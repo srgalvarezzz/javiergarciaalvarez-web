@@ -13,7 +13,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Sobre mí</p>
       <h1 class="text-4xl font-heading font-semibold text-slate-900">Javier García-Álvarez</h1>
       <p class="text-lg text-slate-600 leading-relaxed">
-        Soy doctorando FPI en el programa de Educación Tecnológica de la Universidad de Extremadura. Mi investigación se centra en comprender cómo el <strong class="font-medium text-slate-800">Aprendizaje Basado en Juegos</strong> puede mejorar la motivación y los resultados de aprendizaje en entornos educativos formales.
+        Soy doctorando FPI en el programa de Educación Tecnológica de la Universidad de Extremadura. Mi investigación explora tres líneas: el <strong class="font-medium text-slate-800">Aprendizaje Basado en Juegos</strong> y cómo sus mecánicas pueden servir como medio de evaluación del aprendizaje, y la <strong class="font-medium text-slate-800">Inteligencia Artificial</strong> aplicada a la educación, en el marco del proyecto DIDACT.IA, orientado a impulsar el pensamiento crítico mediado por IA.
       </p>
     </section>
 
@@ -23,17 +23,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <section class="space-y-6">
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Formación</h2>
       <div class="space-y-4">
-        {[
-          { year: 'En curso', degree: 'Doctorado en Educación Tecnológica', institution: 'Universidad de Extremadura', detail: 'Contrato FPI' },
-          { year: '—', degree: 'Máster en ...', institution: 'Universidad de ...', detail: '' },
-          { year: '—', degree: 'Grado en ...', institution: 'Universidad de ...', detail: '' },
-        ].map(({ year, degree, institution, detail }) => (
-          <div class="flex gap-6">
+        {([
+          { year: 'En curso', degree: 'Doctorado en Educación Tecnológica', institution: 'Universidad de Extremadura', detail: 'Contrato FPI', done: false },
+          { year: 'En curso', degree: 'Grado en Filosofía', institution: 'UNED', detail: '', done: false },
+          { year: '2024', degree: 'Máster Universitario de Investigación en Ciencias Sociales', institution: 'Universidad de Extremadura', detail: '', done: true },
+          { year: '2023', degree: 'Grado en Educación Primaria', institution: 'Universidad de Extremadura', detail: '', done: true },
+        ] as const).map(({ year, degree, institution, detail, done }) => (
+          <div class="flex gap-6 items-start">
             <span class="text-sm text-slate-400 w-20 flex-shrink-0 pt-0.5">{year}</span>
-            <div>
+            <div class="flex-1">
               <p class="font-medium text-slate-800">{degree}</p>
               <p class="text-sm text-slate-500">{institution}{detail ? ` · ${detail}` : ''}</p>
             </div>
+            {done && (
+              <svg class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
+              </svg>
+            )}
           </div>
         ))}
       </div>
