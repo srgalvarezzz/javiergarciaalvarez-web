@@ -24,13 +24,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Formación</h2>
       <div class="space-y-4">
         {([
-          { year: 'En curso', degree: 'Doctorado en Educación Tecnológica', institution: 'Universidad de Extremadura', detail: 'Contrato FPI', done: false },
-          { year: 'En curso', degree: 'Grado en Filosofía', institution: 'UNED', detail: '', done: false },
-          { year: '2024', degree: 'Máster Universitario de Investigación en Ciencias Sociales', institution: 'Universidad de Extremadura', detail: '', done: true },
-          { year: '2023', degree: 'Grado en Educación Primaria', institution: 'Universidad de Extremadura', detail: '', done: true },
-        ] as const).map(({ year, degree, institution, detail, done }) => (
+          { degree: 'Doctorado en Educación Tecnológica', institution: 'Universidad de Extremadura', detail: 'Contrato FPI', done: false },
+          { degree: 'Grado en Filosofía', institution: 'UNED', detail: '', done: false },
+          { degree: 'Máster Universitario de Investigación en Ciencias Sociales', institution: 'Universidad de Extremadura', detail: '', done: true },
+          { degree: 'Grado en Educación Primaria', institution: 'Universidad de Extremadura', detail: '', done: true },
+        ] as const).map(({ degree, institution, detail, done }) => (
           <div class="flex gap-6 items-start">
-            <span class="text-sm text-slate-400 w-20 flex-shrink-0 pt-0.5">{year}</span>
             <div class="flex-1">
               <p class="font-medium text-slate-800">{degree}</p>
               <p class="text-sm text-slate-500">{institution}{detail ? ` · ${detail}` : ''}</p>
