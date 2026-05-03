@@ -1,0 +1,92 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Herramientas"
+  description="Herramientas gratuitas para docentes universitarios: calculadora de baremos, recursos de evaluación y más."
+>
+  <div class="max-w-3xl mx-auto px-6 py-16 space-y-14">
+
+    <!-- Header -->
+    <section class="space-y-4">
+      <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Herramientas</p>
+      <h1 class="text-4xl font-heading font-semibold text-slate-900">Recursos para docentes</h1>
+      <p class="text-lg text-slate-600 leading-relaxed">
+        Herramientas gratuitas que he desarrollado para facilitar el trabajo cotidiano de docentes e investigadores universitarios.
+      </p>
+    </section>
+
+    <hr class="border-slate-100" />
+
+    <!-- Calculadora de baremos -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Calculadora de baremos universitarios</h2>
+
+      <div class="rounded-2xl border border-slate-200 overflow-hidden">
+        <!-- Tool card header -->
+        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl">🧮</span>
+            <div>
+              <p class="font-medium text-slate-800">Calculadora de baremos</p>
+              <p class="text-xs text-slate-500">Convocatorias universitarias · España</p>
+            </div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Disponible</span>
+        </div>
+
+        <!-- Tool description -->
+        <div class="px-6 py-6 space-y-4">
+          <p class="text-slate-600 leading-relaxed">
+            Calcula automáticamente la puntuación de un expediente académico según los baremos de distintas convocatorias universitarias españolas (FPI, FPU, contratos predoctorales, etc.).
+          </p>
+          <ul class="space-y-1.5 text-sm text-slate-600">
+            {[
+              'Cálculo según múltiples convocatorias',
+              'Exportación de resultados',
+              'Interfaz sencilla, sin registro',
+            ].map(feat => (
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-brand-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                {feat}
+              </li>
+            ))}
+          </ul>
+          <div class="pt-2">
+            <a
+              href="/herramientas/calculadora-baremos"
+              class="inline-block px-5 py-2.5 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
+            >
+              Abrir calculadora →
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="border-slate-100" />
+
+    <!-- Próximamente -->
+    <section class="space-y-4">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Próximamente</h2>
+      <div class="space-y-3">
+        {[
+          { title: 'Generador de rúbricas GBL', desc: 'Plantillas de evaluación para actividades de aprendizaje basado en juegos.' },
+          { title: 'Checklist de diseño instruccional', desc: 'Lista de verificación para diseñar experiencias con juegos educativos.' },
+        ].map(({ title, desc }) => (
+          <div class="flex gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100">
+            <span class="text-slate-300 text-lg mt-0.5">⏳</span>
+            <div>
+              <p class="font-medium text-slate-700">{title}</p>
+              <p class="text-sm text-slate-500">{desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>

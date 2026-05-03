@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Contacto"
+  description="Contacta con Javier García-Álvarez para colaboraciones académicas, consultas sobre investigación o simplemente charlar sobre educación y tecnología."
+>
+  <div class="max-w-3xl mx-auto px-6 py-16 space-y-14">
+
+    <!-- Header -->
+    <section class="space-y-4">
+      <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Contacto</p>
+      <h1 class="text-4xl font-heading font-semibold text-slate-900">Hablemos</h1>
+      <p class="text-lg text-slate-600 leading-relaxed">
+        Estoy disponible para colaboraciones de investigación, consultas sobre GBL o tecnología educativa, charlas y ponencias, o simplemente para intercambiar perspectivas sobre educación.
+      </p>
+    </section>
+
+    <hr class="border-slate-100" />
+
+    <div class="grid md:grid-cols-2 gap-10">
+
+      <!-- Formas de contacto -->
+      <section class="space-y-5">
+        <h2 class="text-xl font-heading font-semibold text-slate-900">Canales</h2>
+        <div class="space-y-4">
+          {[
+            { icon: '✉️', label: 'Email institucional', value: 'jgarcia@unex.es', href: 'mailto:jgarcia@unex.es' },
+            { icon: '🐦', label: 'Twitter / X', value: '@javierga_edu', href: '#' },
+            { icon: '💼', label: 'LinkedIn', value: 'Javier García-Álvarez', href: '#' },
+          ].map(({ icon, label, value, href }) => (
+            <a
+              href={href}
+              class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-brand-200 hover:bg-brand-50/50 transition-all group"
+            >
+              <span class="text-xl">{icon}</span>
+              <div>
+                <p class="text-xs text-slate-400 font-medium">{label}</p>
+                <p class="text-sm text-slate-700 group-hover:text-brand-700 font-medium">{value}</p>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Afiliación -->
+      <section class="space-y-5">
+        <h2 class="text-xl font-heading font-semibold text-slate-900">Afiliación</h2>
+        <div class="space-y-3 text-sm text-slate-600">
+          <p><strong class="text-slate-800">Universidad de Extremadura</strong></p>
+          <p>Grupo de investigación: <em>por confirmar</em></p>
+          <p>Departamento: <em>por confirmar</em></p>
+          <p class="text-slate-400 text-xs pt-2">Actualmente en Cáceres o Badajoz, España.</p>
+        </div>
+      </section>
+
+    </div>
+
+    <hr class="border-slate-100" />
+
+    <!-- Nota sobre respuesta -->
+    <section class="rounded-xl bg-slate-50 border border-slate-100 p-6">
+      <p class="text-sm text-slate-600 leading-relaxed">
+        <strong class="text-slate-800">Tiempo de respuesta habitual:</strong> intento contestar en 2–3 días hábiles. Para colaboraciones con plazos ajustados, indícalo en el asunto del email.
+      </p>
+    </section>
+
+  </div>
+</BaseLayout>

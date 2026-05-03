@@ -1,0 +1,127 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = 'Javier García-Álvarez — Doctorando en Educación Tecnológica, UEx' } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://javiergarciaalvarez.com');
+
+const navLinks = [
+  { href: '/',              label: 'Inicio'        },
+  { href: '/sobre-mi',      label: 'Sobre mí'      },
+  { href: '/investigacion', label: 'Investigación' },
+  { href: '/herramientas',  label: 'Herramientas'  },
+  { href: '/contacto',      label: 'Contacto'      },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{title} | Javier García-Álvarez</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={`${title} | Javier García-Álvarez`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lora:ital,wght@0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body class="min-h-screen bg-white text-slate-800 flex flex-col">
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-slate-100">
+      <div class="max-w-5xl mx-auto px-6 flex items-center justify-between h-16">
+
+        <a href="/" class="font-heading font-semibold text-brand-700 hover:text-brand-600 transition-colors">
+          Javier García-Álvarez
+        </a>
+
+        <!-- Desktop nav -->
+        <nav class="hidden md:flex items-center gap-1">
+          {navLinks.map(({ href, label }) => {
+            const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+            return (
+              <a
+                href={href}
+                class={[
+                  'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
+                  isActive
+                    ? 'bg-brand-50 text-brand-700'
+                    : 'text-slate-600 hover:text-brand-700 hover:bg-slate-50',
+                ].join(' ')}
+              >
+                {label}
+              </a>
+            );
+          })}
+        </nav>
+
+        <!-- Mobile menu button (functional with CSS only) -->
+        <label for="mobile-menu-toggle" class="md:hidden cursor-pointer p-2 rounded-md hover:bg-slate-100">
+          <span class="sr-only">Menú</span>
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </label>
+      </div>
+
+      <!-- Mobile nav -->
+      <input type="checkbox" id="mobile-menu-toggle" class="hidden peer" />
+      <nav class="hidden peer-checked:flex flex-col md:hidden border-t border-slate-100 py-2">
+        {navLinks.map(({ href, label }) => {
+          const isActive = href === '/' ? currentPath === '/' : currentPath.startsWith(href);
+          return (
+            <a
+              href={href}
+              class={[
+                'px-6 py-2.5 text-sm font-medium transition-colors',
+                isActive ? 'text-brand-700 bg-brand-50' : 'text-slate-600 hover:text-brand-700',
+              ].join(' ')}
+            >
+              {label}
+            </a>
+          );
+        })}
+      </nav>
+    </header>
+
+    <!-- Page content -->
+    <main class="flex-1">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-slate-100 mt-20">
+      <div class="max-w-5xl mx-auto px-6 py-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-slate-500">
+        <p>© {new Date().getFullYear()} Javier García-Álvarez</p>
+        <div class="flex items-center gap-4">
+          <a href="https://orcid.org" class="hover:text-brand-700 transition-colors" target="_blank" rel="noopener">ORCID</a>
+          <a href="https://scholar.google.com" class="hover:text-brand-700 transition-colors" target="_blank" rel="noopener">Google Scholar</a>
+          <a href="https://twitter.com" class="hover:text-brand-700 transition-colors" target="_blank" rel="noopener">Twitter/X</a>
+        </div>
+      </div>
+    </footer>
+
+  </body>
+</html>

@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Sobre mí"
+  description="Javier García-Álvarez, doctorando FPI en la Universidad de Extremadura. Trayectoria, formación e intereses de investigación."
+>
+  <div class="max-w-3xl mx-auto px-6 py-16 space-y-14">
+
+    <!-- Intro -->
+    <section class="space-y-4">
+      <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Sobre mí</p>
+      <h1 class="text-4xl font-heading font-semibold text-slate-900">Javier García-Álvarez</h1>
+      <p class="text-lg text-slate-600 leading-relaxed">
+        Soy doctorando FPI en el programa de Educación Tecnológica de la Universidad de Extremadura. Mi investigación se centra en comprender cómo el <strong class="font-medium text-slate-800">Aprendizaje Basado en Juegos</strong> puede mejorar la motivación y los resultados de aprendizaje en entornos educativos formales.
+      </p>
+    </section>
+
+    <hr class="border-slate-100" />
+
+    <!-- Formación -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Formación</h2>
+      <div class="space-y-4">
+        {[
+          { year: 'En curso', degree: 'Doctorado en Educación Tecnológica', institution: 'Universidad de Extremadura', detail: 'Contrato FPI' },
+          { year: '—', degree: 'Máster en ...', institution: 'Universidad de ...', detail: '' },
+          { year: '—', degree: 'Grado en ...', institution: 'Universidad de ...', detail: '' },
+        ].map(({ year, degree, institution, detail }) => (
+          <div class="flex gap-6">
+            <span class="text-sm text-slate-400 w-20 flex-shrink-0 pt-0.5">{year}</span>
+            <div>
+              <p class="font-medium text-slate-800">{degree}</p>
+              <p class="text-sm text-slate-500">{institution}{detail ? ` · ${detail}` : ''}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <hr class="border-slate-100" />
+
+    <!-- Intereses -->
+    <section class="space-y-4">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Intereses de investigación</h2>
+      <ul class="space-y-2 text-slate-600">
+        {[
+          'Aprendizaje Basado en Juegos (GBL) en educación superior',
+          'Diseño instruccional y experiencia de usuario en entornos digitales',
+          'Revisiones sistemáticas de literatura en tecnología educativa',
+          'Gamificación y engagement en el aprendizaje',
+        ].map(item => (
+          <li class="flex items-start gap-3">
+            <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-500 flex-shrink-0"></span>
+            {item}
+          </li>
+        ))}
+      </ul>
+    </section>
+
+    <hr class="border-slate-100" />
+
+    <!-- Perfiles académicos -->
+    <section class="space-y-4">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Perfiles académicos</h2>
+      <div class="flex flex-wrap gap-3">
+        {[
+          { label: 'ORCID', href: '#' },
+          { label: 'Google Scholar', href: '#' },
+          { label: 'ResearchGate', href: '#' },
+          { label: 'Dialnet', href: '#' },
+        ].map(({ label, href }) => (
+          <a
+            href={href}
+            class="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-brand-300 hover:text-brand-700 transition-colors"
+            target="_blank"
+            rel="noopener"
+          >
+            {label} ↗
+          </a>
+        ))}
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
