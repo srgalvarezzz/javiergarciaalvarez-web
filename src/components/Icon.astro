@@ -1,0 +1,32 @@
+---
+/**
+ * Wrapper centralizado de iconos Lucide.
+ * Tamaño y grosor uniforme en toda la web. Color: currentColor.
+ */
+import { Gamepad2, Cog, BrainCircuit, Layers, Calculator, Clock,
+         Check, ExternalLink, Download, Eye, ChevronRight,
+         Mail, MapPin, BookOpen, FileText } from 'lucide-astro';
+
+type IconName =
+  | 'Gamepad2' | 'Cog' | 'BrainCircuit' | 'Layers' | 'Calculator'
+  | 'Clock' | 'Check' | 'ExternalLink' | 'Download' | 'Eye'
+  | 'ChevronRight' | 'Mail' | 'MapPin' | 'BookOpen' | 'FileText';
+
+interface Props {
+  name: IconName;
+  size?: number;
+  class?: string;
+}
+
+const { name, size = 20, class: className = '' } = Astro.props;
+
+const iconMap = {
+  Gamepad2, Cog, BrainCircuit, Layers, Calculator, Clock,
+  Check, ExternalLink, Download, Eye, ChevronRight,
+  Mail, MapPin, BookOpen, FileText,
+};
+
+const LucideIcon = iconMap[name];
+---
+
+<LucideIcon size={size} stroke-width={1.75} class={className} />
