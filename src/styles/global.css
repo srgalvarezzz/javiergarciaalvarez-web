@@ -11,7 +11,7 @@
   --color-accent-400: #fb923c;
   --color-accent-500: #f97316;
 
-  --font-heading: "Lora", "Georgia", serif;
+  --font-heading: "Space Grotesk", system-ui, sans-serif;
   --font-body: "Inter", system-ui, sans-serif;
 
   --breakpoint-sm: 640px;
