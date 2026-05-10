@@ -1,1 +1,2 @@
-https://www.javiergarciaalvarez.com/* https://javiergarciaalvarez.com/:splat 301
+# Redirects gestionados desde Cloudflare Dashboard (redirect rules)
+# Workers no permite URLs absolutas en este fichero
