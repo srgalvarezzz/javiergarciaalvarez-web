@@ -4,11 +4,13 @@ import Icon from '../components/Icon.astro';
 
 const datasets = [
   {
-    title: 'Minecraft Education Components Lists',
+    title: 'Componentes de juego en Minecraft Education: catálogo según el marco de Järvinen (2008)',
     desc: 'Recopilación y organización sistemática de los componentes de juego identificados en Minecraft Education, estructurada según el marco conceptual de Järvinen (2008).',
     doi: '10.5281/zenodo.15630826',
     href: 'https://zenodo.org/records/15630826',
-    stats: { downloads: 8, views: 28 },
+    tipo: 'Dataset',
+    estado: 'Disponible',
+    publicado: 'Junio 2025',
   },
 ];
 ---
@@ -17,24 +19,24 @@ const datasets = [
   title="Recursos"
   description="Recursos abiertos, datasets y herramientas de Javier García-Álvarez para docentes e investigadores en educación y tecnología educativa."
 >
-  <div class="max-w-3xl mx-auto px-6 py-16 space-y-14">
+  <div class="max-w-3xl mx-auto px-6 py-16 space-y-16">
 
     <!-- Header -->
     <section class="space-y-4">
       <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Recursos</p>
       <h1 class="text-4xl font-heading font-semibold text-slate-900">Recursos abiertos</h1>
       <p class="text-lg text-slate-600 leading-relaxed">
-        Datasets, herramientas y materiales de libre acceso generados en el marco de mi investigación.
+        Lo que produzco mientras investigo, en abierto. Si te resulta útil, úsalo y cítame. Si encuentras un error, dímelo.
       </p>
     </section>
 
-    <hr class="border-slate-100" />
+    <div class="border-t border-zinc-200" />
 
     <!-- Datasets -->
-    <section class="space-y-6">
+    <section class="space-y-8">
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Datasets</h2>
       <div class="space-y-4">
-        {datasets.map(({ title, desc, doi, href, stats }) => (
+        {datasets.map(({ title, desc, doi, href, tipo, estado, publicado }) => (
           <div class="rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-200 hover:shadow-sm transition-all">
             <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
               <div class="flex items-center gap-3">
@@ -47,23 +49,14 @@ const datasets = [
                 </div>
               </div>
               <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Dataset</span>
-                <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Abierto</span>
+                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">{tipo}</span>
+                <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">{estado}</span>
               </div>
             </div>
             <div class="px-6 py-5 space-y-4">
               <p class="text-sm text-slate-600 leading-relaxed">{desc}</p>
               <div class="flex items-center justify-between">
-                <div class="flex items-center gap-4 text-xs text-slate-400">
-                  <span class="flex items-center gap-1">
-                    <Icon name="Download" size={12} />
-                    {stats.downloads} descargas
-                  </span>
-                  <span class="flex items-center gap-1">
-                    <Icon name="Eye" size={12} />
-                    {stats.views} vistas
-                  </span>
-                </div>
+                <span class="text-xs text-slate-400">Publicado: {publicado}</span>
                 <a
                   href={href}
                   target="_blank"
@@ -80,16 +73,16 @@ const datasets = [
       </div>
     </section>
 
-    <hr class="border-slate-100" />
+    <div class="border-t border-zinc-200" />
 
     <!-- Herramientas -->
-    <section class="space-y-6">
+    <section class="space-y-8">
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Herramientas</h2>
 
       <div class="rounded-2xl border border-slate-200 overflow-hidden">
-        <div class="bg-slate-50 px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
           <div class="flex items-center gap-3">
-            <span class="text-slate-500">
+            <span class="text-slate-400">
               <Icon name="Calculator" size={22} />
             </span>
             <div>
@@ -97,7 +90,10 @@ const datasets = [
               <p class="text-xs text-slate-500">Convocatorias universitarias · España</p>
             </div>
           </div>
-          <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Disponible</span>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Herramienta</span>
+            <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Disponible</span>
+          </div>
         </div>
         <div class="px-6 py-6 space-y-4">
           <p class="text-sm text-slate-600 leading-relaxed">
@@ -117,7 +113,7 @@ const datasets = [
               </li>
             ))}
           </ul>
-          <div class="pt-2">
+          <div class="flex flex-wrap items-center gap-3 pt-2">
             <a
               href="https://www.notion.so/Tutorial-herramientas-de-c-lculo-2c0334b437154f7f9abcc2d82c1abd59"
               target="_blank"
@@ -127,30 +123,46 @@ const datasets = [
               Descargar en Notion
               <Icon name="ExternalLink" size={14} />
             </a>
+            <a
+              href="https://www.notion.so/Tutorial-herramientas-de-c-lculo-2c0334b437154f7f9abcc2d82c1abd59"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-sm text-slate-500 hover:text-brand-700 transition-colors"
+            >
+              Ver tutorial extendido →
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <hr class="border-slate-100" />
+    <div class="border-t border-zinc-200" />
 
     <!-- Próximamente -->
-    <section class="space-y-4">
+    <section class="space-y-6">
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Próximamente</h2>
       <div class="space-y-3">
-        {[
-          { title: 'GDD estandarizado', desc: 'Plantilla de Game Design Document adaptada a contextos de aprendizaje basado en juegos.' },
-        ].map(({ title, desc }) => (
-          <div class="flex gap-4 p-4 rounded-lg bg-slate-50 border border-slate-100">
-            <span class="text-slate-300 mt-0.5 flex-shrink-0">
-              <Icon name="Clock" size={20} />
-            </span>
-            <div>
-              <p class="font-medium text-slate-700">{title}</p>
-              <p class="text-sm text-slate-500">{desc}</p>
+        <div class="flex gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100">
+          <span class="text-slate-300 mt-0.5 flex-shrink-0">
+            <Icon name="Clock" size={20} />
+          </span>
+          <div class="flex-1 space-y-2">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <p class="font-medium text-slate-700">GDD estandarizado</p>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Plantilla</span>
+                <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-medium border border-amber-100">Próximamente</span>
+              </div>
+            </div>
+            <p class="text-sm text-slate-500">Plantilla de Game Design Document adaptada a contextos de aprendizaje basado en juegos.</p>
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
+              <span class="text-xs text-slate-400">Fecha estimada: por confirmar</span>
+              <a href="/contacto" class="text-xs text-brand-600 hover:text-brand-700 hover:underline transition-colors">
+                Avisarme cuando esté listo →
+              </a>
             </div>
           </div>
-        ))}
+        </div>
       </div>
     </section>
 
