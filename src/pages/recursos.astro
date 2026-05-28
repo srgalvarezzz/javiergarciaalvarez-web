@@ -14,6 +14,9 @@ const filtros = [
 const countFor = (k: string) => (k === 'all' ? recursos.length : recursos.filter((r) => r.type === k).length);
 const chips = filtros.filter((f) => f.key === 'all' || countFor(f.key) > 0);
 
+// Recursos accesibles (en abierto) — excluye los que están en proceso.
+const disponibles = recursos.filter((r) => r.status === 'active').length;
+
 // ── Generación dinámica de citas a partir de los metadatos ──
 const TIPO_APA: Record<string, string> = { dataset: 'Conjunto de datos', tool: 'Herramienta', template: 'Plantilla' };
 const RIS_TY: Record<string, string> = { dataset: 'DATA', tool: 'COMP', template: 'GEN' };
@@ -84,7 +87,7 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
         ))}
       </div>
       <p class="resources-meta">
-        <span id="resources-count">{recursos.length}</span> recursos · en abierto
+        <span>{disponibles}</span> recursos · en abierto
       </p>
     </div>
 
@@ -200,7 +203,6 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
   const filterChips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
   const resourceCards = document.querySelectorAll<HTMLLIElement>('.resource-card');
   const emptyState = document.querySelector<HTMLElement>('.resources-empty');
-  const countEl = document.getElementById('resources-count');
 
   filterChips.forEach((chip) => {
     chip.addEventListener('click', () => {
@@ -214,7 +216,6 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
         if (show) visible++;
       });
 
-      if (countEl) countEl.textContent = String(visible);
       if (emptyState) emptyState.hidden = visible > 0;
     });
   });
