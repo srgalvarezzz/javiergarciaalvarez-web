@@ -4,7 +4,7 @@ import Icon from '../components/Icon.astro';
 
 const datasets = [
   {
-    title: 'Componentes de juego en Minecraft Education: catálogo según el marco de Järvinen (2008)',
+    title: 'Minecraft Component Lists',
     desc: 'Recopilación y organización sistemática de los componentes de juego identificados en Minecraft Education, estructurada según el marco conceptual de Järvinen (2008).',
     doi: '10.5281/zenodo.15630826',
     href: 'https://zenodo.org/records/15630826',
@@ -190,6 +190,47 @@ const datasets = [
 
     <div class="border-t border-zinc-200" />
 
+    <!-- Otros -->
+    <section class="space-y-8">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Otros</h2>
+
+      <div class="rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-200 hover:shadow-sm transition-all">
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="text-slate-400">
+              <Icon name="MapPin" size={22} />
+            </span>
+            <div>
+              <p class="font-medium text-slate-800">Mapa Educraft (Minecraft Education)</p>
+              <p class="text-xs text-slate-500">Mapa para Minecraft Education</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Mapa</span>
+            <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Disponible</span>
+          </div>
+        </div>
+        <div class="px-6 py-6 space-y-4">
+          <p class="text-sm text-slate-600 leading-relaxed">
+            Mapa de Minecraft Education listo para usar en el aula. Descárgalo desde Google Drive e impórtalo en Minecraft Education.
+          </p>
+          <div class="flex flex-wrap items-center gap-3 pt-1">
+            <a
+              href="https://bit.ly/3QDQ4MB"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
+            >
+              Descargar (Google Drive)
+              <Icon name="ExternalLink" size={14} />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="border-t border-zinc-200" />
+
     <!-- Próximamente -->
     <section class="space-y-6">
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Próximamente</h2>
@@ -207,6 +248,28 @@ const datasets = [
               </div>
             </div>
             <p class="text-sm text-slate-500">Plantilla de Game Design Document adaptada a contextos de aprendizaje basado en juegos.</p>
+            <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
+              <span class="text-xs text-slate-400">Fecha estimada: por confirmar</span>
+              <a href="/contacto" class="text-xs text-brand-600 hover:text-brand-700 hover:underline transition-colors">
+                Avisarme cuando esté listo →
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100">
+          <span class="text-slate-300 mt-0.5 flex-shrink-0">
+            <Icon name="Clock" size={20} />
+          </span>
+          <div class="flex-1 space-y-2">
+            <div class="flex items-center justify-between flex-wrap gap-2">
+              <p class="font-medium text-slate-700">Plantilla Dataset RSL</p>
+              <div class="flex items-center gap-2">
+                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Plantilla</span>
+                <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-medium border border-amber-100">Próximamente</span>
+              </div>
+            </div>
+            <p class="text-sm text-slate-500">Plantilla para estructurar y documentar el dataset de una Revisión Sistemática de Literatura (RSL).</p>
             <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
               <span class="text-xs text-slate-400">Fecha estimada: por confirmar</span>
               <a href="/contacto" class="text-xs text-brand-600 hover:text-brand-700 hover:underline transition-colors">
