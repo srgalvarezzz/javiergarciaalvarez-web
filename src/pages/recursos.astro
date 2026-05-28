@@ -1,286 +1,616 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import recursos from '../data/recursos.json';
 
-const datasets = [
-  {
-    title: 'Minecraft Component Lists',
-    desc: 'Recopilación y organización sistemática de los componentes de juego identificados en Minecraft Education, estructurada según el marco conceptual de Järvinen (2008).',
-    doi: '10.5281/zenodo.15630826',
-    href: 'https://zenodo.org/records/15630826',
-    tipo: 'Dataset',
-    estado: 'Disponible',
-    publicado: 'Junio 2025',
-    mcVersion: 'Minecraft 1.21.6',
-  },
+// ── Filtros (contadores dinámicos en server-side) ──
+const filtros = [
+  { key: 'all', label: 'Todos' },
+  { key: 'dataset', label: 'Datasets' },
+  { key: 'tool', label: 'Herramientas' },
+  { key: 'template', label: 'Plantillas' },
 ];
+const countFor = (k: string) => (k === 'all' ? recursos.length : recursos.filter((r) => r.type === k).length);
+const chips = filtros.filter((f) => f.key === 'all' || countFor(f.key) > 0);
+
+// ── Generación dinámica de citas a partir de los metadatos ──
+const TIPO_APA: Record<string, string> = { dataset: 'Conjunto de datos', tool: 'Herramienta', template: 'Plantilla' };
+const RIS_TY: Record<string, string> = { dataset: 'DATA', tool: 'COMP', template: 'GEN' };
+const BIB_TYPE: Record<string, string> = { dataset: 'dataset', tool: 'misc', template: 'misc' };
+
+function buildCitations(r: any) {
+  if (r.status === 'upcoming') return null;
+  const url = r.doi ? `https://doi.org/${r.doi}` : (r.citeUrl || r.accion?.url);
+  const versionApa = r.version ? ` (Versión ${r.version})` : '';
+  const tipoApa = TIPO_APA[r.type] ?? 'Recurso';
+  const fuenteApa = r.doi ? `Zenodo. https://doi.org/${r.doi}` : (r.editor ? `${r.editor}.` : '');
+  const apa = `${r.autorApa} (${r.anio}). ${r.titulo}${versionApa} [${tipoApa}]. ${fuenteApa}`.trim();
+
+  const bibtex = [
+    `@${BIB_TYPE[r.type] ?? 'misc'}{${r.bibtexKey},`,
+    `  author    = {${r.autorBibtex}},`,
+    `  title     = {${r.titulo}},`,
+    r.mes ? `  month     = ${r.mes},` : null,
+    `  year      = {${r.anio}},`,
+    r.editor ? `  publisher = {${r.editor}},` : null,
+    r.version ? `  version   = {${r.version}},` : null,
+    r.doi ? `  doi       = {${r.doi}},` : null,
+    `  url       = {${url}}`,
+    `}`,
+  ].filter(Boolean).join('\n');
+
+  const ris = [
+    `TY  - ${RIS_TY[r.type] ?? 'GEN'}`,
+    `AU  - ${r.autorBibtex}`,
+    `TI  - ${r.titulo}`,
+    `PY  - ${r.anio}`,
+    r.publicadoISO ? `DA  - ${r.publicadoISO.replace('-', '/')}` : null,
+    r.editor ? `PB  - ${r.editor}` : null,
+    r.doi ? `DO  - ${r.doi}` : null,
+    `UR  - ${url}`,
+    `ER  - `,
+  ].filter(Boolean).join('\n');
+
+  return { apa, bibtex, ris };
+}
+
+const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
 ---
 
 <BaseLayout
   title="Recursos"
   description="Recursos abiertos, datasets y herramientas de Javier García-Álvarez para docentes e investigadores en educación y tecnología educativa."
 >
-  <div class="max-w-3xl mx-auto px-6 py-16 space-y-16">
+  <div class="resources-page">
 
-    <!-- Header -->
-    <section class="space-y-4">
-      <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Recursos</p>
-      <h1 class="text-4xl font-heading font-semibold text-slate-900">Recursos abiertos</h1>
-      <p class="text-lg text-slate-600 leading-relaxed">
+    <header class="page-header">
+      <p class="eyebrow">03 / Recursos</p>
+      <h1 class="page-title">Recursos abiertos</h1>
+      <p class="page-lead">
         Lo que produzco mientras investigo, en abierto. Si te resulta útil, úsalo y cítame. Si encuentras un error, dímelo.
       </p>
-    </section>
+    </header>
 
-    <div class="border-t border-zinc-200" />
-
-    <!-- Datasets -->
-    <section class="space-y-8">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Datasets</h2>
-      <div class="space-y-4">
-        {datasets.map(({ title, desc, doi, href, tipo, estado, publicado, mcVersion }) => (
-          <div class="rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-200 hover:shadow-sm transition-all">
-            <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
-              <div class="flex items-center gap-3">
-                <span class="text-slate-400">
-                  <Icon name="Layers" size={22} />
-                </span>
-                <div>
-                  <p class="font-medium text-slate-800">{title}</p>
-                  <p class="text-xs text-slate-400 font-mono mt-0.5">DOI: {doi}</p>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 flex-shrink-0">
-                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">{tipo}</span>
-                <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">{estado}</span>
-              </div>
-            </div>
-            <div class="px-6 py-5 space-y-4">
-              <p class="text-sm text-slate-600 leading-relaxed">{desc}</p>
-              <div class="flex items-center justify-between">
-                <span class="text-xs text-slate-400">Publicado: {publicado}{mcVersion ? ` · ${mcVersion}` : ''}</span>
-                <a
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
-                >
-                  Ver en Zenodo
-                  <Icon name="ExternalLink" size={14} />
-                </a>
-              </div>
-              <!-- Cita y feedback -->
-              <details class="group border-t border-slate-100 pt-4">
-                <summary class="flex items-center gap-4 cursor-pointer list-none text-xs text-slate-400 hover:text-slate-600 transition-colors select-none">
-                  <span class="hover:text-brand-600 transition-colors">¿Cómo citar?</span>
-                  <span class="text-slate-200">·</span>
-                  <a href={`/contacto?recurso=${encodeURIComponent(title)}`} class="hover:text-brand-600 transition-colors">Feedback</a>
-                </summary>
-                <div class="mt-4 space-y-3">
-                  <div>
-                    <p class="text-xs font-medium text-slate-500 mb-1">APA</p>
-                    <p class="text-xs text-slate-600 bg-slate-50 rounded-lg px-4 py-3 leading-relaxed font-mono">
-                      García-Álvarez, J. (2025). <em>{title}</em>. Zenodo. https://doi.org/{doi}
-                    </p>
-                  </div>
-                  <div>
-                    <p class="text-xs font-medium text-slate-500 mb-1">BibTeX</p>
-                    <pre class="text-xs text-slate-600 bg-slate-50 rounded-lg px-4 py-3 overflow-x-auto leading-relaxed">{`@misc{garciaAlvarez2025minecraft,
-  author    = {García-Álvarez, Javier},
-  title     = {${title}},
-  year      = {2025},
-  publisher = {Zenodo},
-  doi       = {${doi}},
-  url       = {${href}}
-}`}</pre>
-                  </div>
-                </div>
-              </details>
-            </div>
-          </div>
+    <div class="resources-toolbar">
+      <div class="filter-chips" role="group" aria-label="Filtrar recursos por tipo">
+        {chips.map((f) => (
+          <button type="button" class:list={['filter-chip', { 'is-active': f.key === 'all' }]} data-filter={f.key}>
+            {f.label}
+            <span class="filter-chip-count">{countFor(f.key)}</span>
+          </button>
         ))}
       </div>
-    </section>
+      <p class="resources-meta">
+        <span id="resources-count">{recursos.length}</span> recursos · en abierto
+      </p>
+    </div>
 
-    <div class="border-t border-zinc-200" />
-
-    <!-- Herramientas -->
-    <section class="space-y-8">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Herramientas</h2>
-
-      <div class="rounded-2xl border border-slate-200 overflow-hidden">
-        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <span class="text-slate-400">
-              <Icon name="Calculator" size={22} />
+    <ul class="resources-list">
+      {cards.map((r) => (
+        <li class="resource-card" data-type={r.type}>
+          <div class="resource-card-header">
+            <div class="resource-card-type">
+              <span class="resource-card-icon" aria-hidden="true"><Icon name={r.icon} size={16} /></span>
+              <span class="resource-card-type-label">{r.tipo}</span>
+            </div>
+            <span class:list={['status-pill', `status-${r.status}`]}>
+              <span class="status-dot" aria-hidden="true"></span>
+              {r.estado}
             </span>
-            <div>
-              <p class="font-medium text-slate-800">Calculadora de baremos universitarios</p>
-              <p class="text-xs text-slate-500">Convocatorias universitarias · España</p>
-            </div>
           </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Herramienta</span>
-            <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Disponible</span>
-          </div>
-        </div>
-        <div class="px-6 py-6 space-y-4">
-          <p class="text-sm text-slate-600 leading-relaxed">
-            Calcula automáticamente la puntuación de un expediente académico según los baremos de distintas convocatorias universitarias españolas (FPI, FPU, contratos predoctorales, etc.).
-          </p>
-          <ul class="space-y-1.5 text-sm text-slate-600">
-            {[
-              'Cálculo según múltiples convocatorias',
-              'Exportación de resultados',
-              'Interfaz sencilla, sin registro',
-            ].map(feat => (
-              <li class="flex items-center gap-2">
-                <span class="text-brand-500 flex-shrink-0">
-                  <Icon name="Check" size={16} />
-                </span>
-                {feat}
-              </li>
-            ))}
-          </ul>
-          <div class="flex flex-wrap items-center gap-3 pt-2">
-            <a
-              href="https://www.notion.so/Tutorial-herramientas-de-c-lculo-2c0334b437154f7f9abcc2d82c1abd59"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
-            >
-              Descargar en Notion
-              <Icon name="ExternalLink" size={14} />
-            </a>
-            <a
-              href="https://www.notion.so/Tutorial-herramientas-de-c-lculo-2c0334b437154f7f9abcc2d82c1abd59"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-sm text-slate-500 hover:text-brand-700 transition-colors"
-            >
-              Ver tutorial extendido →
-            </a>
-          </div>
-          <!-- Cita y feedback -->
-          <details class="group border-t border-slate-100 pt-4">
-            <summary class="flex items-center gap-4 cursor-pointer list-none text-xs text-slate-400 hover:text-slate-600 transition-colors select-none">
-              <span class="hover:text-brand-600 transition-colors">¿Cómo citar?</span>
-              <span class="text-slate-200">·</span>
-              <a href="/contacto?recurso=Calculadora+de+baremos" class="hover:text-brand-600 transition-colors">Feedback</a>
-            </summary>
-            <div class="mt-4 space-y-3">
-              <div>
-                <p class="text-xs font-medium text-slate-500 mb-1">APA</p>
-                <p class="text-xs text-slate-600 bg-slate-50 rounded-lg px-4 py-3 leading-relaxed font-mono">
-                  García-Álvarez, J. (2024). <em>Calculadora de baremos universitarios</em> [Herramienta]. javiergarciaalvarez.com
-                </p>
-              </div>
-              <div>
-                <p class="text-xs font-medium text-slate-500 mb-1">BibTeX</p>
-                <pre class="text-xs text-slate-600 bg-slate-50 rounded-lg px-4 py-3 overflow-x-auto leading-relaxed">{`@misc{garciaAlvarez2024baremos,
-  author = {García-Álvarez, Javier},
-  title  = {Calculadora de baremos universitarios},
-  year   = {2024},
-  url    = {https://javiergarciaalvarez.com/recursos}
-}`}</pre>
-              </div>
-            </div>
-          </details>
-        </div>
-      </div>
-    </section>
 
-    <div class="border-t border-zinc-200" />
+          <h2 class="resource-card-title">{r.titulo}</h2>
 
-    <!-- Otros -->
-    <section class="space-y-8">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Otros</h2>
+          {r.doi && (
+            <p class="resource-card-doi">
+              <span class="resource-card-doi-label">DOI</span>
+              <code>{r.doi}</code>
+              <button type="button" class="copy-btn" data-copy={r.doi} aria-label="Copiar DOI">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                </svg>
+              </button>
+            </p>
+          )}
 
-      <div class="rounded-2xl border border-slate-200 overflow-hidden hover:border-brand-200 hover:shadow-sm transition-all">
-        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <span class="text-slate-400">
-              <Icon name="MapPin" size={22} />
-            </span>
-            <div>
-              <p class="font-medium text-slate-800">Mapa Educraft (Minecraft Education)</p>
-              <p class="text-xs text-slate-500">Mapa para Minecraft Education</p>
-            </div>
-          </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Mapa</span>
-            <span class="px-2 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-medium border border-green-100">Disponible</span>
-          </div>
-        </div>
-        <div class="px-6 py-6 space-y-4">
-          <p class="text-sm text-slate-600 leading-relaxed">
-            Mapa de Minecraft Education listo para usar en el aula. Descárgalo desde Google Drive e impórtalo en Minecraft Education.
-          </p>
-          <div class="flex flex-wrap items-center gap-3 pt-1">
-            <a
-              href="https://bit.ly/3QDQ4MB"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors"
-            >
-              Descargar (Google Drive)
-              <Icon name="ExternalLink" size={14} />
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
+          <p class="resource-card-body">{r.descripcion}</p>
 
-    <div class="border-t border-zinc-200" />
+          {(r.publicado || r.version || r.licencia) && (
+            <dl class="resource-card-metadata">
+              {r.publicado && (
+                <div><dt>Publicado</dt><dd>{r.publicado}</dd></div>
+              )}
+              {r.version && (
+                <div><dt>Versión</dt><dd>{r.version}</dd></div>
+              )}
+              {r.licencia && (
+                <div><dt>Licencia</dt><dd>{r.licencia}</dd></div>
+              )}
+            </dl>
+          )}
 
-    <!-- Próximamente -->
-    <section class="space-y-6">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Próximamente</h2>
-      <div class="space-y-3">
-        <div class="flex gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100">
-          <span class="text-slate-300 mt-0.5 flex-shrink-0">
-            <Icon name="Clock" size={20} />
-          </span>
-          <div class="flex-1 space-y-2">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-              <p class="font-medium text-slate-700">GDD estandarizado</p>
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Plantilla</span>
-                <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-medium border border-amber-100">Próximamente</span>
-              </div>
-            </div>
-            <p class="text-sm text-slate-500">Plantilla de Game Design Document adaptada a contextos de aprendizaje basado en juegos.</p>
-            <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-              <span class="text-xs text-slate-400">Fecha estimada: por confirmar</span>
-              <a href="/contacto" class="text-xs text-brand-600 hover:text-brand-700 hover:underline transition-colors">
-                Avisarme cuando esté listo →
+          <div class="resource-card-actions">
+            {r.status === 'upcoming' ? (
+              <a href={r.accion.url} class="btn-secondary">{r.accion.label} →</a>
+            ) : (
+              <a
+                href={r.accion.url}
+                class="btn-primary"
+                target={r.accion.external ? '_blank' : undefined}
+                rel={r.accion.external ? 'noopener noreferrer' : undefined}
+              >
+                {r.accion.label}
+                {r.accion.external && (
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+                    <path d="M7 17L17 7M17 7H8M17 7V16" />
+                  </svg>
+                )}
               </a>
-            </div>
-          </div>
-        </div>
+            )}
 
-        <div class="flex gap-4 p-5 rounded-xl bg-slate-50 border border-slate-100">
-          <span class="text-slate-300 mt-0.5 flex-shrink-0">
-            <Icon name="Clock" size={20} />
-          </span>
-          <div class="flex-1 space-y-2">
-            <div class="flex items-center justify-between flex-wrap gap-2">
-              <p class="font-medium text-slate-700">Plantilla Dataset RSL</p>
-              <div class="flex items-center gap-2">
-                <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-medium">Plantilla</span>
-                <span class="px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 text-xs font-medium border border-amber-100">Próximamente</span>
-              </div>
-            </div>
-            <p class="text-sm text-slate-500">Plantilla para estructurar y documentar el dataset de una Revisión Sistemática de Literatura (RSL).</p>
-            <div class="flex items-center justify-between flex-wrap gap-2 pt-1">
-              <span class="text-xs text-slate-400">Fecha estimada: por confirmar</span>
-              <a href="/contacto" class="text-xs text-brand-600 hover:text-brand-700 hover:underline transition-colors">
-                Avisarme cuando esté listo →
-              </a>
-            </div>
+            {r.cites && (
+              <button type="button" class="btn-secondary" data-toggle-cite aria-expanded="false" aria-controls={`cite-panel-${r.id}`}>
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+                  <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z" />
+                  <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z" />
+                </svg>
+                Cómo citar
+              </button>
+            )}
+
+            {r.status !== 'upcoming' && (
+              <a href={`/contacto?recurso=${encodeURIComponent(r.titulo)}`} class="resource-card-feedback">Feedback</a>
+            )}
           </div>
-        </div>
-      </div>
-    </section>
+
+          {r.cites && (
+            <div class="cite-panel" id={`cite-panel-${r.id}`} hidden>
+              {([
+                { name: 'APA 7', key: 'apa', text: r.cites.apa },
+                { name: 'BibTeX', key: 'bibtex', text: r.cites.bibtex },
+                { name: 'RIS', key: 'ris', text: r.cites.ris },
+              ]).map((fmt) => (
+                <div class="cite-format">
+                  <div class="cite-format-header">
+                    <span class="cite-format-name">{fmt.name}</span>
+                    <button type="button" class="copy-btn-large" data-copy-target={`cite-${fmt.key}-${r.id}`}>Copiar</button>
+                  </div>
+                  <pre id={`cite-${fmt.key}-${r.id}`} class="cite-format-text">{fmt.text}</pre>
+                </div>
+              ))}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+
+    <div class="resources-empty" hidden>
+      <p>No hay recursos de este tipo todavía.</p>
+    </div>
 
   </div>
 </BaseLayout>
+
+<script>
+  // A) Filtros por tipo
+  const filterChips = document.querySelectorAll<HTMLButtonElement>('.filter-chip');
+  const resourceCards = document.querySelectorAll<HTMLLIElement>('.resource-card');
+  const emptyState = document.querySelector<HTMLElement>('.resources-empty');
+  const countEl = document.getElementById('resources-count');
+
+  filterChips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const filter = chip.dataset.filter;
+      filterChips.forEach((c) => c.classList.toggle('is-active', c === chip));
+
+      let visible = 0;
+      resourceCards.forEach((card) => {
+        const show = filter === 'all' || card.dataset.type === filter;
+        card.hidden = !show;
+        if (show) visible++;
+      });
+
+      if (countEl) countEl.textContent = String(visible);
+      if (emptyState) emptyState.hidden = visible > 0;
+    });
+  });
+
+  // B) Desplegar / colapsar panel de citas
+  document.querySelectorAll<HTMLButtonElement>('[data-toggle-cite]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const panelId = btn.getAttribute('aria-controls');
+      const panel = panelId ? document.getElementById(panelId) : null;
+      if (!panel) return;
+      const isOpen = !panel.hidden;
+      panel.hidden = isOpen;
+      btn.setAttribute('aria-expanded', String(!isOpen));
+    });
+  });
+
+  // C) Copiar al portapapeles — texto directo (DOI)
+  document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy ?? '';
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.classList.add('is-copied');
+        setTimeout(() => btn.classList.remove('is-copied'), 1500);
+      } catch (e) {
+        console.error('Copy failed', e);
+      }
+    });
+  });
+
+  // C) Copiar al portapapeles — contenido de un elemento (citas)
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-target]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const targetId = btn.dataset.copyTarget;
+      const target = targetId ? document.getElementById(targetId) : null;
+      if (!target) return;
+      try {
+        await navigator.clipboard.writeText((target.textContent ?? '').trim());
+        const original = btn.textContent;
+        btn.textContent = 'Copiado';
+        btn.classList.add('is-copied');
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('is-copied');
+        }, 1500);
+      } catch (e) {
+        console.error('Copy failed', e);
+      }
+    });
+  });
+</script>
+
+<style>
+  /* ── Página Recursos (Fase 6) ── usa tokens de tokens.css ── */
+  .resources-page {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  /* Header de página */
+  .page-header { margin-bottom: 3rem; max-width: 42rem; }
+  .page-header .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+  }
+  .page-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 36rem;
+  }
+
+  /* Toolbar */
+  .resources-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--color-border);
+    flex-wrap: wrap;
+  }
+  .filter-chips { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-soft);
+    background: transparent;
+    border: 1px solid var(--color-border);
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+  }
+  .filter-chip:hover { border-color: var(--color-border-strong); color: var(--color-ink); }
+  .filter-chip.is-active { background: var(--color-ink); color: var(--color-bg); border-color: var(--color-ink); }
+  .filter-chip-count {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    opacity: 0.7;
+    padding: 0.1rem 0.4rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 99px;
+  }
+  .filter-chip:not(.is-active) .filter-chip-count { background: var(--color-surface-soft); color: var(--color-ink-muted); }
+  .resources-meta {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    letter-spacing: 0.04em;
+  }
+
+  /* Lista */
+  .resources-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 1rem; }
+
+  /* Card */
+  .resource-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    transition: border-color var(--transition-fast);
+  }
+  .resource-card[hidden] { display: none; }
+  .resource-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .resource-card-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-muted);
+    font-weight: var(--weight-regular);
+  }
+  .resource-card-icon { color: var(--color-warm); display: inline-flex; width: 16px; height: 16px; }
+  .resource-card-icon :global(svg) { width: 100%; height: 100%; }
+
+  .resource-card-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1rem;
+  }
+
+  .resource-card-doi {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    margin-bottom: 1.25rem;
+    background: var(--color-surface-soft);
+    padding: 0.4rem 0.75rem;
+    border-radius: var(--radius-sm);
+  }
+  .resource-card-doi-label {
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-muted);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .resource-card-doi code { background: transparent; padding: 0; font-family: var(--font-mono); }
+
+  .copy-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-ink-muted);
+    padding: 0.2rem;
+    display: inline-flex;
+    align-items: center;
+    border-radius: 4px;
+    transition: color var(--transition-fast), background var(--transition-fast);
+  }
+  .copy-btn:hover { color: var(--color-ink); background: var(--color-surface); }
+  .copy-btn.is-copied { color: var(--color-success); }
+
+  .resource-card-body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    margin-bottom: 1.5rem;
+    max-width: 56rem;
+  }
+
+  .resource-card-metadata {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem 2.5rem;
+    margin: 0 0 1.75rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .resource-card-metadata > div { display: flex; flex-direction: column; gap: 0.25rem; }
+  .resource-card-metadata dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+    margin: 0;
+  }
+  .resource-card-metadata dd {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    margin: 0;
+    font-weight: var(--weight-medium);
+  }
+
+  /* Acciones */
+  .resource-card-actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.25rem;
+    background: var(--color-accent);
+    color: white;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-sm);
+    text-decoration: none;
+    transition: background var(--transition-fast), transform var(--transition-fast);
+  }
+  .btn-primary:hover { background: var(--color-accent-hover); color: white; }
+  .btn-primary:active { transform: translateY(1px); }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+  }
+  .btn-secondary:hover { background: var(--color-surface-soft); border-color: var(--color-ink); }
+  .btn-secondary[aria-expanded="true"] { background: var(--color-surface-soft); border-color: var(--color-ink); }
+
+  .resource-card-feedback {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    margin-left: auto;
+    transition: color var(--transition-fast);
+  }
+  .resource-card-feedback:hover { color: var(--color-ink); text-decoration: underline; }
+
+  /* Pill de estado */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    padding: 0.35rem 0.7rem 0.35rem 0.6rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+  .status-pill.status-active { background: var(--color-success-soft); color: var(--color-success); }
+  .status-pill.status-upcoming { background: var(--color-warm-soft); color: var(--color-warm-deep); }
+
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; position: relative; }
+  .status-active .status-dot { background: var(--color-success); }
+  .status-upcoming .status-dot { background: var(--color-warm); }
+  .status-active .status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: var(--color-success);
+    opacity: 0.4;
+    animation: pulse 2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.6); opacity: 0.4; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-active .status-dot::after { animation: none; }
+  }
+
+  /* Panel de citas */
+  .cite-panel {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .cite-panel[hidden] { display: none; }
+  .cite-format { background: var(--color-surface-soft); border-radius: var(--radius-md); overflow: hidden; }
+  .cite-format-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 1rem;
+    background: var(--color-bg);
+    border-bottom: 1px solid var(--color-border);
+  }
+  .cite-format-name {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-muted);
+    font-weight: var(--weight-medium);
+  }
+  .copy-btn-large {
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
+  }
+  .copy-btn-large:hover { background: var(--color-ink); color: var(--color-bg); border-color: var(--color-ink); }
+  .copy-btn-large.is-copied { background: var(--color-success); color: white; border-color: var(--color-success); }
+  .cite-format-text {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    color: var(--color-ink);
+    padding: 1rem;
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+
+  /* Estado vacío */
+  .resources-empty {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--color-ink-muted);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+  }
+  .resources-empty[hidden] { display: none; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .resource-card { padding: 1.5rem 1.25rem; }
+    .resource-card-actions { flex-direction: column; align-items: stretch; }
+    .resource-card-feedback { margin-left: 0; text-align: center; padding-top: 0.5rem; }
+    .resources-toolbar { flex-direction: column; align-items: flex-start; }
+    .resource-card-metadata { gap: 1rem; }
+  }
+</style>
