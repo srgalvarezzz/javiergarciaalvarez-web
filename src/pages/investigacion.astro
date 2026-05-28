@@ -1,5 +1,50 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import metricsFallback from '../data/metrics.json';
+
+// Métricas de Google Scholar — se intentan leer en tiempo de build.
+// Si Scholar bloquea la petición o cambia el HTML, se usan los últimos
+// valores conocidos de src/data/metrics.json (respaldo).
+const SCHOLAR_PROFILE = 'https://scholar.google.com/citations?hl=es&user=mYf-JyQAAAAJ&pagesize=100';
+
+async function getMetrics() {
+  try {
+    const res = await fetch(SCHOLAR_PROFILE, {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'Accept-Language': 'es-ES,es;q=0.9',
+      },
+      signal: AbortSignal.timeout(8000),
+    });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const html = await res.text();
+
+    // Tabla de estadísticas: columna "Todo" en el orden Citas, Índice h, Índice i10.
+    const stats = [...html.matchAll(/<td class="gsc_rsb_std">(\d[\d.,]*)<\/td>/g)].map((m) =>
+      m[1].replace(/[.,]/g, ''),
+    );
+    const citas = stats[0];
+    const hIndex = stats[2];
+
+    // Nº de publicaciones = filas de artículos listadas.
+    const pubRows = html.match(/class="gsc_a_tr"/g);
+    const publicaciones = pubRows ? String(pubRows.length) : null;
+
+    if (!citas || !hIndex) throw new Error('No se pudo parsear el perfil');
+
+    return {
+      citas,
+      hIndex,
+      publicaciones: publicaciones ?? metricsFallback.publicaciones,
+      updated: new Date().toISOString().slice(0, 10),
+    };
+  } catch {
+    return metricsFallback;
+  }
+}
+
+const metrics = await getMetrics();
 ---
 
 <BaseLayout
@@ -115,9 +160,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Métricas</h2>
       <div class="grid grid-cols-3 gap-4">
         {([
-          { label: 'Citas', value: '8' },
-          { label: 'Índice h', value: '1' },
-          { label: 'Publicaciones', value: '2' },
+          { label: 'Citas', value: metrics.citas },
+          { label: 'Índice h', value: metrics.hIndex },
+          { label: 'Publicaciones', value: metrics.publicaciones },
         ]).map(({ label, value }) => (
           <div class="rounded-2xl border border-slate-200 p-6 text-center">
             <p class="text-3xl font-heading font-semibold text-brand-700">{value}</p>
@@ -126,7 +171,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         ))}
       </div>
       <p class="text-sm text-slate-500">
-        Fuente: <a href="https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=es" target="_blank" rel="noopener" class="text-brand-700 hover:underline">Google Scholar</a> · actualizado en mayo de 2026.
+        Fuente: <a href="https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=es" target="_blank" rel="noopener" class="text-brand-700 hover:underline">Google Scholar</a> · actualizado el {metrics.updated}.
       </p>
     </section>
 
