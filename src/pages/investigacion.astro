@@ -27,16 +27,13 @@ async function getMetrics() {
     const citas = stats[0];
     const hIndex = stats[2];
 
-    // Nº de publicaciones = filas de artículos listadas.
-    const pubRows = html.match(/class="gsc_a_tr"/g);
-    const publicaciones = pubRows ? String(pubRows.length) : null;
-
     if (!citas || !hIndex) throw new Error('No se pudo parsear el perfil');
 
     return {
       citas,
       hIndex,
-      publicaciones: publicaciones ?? metricsFallback.publicaciones,
+      // Nº de publicaciones se fija a mano: Scholar mezcla artículos y datasets.
+      publicaciones: metricsFallback.publicaciones,
       updated: new Date().toISOString().slice(0, 10),
     };
   } catch {
