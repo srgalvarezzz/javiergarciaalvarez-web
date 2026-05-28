@@ -147,6 +147,52 @@ code, pre, .mono { font-family: var(--font-mono); }
   color: var(--color-accent-deep);
 }
 
+/* ============ MICROINTERACCIONES GLOBALES (Fase 7) ============ */
+
+html { scroll-behavior: smooth; }
+
+a, button {
+  transition: color var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+}
+
+/* Hover sutil en cards: solo el borde, sin elevar ni sombra */
+.resource-card { transition: border-color var(--transition-base); }
+.resource-card:hover { border-color: var(--color-border-strong); }
+
+.research-card { transition: border-color var(--transition-base); }
+.research-card:hover {
+  /* Conserva la pestaña terracota de la izquierda */
+  border-top-color: var(--color-border-strong);
+  border-right-color: var(--color-border-strong);
+  border-bottom-color: var(--color-border-strong);
+}
+
+/* ============ FOCUS POR CONTEXTO (Fase 7) ============ */
+
+/* En botones primarios, el foco va dentro para no romper la silueta */
+.btn-primary:focus-visible {
+  outline: 2px solid var(--color-bg);
+  outline-offset: -4px;
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+/* Logo del header: sin border-radius extra */
+.site-logo:focus-visible {
+  outline-offset: 4px;
+  border-radius: 2px;
+}
+
+/* Filter chip activo (fondo negro): invertir el color del foco */
+.filter-chip.is-active:focus-visible {
+  outline-color: var(--color-bg);
+  outline-offset: -4px;
+  box-shadow: 0 0 0 4px var(--color-accent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
 /*
 USO DE COLOR — reglas del sistema
 
