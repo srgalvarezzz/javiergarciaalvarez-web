@@ -9,66 +9,30 @@ import Icon from '../components/Icon.astro';
 >
 
   <!-- ── Hero ─────────────────────────────────────────────────────── -->
-  <section class="max-w-5xl mx-auto px-6 pt-20 pb-16">
-    <div class="flex flex-col md:flex-row items-center gap-14">
-
-      <!-- Copy -->
-      <div class="flex-1 space-y-6 order-2 md:order-1">
-        <p class="text-sm font-medium text-brand-600 tracking-widest uppercase">
-          Doctorando FPI · Universidad de Extremadura
-        </p>
-
-        <h1 class="text-4xl md:text-5xl font-heading font-semibold text-slate-900 leading-tight">
-          Investigando el aprendizaje<br />
-          en un <span class="text-brand-700">mundo tecnológico</span>
-        </h1>
-
-        <p class="text-lg text-slate-500 max-w-lg leading-relaxed">
-          Estudio cómo la <strong class="font-medium text-slate-700">tecnología educativa</strong> puede transformar experiencias de aprendizaje.
-        </p>
-
-        <!-- CTAs -->
-        <div class="flex flex-wrap items-center gap-3 pt-1">
-          <a href="/investigacion" class="px-5 py-2.5 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors shadow-sm">
-            Mi investigación
-          </a>
-          <a href="/sobre-mi" class="px-5 py-2.5 border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:border-brand-300 hover:text-brand-700 transition-colors">
-            Sobre mí →
-          </a>
-        </div>
+  <section class="hero">
+    <div class="hero-content">
+      <h1 class="hero-title">
+        Investigando el aprendizaje en un <span class="hero-title-mark">mundo tecnológico</span>
+      </h1>
+      <p class="hero-subtitle">
+        Diseño y evalúo experiencias de aprendizaje basado en juegos en la universidad. Doctorando FPI en la Universidad de Extremadura.
+      </p>
+      <div class="hero-actions">
+        <a href="/investigacion" class="btn-primary">Mi investigación</a>
+        <a href="/sobre-mi" class="link-arrow">
+          Sobre mí
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
-
-      <!-- Avatar -->
-      <div class="order-1 md:order-2 flex-shrink-0">
-        <input type="checkbox" id="avatar-zoom" class="peer hidden" />
-
-        <!-- Foto (clic para ampliar) -->
-        <label
-          for="avatar-zoom"
-          class="block w-52 h-52 md:w-60 md:h-60 rounded-full overflow-hidden ring-4 ring-brand-100 shadow-lg cursor-zoom-in transition-transform duration-200 hover:scale-[1.03]"
-        >
-          <img
-            src="/avatar.jpg"
-            alt="Javier García-Álvarez"
-            class="w-full h-full object-cover"
-            style="object-position: center 25%;"
-            loading="eager"
-          />
-        </label>
-
-        <!-- Lightbox (clic fuera para cerrar) -->
-        <label
-          for="avatar-zoom"
-          class="hidden peer-checked:flex fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm items-center justify-center p-6 cursor-zoom-out"
-        >
-          <img
-            src="/avatar.jpg"
-            alt="Javier García-Álvarez"
-            class="max-h-[85vh] max-w-[90vw] rounded-2xl shadow-2xl"
-          />
-        </label>
-      </div>
-
+    </div>
+    <div class="hero-photo">
+      <img
+        src="/avatar.jpg"
+        alt="Javier García-Álvarez"
+        width="480"
+        height="480"
+        loading="eager"
+      />
     </div>
   </section>
 
@@ -126,3 +90,131 @@ import Icon from '../components/Icon.astro';
   </section>
 
 </BaseLayout>
+
+<style>
+  /* ── Hero (Fase 2) ── usa los tokens definidos en tokens.css ── */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  .hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-title-mark {
+    position: relative;
+    display: inline-block;
+  }
+
+  .hero-title-mark::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.08em;
+    height: 0.18em;
+    background: var(--color-warm);
+    z-index: -1;
+    border-radius: 2px;
+  }
+
+  .hero-subtitle {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 32rem;
+    margin-bottom: 2.5rem;
+    font-weight: 400;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent);
+    color: white;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-base);
+    transition: background var(--transition-fast), transform var(--transition-fast);
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--color-accent-hover);
+    color: white;
+  }
+
+  .btn-primary:active {
+    transform: translateY(1px);
+  }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-base);
+    text-decoration: none;
+    transition: gap var(--transition-base), color var(--transition-fast);
+  }
+
+  .link-arrow:hover {
+    color: var(--color-accent);
+    gap: 0.7rem;
+  }
+
+  .link-arrow span {
+    transition: transform var(--transition-base);
+  }
+
+  .link-arrow:hover span {
+    transform: translateX(2px);
+  }
+
+  .hero-photo {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface-soft);
+  }
+
+  .hero-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    display: block;
+  }
+</style>
