@@ -13,7 +13,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Contacto</p>
       <h1 class="text-4xl font-heading font-semibold text-slate-900">Hablemos</h1>
       <p class="text-lg text-slate-600 leading-relaxed">
-        Estoy disponible para colaboraciones de investigación, consultas sobre GBL o tecnología educativa, charlas y ponencias, o simplemente para intercambiar perspectivas sobre educación.
+        Estoy disponible para colaboraciones de investigación o simplemente para intercambiar perspectivas sobre educación.
       </p>
     </section>
 
@@ -26,12 +26,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <h2 class="text-xl font-heading font-semibold text-slate-900">Canales</h2>
         <div class="space-y-4">
           {[
-            { icon: '✉️', label: 'Email institucional', value: 'jgarcia@unex.es', href: 'mailto:jgarcia@unex.es' },
-            { icon: '🐦', label: 'Twitter / X', value: '@javierga_edu', href: '#' },
-            { icon: '💼', label: 'LinkedIn', value: 'Javier García-Álvarez', href: '#' },
+            { icon: '✉️', label: 'Email UEx', value: 'alvarez@unex.es', href: 'https://mail.google.com/mail/?view=cm&fs=1&to=alvarez@unex.es' },
+            { icon: '🐦', label: 'Twitter / X', value: '@sralvarezzz_', href: 'https://x.com/sralvarezzz_' },
+            { icon: '💼', label: 'LinkedIn', value: 'Javier García Álvarez', href: 'https://www.linkedin.com/in/javier-garcía-álvarez-807854201/' },
           ].map(({ icon, label, value, href }) => (
             <a
               href={href}
+              target="_blank"
+              rel="noopener noreferrer"
               class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-brand-200 hover:bg-brand-50/50 transition-all group"
             >
               <span class="text-xl">{icon}</span>
@@ -49,9 +51,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <h2 class="text-xl font-heading font-semibold text-slate-900">Afiliación</h2>
         <div class="space-y-3 text-sm text-slate-600">
           <p><strong class="text-slate-800">Universidad de Extremadura</strong></p>
-          <p>Grupo de investigación: <em>por confirmar</em></p>
-          <p>Departamento: <em>por confirmar</em></p>
-          <p class="text-slate-400 text-xs pt-2">Actualmente en Cáceres o Badajoz, España.</p>
+          <p>Grupo de investigación: Nodo Educativo</p>
+          <p>Departamento: Ciencias de la Educación</p>
+          <p class="text-slate-400 text-xs pt-2">Actualmente en Cáceres, Extremadura, España.</p>
         </div>
       </section>
 
