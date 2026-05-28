@@ -40,7 +40,13 @@ import Icon from '../components/Icon.astro';
 
       <!-- Avatar -->
       <div class="order-1 md:order-2 flex-shrink-0">
-        <div class="relative w-44 h-44 md:w-52 md:h-52 rounded-full overflow-hidden ring-4 ring-brand-100 shadow-lg">
+        <input type="checkbox" id="avatar-zoom" class="peer hidden" />
+
+        <!-- Foto (clic para ampliar) -->
+        <label
+          for="avatar-zoom"
+          class="block w-52 h-52 md:w-60 md:h-60 rounded-full overflow-hidden ring-4 ring-brand-100 shadow-lg cursor-zoom-in transition-transform duration-200 hover:scale-[1.03]"
+        >
           <img
             src="/avatar.png"
             alt="Javier García-Álvarez"
@@ -48,7 +54,19 @@ import Icon from '../components/Icon.astro';
             style="object-position: center 25%;"
             loading="eager"
           />
-        </div>
+        </label>
+
+        <!-- Lightbox (clic fuera para cerrar) -->
+        <label
+          for="avatar-zoom"
+          class="hidden peer-checked:flex fixed inset-0 z-[60] bg-slate-900/80 backdrop-blur-sm items-center justify-center p-6 cursor-zoom-out"
+        >
+          <img
+            src="/avatar.png"
+            alt="Javier García-Álvarez"
+            class="max-h-[85vh] max-w-[90vw] rounded-2xl shadow-2xl"
+          />
+        </label>
       </div>
 
     </div>
