@@ -9,15 +9,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <div class="max-w-3xl mx-auto px-6 py-16 space-y-16">
 
     <!-- Header -->
-    <section class="space-y-4">
+    <section>
       <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Investigación</p>
-      <h1 class="text-4xl font-heading font-semibold text-slate-900">Proyectos y publicaciones</h1>
-      <p class="text-lg text-slate-600 leading-relaxed">
-        Mi investigación doctoral explora el impacto del Game-Based Learning en contextos de educación superior, con especial atención a la motivación, la transferencia del aprendizaje y el diseño instruccional.
-      </p>
     </section>
-
-    <div class="border-t border-zinc-200" />
 
     <!-- RSL en curso — TEASER -->
     <section class="space-y-6">
@@ -28,19 +22,59 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <div class="rounded-2xl border border-brand-100 bg-brand-50/50 p-8 space-y-4">
         <h3 class="text-xl font-heading font-semibold text-brand-900">
-          Revisión Sistemática de Literatura sobre GBL en Educación Superior
+          Revisión Sistemática de Literatura sobre el uso de Inteligencia Artificial para el desarrollo del pensamiento crítico en Educación Superior
         </h3>
         <p class="text-slate-700 leading-relaxed">
-          Esta RSL mapea el estado de la evidencia empírica sobre el Aprendizaje Basado en Juegos en entornos universitarios publicada en la última década. El objetivo es identificar patrones de diseño efectivos, variables moderadoras y lagunas de conocimiento que orienten futuras investigaciones.
+          Esta RSL examina el estado de la evidencia empírica sobre el uso de herramientas y metodologías basadas en Inteligencia Artificial para el desarrollo del pensamiento crítico en entornos universitarios. El objetivo es identificar enfoques pedagógicos efectivos, condiciones de implementación y lagunas de conocimiento que orienten el diseño educativo con IA.
         </p>
         <div class="flex flex-wrap gap-3 pt-2">
-          {['Game-Based Learning', 'Educación Superior', 'RSL / Systematic Review', 'Motivación', 'Diseño instruccional'].map(tag => (
+          {['Inteligencia Artificial', 'Pensamiento Crítico', 'Educación Superior', 'RSL / Systematic Review', 'Diseño instruccional', 'IA generativa'].map(tag => (
             <span class="px-2.5 py-1 rounded-md bg-brand-100 text-brand-700 text-xs font-medium">{tag}</span>
           ))}
         </div>
         <p class="text-sm text-slate-500 pt-2">
-          Resultados esperados: 2025–2026. Más detalles disponibles próximamente.
+          Resultados esperados: 2025 Q4 – 2026 Q1.
         </p>
+      </div>
+    </section>
+
+    <div class="border-t border-zinc-200" />
+
+    <!-- Otros proyectos -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Otros proyectos</h2>
+
+      <div class="rounded-2xl border border-slate-200 p-8 space-y-4">
+        <div class="flex items-start justify-between gap-3 flex-wrap">
+          <h3 class="text-xl font-heading font-semibold text-slate-900">
+            La Mecánica de Juego como Indicador del Aprendizaje: una Revisión Sistemática de la Evaluación Integrada en los Juegos Educativos
+          </h3>
+          <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-semibold uppercase tracking-wide whitespace-nowrap">Pendiente de publicar</span>
+        </div>
+        <p class="text-slate-700 leading-relaxed">
+          Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.
+        </p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          {['Mecánicas de juego', 'Evaluación integrada', 'Game-Based Learning', 'Educación Superior', 'Stealth Assessment', 'RSL / Systematic Review'].map(tag => (
+            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">{tag}</span>
+          ))}
+        </div>
+        <p class="text-sm text-slate-500 pt-2">Resultados esperados: 2025 Q3.</p>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 p-8 space-y-4">
+        <h3 class="text-xl font-heading font-semibold text-slate-900">
+          Ontología de mecánicas de juego
+        </h3>
+        <p class="text-slate-700 leading-relaxed">
+          Desarrollo de una ontología formal que clasifica y estructura las mecánicas de juego como unidades de análisis en el diseño de juegos educativos. El objetivo es proporcionar un marco conceptual compartido que facilite la comparación entre estudios, el diseño fundamentado y la operacionalización de mecánicas en contextos de investigación.
+        </p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          {['Ontología', 'Mecánicas de juego', 'Game Design', 'Game-Based Learning', 'Marco conceptual', 'Taxonomía'].map(tag => (
+            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">{tag}</span>
+          ))}
+        </div>
+        <p class="text-sm text-slate-500 pt-2">Resultados esperados: 2025 Q4 – 2026 Q1.</p>
       </div>
     </section>
 
@@ -49,20 +83,50 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <!-- Publicaciones -->
     <section class="space-y-6">
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Publicaciones</h2>
-      <p class="text-slate-500 text-sm italic">
-        Listado de publicaciones disponible próximamente. Mientras tanto, consulta mi perfil en
-        <a href="#" class="text-brand-700 hover:underline">Google Scholar</a> o
-        <a href="#" class="text-brand-700 hover:underline">ORCID</a>.
-      </p>
+      <article class="rounded-2xl border border-slate-200 p-6 space-y-2">
+        <h3 class="font-heading font-semibold text-slate-900 leading-snug">
+          <a
+            href="https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C"
+            target="_blank"
+            rel="noopener"
+            class="hover:text-brand-700 transition-colors"
+          >
+            Minecraft as a Pedagogical Tool: A Systematic Literature Review (2014–2024)
+          </a>
+        </h3>
+        <p class="text-sm text-slate-600">
+          García-Álvarez, J. &amp; Acevedo-Borrega, J. (2025). <em>Games and Culture</em>. SAGE.
+        </p>
+        <a
+          href="https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C"
+          target="_blank"
+          rel="noopener"
+          class="inline-block text-sm text-brand-700 hover:underline"
+        >
+          Ver en Google Scholar ↗
+        </a>
+      </article>
     </section>
 
     <div class="border-t border-zinc-200" />
 
-    <!-- Líneas abiertas -->
-    <section class="space-y-4">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Colaboración</h2>
-      <p class="text-slate-600 leading-relaxed">
-        Estoy abierto a colaboraciones relacionadas con GBL, tecnología educativa y metodologías de investigación cualitativa y mixta. Si tienes un proyecto afín, <a href="/contacto" class="text-brand-700 hover:underline font-medium">escríbeme</a>.
+    <!-- Métricas -->
+    <section class="space-y-6">
+      <h2 class="text-2xl font-heading font-semibold text-slate-900">Métricas</h2>
+      <div class="grid grid-cols-3 gap-4">
+        {([
+          { label: 'Citas', value: '8' },
+          { label: 'Índice h', value: '1' },
+          { label: 'Publicaciones', value: '2' },
+        ]).map(({ label, value }) => (
+          <div class="rounded-2xl border border-slate-200 p-6 text-center">
+            <p class="text-3xl font-heading font-semibold text-brand-700">{value}</p>
+            <p class="mt-1 text-sm text-slate-500">{label}</p>
+          </div>
+        ))}
+      </div>
+      <p class="text-sm text-slate-500">
+        Fuente: <a href="https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=es" target="_blank" rel="noopener" class="text-brand-700 hover:underline">Google Scholar</a> · actualizado en mayo de 2026.
       </p>
     </section>
 
