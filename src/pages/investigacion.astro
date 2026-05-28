@@ -42,135 +42,489 @@ async function getMetrics() {
 }
 
 const metrics = await getMetrics();
+
+const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C';
 ---
 
 <BaseLayout
   title="Investigación"
   description="Proyectos de investigación de Javier García-Álvarez sobre Aprendizaje Basado en Juegos y tecnología educativa. Revisión Sistemática de Literatura en curso."
 >
-  <div class="max-w-3xl mx-auto px-6 py-16 space-y-16">
+  <div class="research-page">
 
-    <!-- Header -->
-    <section>
-      <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Investigación</p>
-    </section>
+    <header class="page-header">
+      <p class="eyebrow">02 / Investigación</p>
+      <h1 class="page-title">Líneas de trabajo en curso</h1>
+      <p class="page-lead">
+        Lo que estoy investigando ahora mismo y los proyectos que mantengo activos en paralelo.
+      </p>
+    </header>
 
-    <!-- RSL en curso — TEASER -->
-    <section class="space-y-6">
-      <div class="flex items-center gap-3">
-        <h2 class="text-2xl font-heading font-semibold text-slate-900">Proyecto principal</h2>
-        <span class="px-2.5 py-0.5 rounded-full bg-accent-400/15 text-accent-500 text-xs font-semibold uppercase tracking-wide">En curso</span>
+    <!-- Proyecto principal -->
+    <section class="main-project">
+      <div class="section-label">
+        <span class="section-label-number">Proyecto principal</span>
+        <span class="status-pill status-active">
+          <span class="status-dot" aria-hidden="true"></span>
+          En curso
+        </span>
       </div>
 
-      <div class="rounded-2xl border border-brand-100 bg-brand-50/50 p-8 space-y-4">
-        <h3 class="text-xl font-heading font-semibold text-brand-900">
+      <article class="main-project-card">
+        <h2 class="main-project-title">
           Revisión Sistemática de Literatura sobre el uso de Inteligencia Artificial para el desarrollo del pensamiento crítico en Educación Superior
-        </h3>
-        <p class="text-slate-700 leading-relaxed">
+        </h2>
+        <p class="main-project-body">
           Esta RSL examina el estado de la evidencia empírica sobre el uso de herramientas y metodologías basadas en Inteligencia Artificial para el desarrollo del pensamiento crítico en entornos universitarios. El objetivo es identificar enfoques pedagógicos efectivos, condiciones de implementación y lagunas de conocimiento que orienten el diseño educativo con IA.
         </p>
-        <div class="flex flex-wrap gap-3 pt-2">
+        <ul class="main-project-tags" aria-label="Temas del proyecto">
           {['Inteligencia Artificial', 'Pensamiento Crítico', 'Educación Superior', 'RSL / Systematic Review', 'Diseño instruccional', 'IA generativa'].map(tag => (
-            <span class="px-2.5 py-1 rounded-md bg-brand-100 text-brand-700 text-xs font-medium">{tag}</span>
+            <li>{tag}</li>
           ))}
-        </div>
-        <p class="text-sm text-slate-500 pt-2">
-          Resultados esperados: 2025 Q4 – 2026 Q1.
-        </p>
-      </div>
+        </ul>
+      </article>
     </section>
-
-    <div class="border-t border-zinc-200" />
 
     <!-- Otros proyectos -->
-    <section class="space-y-6">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Otros proyectos</h2>
+    <section class="other-projects">
+      <h2 class="subsection-title">Otros proyectos</h2>
+      <ul class="other-projects-list">
 
-      <div class="rounded-2xl border border-slate-200 p-8 space-y-4">
-        <div class="flex items-start justify-between gap-3 flex-wrap">
-          <h3 class="text-xl font-heading font-semibold text-slate-900">
-            La Mecánica de Juego como Indicador del Aprendizaje: una Revisión Sistemática de la Evaluación Integrada en los Juegos Educativos
-          </h3>
-          <span class="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-500 text-xs font-semibold uppercase tracking-wide whitespace-nowrap">Pendiente de publicar</span>
-        </div>
-        <p class="text-slate-700 leading-relaxed">
-          Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.
-        </p>
-        <div class="flex flex-wrap gap-3 pt-2">
-          {['Mecánicas de juego', 'Evaluación integrada', 'Game-Based Learning', 'Educación Superior', 'Stealth Assessment', 'RSL / Systematic Review'].map(tag => (
-            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">{tag}</span>
-          ))}
-        </div>
-        <p class="text-sm text-slate-500 pt-2">Resultados esperados: 2025 Q3.</p>
-      </div>
+        <li class="other-project">
+          <div class="other-project-main">
+            <h3 class="other-project-title">
+              La Mecánica de Juego como Indicador del Aprendizaje: una Revisión Sistemática de la Evaluación Integrada en los Juegos Educativos
+            </h3>
+            <p class="other-project-body">
+              Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.
+            </p>
+          </div>
+          <div class="other-project-meta">
+            <span class="other-project-status status-completed">
+              <span class="status-dot" aria-hidden="true"></span>
+              Pendiente de publicar
+            </span>
+            <ul class="other-project-tags">
+              {['Mecánicas de juego', 'Evaluación integrada', 'Game-Based Learning', 'Educación Superior', 'Stealth Assessment', 'RSL / Systematic Review'].map(tag => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
 
-      <div class="rounded-2xl border border-slate-200 p-8 space-y-4">
-        <h3 class="text-xl font-heading font-semibold text-slate-900">
-          Ontología de mecánicas de juego
-        </h3>
-        <p class="text-slate-700 leading-relaxed">
-          Desarrollo de una ontología formal que clasifica y estructura las mecánicas de juego como unidades de análisis en el diseño de juegos educativos. El objetivo es proporcionar un marco conceptual compartido que facilite la comparación entre estudios, el diseño fundamentado y la operacionalización de mecánicas en contextos de investigación.
-        </p>
-        <div class="flex flex-wrap gap-3 pt-2">
-          {['Ontología', 'Mecánicas de juego', 'Game Design', 'Game-Based Learning', 'Marco conceptual', 'Taxonomía'].map(tag => (
-            <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-medium">{tag}</span>
-          ))}
-        </div>
-        <p class="text-sm text-slate-500 pt-2">Resultados esperados: 2025 Q4 – 2026 Q1.</p>
-      </div>
+        <li class="other-project">
+          <div class="other-project-main">
+            <h3 class="other-project-title">
+              Ontología de mecánicas de juego
+            </h3>
+            <p class="other-project-body">
+              Desarrollo de una ontología formal que clasifica y estructura las mecánicas de juego como unidades de análisis en el diseño de juegos educativos. El objetivo es proporcionar un marco conceptual compartido que facilite la comparación entre estudios, el diseño fundamentado y la operacionalización de mecánicas en contextos de investigación.
+            </p>
+          </div>
+          <div class="other-project-meta">
+            <span class="other-project-status status-active">
+              <span class="status-dot" aria-hidden="true"></span>
+              En curso
+            </span>
+            <ul class="other-project-tags">
+              {['Ontología', 'Mecánicas de juego', 'Game Design', 'Game-Based Learning', 'Marco conceptual', 'Taxonomía'].map(tag => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+          </div>
+        </li>
+
+      </ul>
     </section>
 
-    <div class="border-t border-zinc-200" />
-
     <!-- Publicaciones -->
-    <section class="space-y-6">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Publicaciones</h2>
-      <article class="rounded-2xl border border-slate-200 p-6 space-y-2">
-        <h3 class="font-heading font-semibold text-slate-900 leading-snug">
-          <a
-            href="https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C"
-            target="_blank"
-            rel="noopener"
-            class="hover:text-brand-700 transition-colors"
-          >
+    <section class="publications">
+      <h2 class="subsection-title">Publicaciones</h2>
+      <article class="publication">
+        <h3 class="publication-title">
+          <a href={SCHOLAR_PUB} target="_blank" rel="noopener">
             Minecraft as a Pedagogical Tool: A Systematic Literature Review (2014–2024)
           </a>
         </h3>
-        <p class="text-sm text-slate-600">
+        <p class="publication-meta">
           García-Álvarez, J. &amp; Acevedo-Borrega, J. (2025). <em>Games and Culture</em>. SAGE.
         </p>
-        <a
-          href="https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C"
-          target="_blank"
-          rel="noopener"
-          class="inline-block text-sm text-brand-700 hover:underline"
-        >
-          Ver en Google Scholar ↗
+        <a class="publication-link" href={SCHOLAR_PUB} target="_blank" rel="noopener">
+          Ver en Google Scholar <span aria-hidden="true">↗</span>
         </a>
       </article>
     </section>
 
-    <div class="border-t border-zinc-200" />
-
     <!-- Métricas -->
-    <section class="space-y-6">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Métricas</h2>
-      <div class="grid grid-cols-3 gap-4">
+    <section class="metrics">
+      <h2 class="subsection-title">Métricas</h2>
+      <div class="metrics-grid">
         {([
           { label: 'Citas', value: metrics.citas },
           { label: 'Índice h', value: metrics.hIndex },
           { label: 'Publicaciones', value: metrics.publicaciones },
         ]).map(({ label, value }) => (
-          <div class="rounded-2xl border border-slate-200 p-6 text-center">
-            <p class="text-3xl font-heading font-semibold text-brand-700">{value}</p>
-            <p class="mt-1 text-sm text-slate-500">{label}</p>
+          <div class="metric">
+            <p class="metric-value">{value}</p>
+            <p class="metric-label">{label}</p>
           </div>
         ))}
       </div>
-      <p class="text-sm text-slate-500">
-        Fuente: <a href="https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=es" target="_blank" rel="noopener" class="text-brand-700 hover:underline">Google Scholar</a> · actualizado el {metrics.updated}.
+      <p class="metrics-source">
+        Fuente: <a href="https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=es" target="_blank" rel="noopener">Google Scholar</a> · actualizado el {metrics.updated}.
       </p>
     </section>
 
   </div>
 </BaseLayout>
+
+<style>
+  /* ── Página Investigación (Fase 5) ── usa tokens de tokens.css ── */
+  .research-page {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  /* Header de página */
+  .page-header {
+    margin-bottom: calc(var(--space-section) * 0.6);
+    max-width: 42rem;
+  }
+  .page-header .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+  }
+  .page-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 36rem;
+  }
+
+  /* Proyecto principal */
+  .main-project {
+    margin-bottom: calc(var(--space-section) * 0.8);
+  }
+  .section-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .section-label-number {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    font-weight: var(--weight-regular);
+  }
+
+  /* Pill de estado */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    padding: 0.35rem 0.7rem 0.35rem 0.6rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+  .status-pill.status-active { background: var(--color-success-soft); color: var(--color-success); }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-success);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .status-dot::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: var(--color-success);
+    opacity: 0.4;
+    animation: pulse 2s ease-out infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.6); opacity: 0.4; }
+    100% { transform: scale(1.8); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .status-dot::after { animation: none; }
+  }
+
+  /* Card del proyecto principal */
+  .main-project-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2.25rem;
+    position: relative;
+  }
+  .main-project-card::before {
+    content: '';
+    position: absolute;
+    left: -1px;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    width: 3px;
+    background: var(--color-warm);
+    border-radius: 2px;
+  }
+  .main-project-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+    padding-right: 2rem;
+  }
+  .main-project-body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-soft);
+    margin-bottom: 2rem;
+    max-width: 56rem;
+  }
+  .main-project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .main-project-tags li {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-soft);
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: transparent;
+  }
+
+  /* Otros proyectos — lista editorial */
+  .other-projects {
+    margin-top: calc(var(--space-section) * 0.6);
+  }
+  .subsection-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .other-projects-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .other-project {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 2.5rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--color-border);
+    align-items: start;
+  }
+  .other-project:last-child { border-bottom: none; }
+  .other-project-title {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 0.75rem;
+  }
+  .other-project-body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 42rem;
+  }
+  .other-project-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.75rem;
+    min-width: 12rem;
+  }
+  .other-project-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    padding: 0.3rem 0.6rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+  }
+  .other-project-status.status-active { background: var(--color-success-soft); color: var(--color-success); }
+  .other-project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    justify-content: flex-end;
+  }
+  .other-project-tags li {
+    font-family: var(--font-body);
+    font-size: 0.7rem;
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-muted);
+    padding: 0.15rem 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+
+  /* Estados alternativos (preparados) */
+  .status-pill.status-completed,
+  .other-project-status.status-completed {
+    background: var(--color-surface-soft);
+    color: var(--color-ink-soft);
+  }
+  .status-pill.status-completed .status-dot,
+  .other-project-status.status-completed .status-dot { background: var(--color-ink-muted); }
+  .status-pill.status-completed .status-dot::after,
+  .other-project-status.status-completed .status-dot::after { display: none; }
+
+  .status-pill.status-paused,
+  .other-project-status.status-paused {
+    background: #FBE9D9;
+    color: var(--color-warm-deep);
+  }
+  .status-pill.status-paused .status-dot,
+  .other-project-status.status-paused .status-dot { background: var(--color-warm); }
+  .status-pill.status-paused .status-dot::after,
+  .other-project-status.status-paused .status-dot::after { display: none; }
+
+  /* Publicaciones (adaptada al sistema, sin morado) */
+  .publications { margin-top: calc(var(--space-section) * 0.6); }
+  .publication-title {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    font-weight: var(--weight-semibold);
+    line-height: var(--leading-snug);
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+    margin-bottom: 0.4rem;
+  }
+  .publication-title a {
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .publication-title a:hover { color: var(--color-warm); }
+  .publication-meta {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    margin-bottom: 0.6rem;
+  }
+  .publication-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  .publication-link:hover { color: var(--color-ink); }
+
+  /* Métricas (adaptada al sistema, sin morado) */
+  .metrics { margin-top: calc(var(--space-section) * 0.6); }
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .metric {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.75rem 1rem;
+    text-align: center;
+  }
+  .metric-value {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+  }
+  .metric-label {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+    margin-top: 0.5rem;
+  }
+  .metrics-source {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink-muted);
+  }
+  .metrics-source a {
+    color: var(--color-ink-soft);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--transition-fast);
+  }
+  .metrics-source a:hover { color: var(--color-ink); }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .other-project {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    .other-project-meta {
+      align-items: flex-start;
+      min-width: 0;
+    }
+    .other-project-tags { justify-content: flex-start; }
+    .metrics-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
