@@ -11,7 +11,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <!-- Intro -->
     <section class="space-y-4">
       <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Sobre mí</p>
-      <h1 class="text-4xl font-heading font-semibold text-slate-900">Javier García-Álvarez</h1>
+      <h1 class="text-4xl font-heading font-semibold text-slate-900">Situación Laboral Actual</h1>
       <p class="text-lg text-slate-600 leading-relaxed">
         Soy doctorando FPI en el programa de Educación Tecnológica de la Universidad de Extremadura. Mi investigación explora tres líneas: el <strong class="font-medium text-slate-800">Aprendizaje Basado en Juegos</strong> y cómo sus mecánicas pueden servir como medio de evaluación del aprendizaje, y la <strong class="font-medium text-slate-800">Inteligencia Artificial</strong> aplicada a la educación, en el marco del proyecto DIDACT.IA, orientado a impulsar el pensamiento crítico mediado por IA.
       </p>
@@ -51,10 +51,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h2 class="text-2xl font-heading font-semibold text-slate-900">Intereses de investigación</h2>
       <ul class="space-y-2 text-slate-600">
         {[
-          'Aprendizaje Basado en Juegos (GBL) en educación superior',
-          'Diseño instruccional y experiencia de usuario en entornos digitales',
-          'Revisiones sistemáticas de literatura en tecnología educativa',
-          'Gamificación y engagement en el aprendizaje',
+          'Aprendizaje Basado en Juegos y Videojuegos',
+          'Learning Analytics y Game Mechanics',
+          'Minecraft Education',
+          'Uso ético de la Inteligencia Artificial en investigación',
         ].map(item => (
           <li class="flex items-start gap-3">
             <span class="mt-1.5 w-1.5 h-1.5 rounded-full bg-brand-500 flex-shrink-0"></span>
@@ -62,30 +62,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </li>
         ))}
       </ul>
-    </section>
-
-    <div class="border-t border-zinc-200" />
-
-    <!-- Perfiles académicos -->
-    <section class="space-y-4">
-      <h2 class="text-2xl font-heading font-semibold text-slate-900">Perfiles académicos</h2>
-      <div class="flex flex-wrap gap-3">
-        {[
-          { label: 'ORCID', href: 'https://orcid.org/0009-0002-2876-2683' },
-          { label: 'Google Scholar', href: 'https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=ca' },
-          { label: 'Twitter / X', href: 'https://x.com/sralvarezzz_' },
-          { label: 'LinkedIn', href: 'https://www.linkedin.com/in/javier-garcía-álvarez-807854201/' },
-        ].map(({ label, href }) => (
-          <a
-            href={href}
-            class="px-4 py-2 rounded-lg border border-slate-200 text-sm text-slate-600 hover:border-brand-300 hover:text-brand-700 transition-colors"
-            target="_blank"
-            rel="noopener"
-          >
-            {label} ↗
-          </a>
-        ))}
-      </div>
     </section>
 
   </div>
