@@ -1,0 +1,166 @@
+/* ============================================================
+   Sistema de diseño — Fase 1: tokens base
+   Adaptado al stack real (Astro + Tailwind v4). Estos tokens y
+   estilos base conviven con global.css. Las utilidades de Tailwind
+   (brand-*) siguen activas hasta que la Fase 2 migre los componentes.
+   ============================================================ */
+
+:root {
+  /* ============ COLOR ============ */
+
+  /* Paleta principal — morado (acento primario, acciones) */
+  --color-accent: #5046E4;
+  --color-accent-hover: #3F35C7;
+  --color-accent-soft: #EEEDFE;
+  --color-accent-deep: #3C3489;
+
+  /* Paleta secundaria — terracota (acentos editoriales, estados) */
+  --color-warm: #D86842;
+  --color-warm-hover: #B85432;
+  --color-warm-soft: #F5E3DA;
+  --color-warm-deep: #8C3F22;
+
+  /* Tinta — texto */
+  --color-ink: #0F0F1A;          /* texto principal, no negro puro */
+  --color-ink-soft: #4A4A5C;     /* texto secundario */
+  --color-ink-muted: #8B8B9E;    /* captions, eyebrows, metadata */
+
+  /* Superficies */
+  --color-bg: #FAFAF7;           /* fondo de página, con calidez sutil */
+  --color-surface: #FFFFFF;      /* tarjetas, contenedores */
+  --color-surface-soft: #F4F4EF; /* fondos secundarios, hover states */
+
+  /* Bordes */
+  --color-border: #E8E8EC;
+  --color-border-strong: #D0D0D8;
+
+  /* Semánticos */
+  --color-success: #4D8B2E;
+  --color-success-soft: #EAF3DE;
+  --color-danger: #C2362F;
+  --color-danger-soft: #FCEBEB;
+
+  /* ============ TIPOGRAFÍA ============ */
+
+  /* Familias */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+
+  /* Escala (ratio 1.25) */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.5rem;      /* 24px */
+  --text-2xl: 2rem;       /* 32px */
+  --text-3xl: 2.75rem;    /* 44px */
+  --text-4xl: 3.75rem;    /* 60px — solo h1 hero */
+
+  /* Pesos */
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Line heights */
+  --leading-tight: 1.1;     /* h1, h2 */
+  --leading-snug: 1.3;      /* h3, h4 */
+  --leading-normal: 1.6;    /* body */
+  --leading-relaxed: 1.75;  /* prosa larga */
+
+  /* ============ ESPACIADO ============ */
+
+  --space-stack: 1rem;                              /* entre elementos del mismo bloque */
+  --space-block: 2.5rem;                            /* entre bloques dentro de sección */
+  --space-section: clamp(4rem, 10vw, 8rem);         /* entre secciones grandes */
+
+  /* ============ RADIOS ============ */
+
+  --radius-sm: 6px;   /* tags, pills, badges */
+  --radius-md: 10px;  /* botones, inputs */
+  --radius-lg: 16px;  /* tarjetas */
+  --radius-xl: 24px;  /* contenedores grandes */
+
+  /* ============ OTROS ============ */
+
+  --max-content: 1100px;
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============ ESTILOS BASE GLOBALES ============ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  font-size: 16px;
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-bg);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-tight);
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+}
+
+h1 { font-size: var(--text-4xl); letter-spacing: -0.03em; }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+
+p { line-height: var(--leading-normal); color: var(--color-ink-soft); }
+
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover { color: var(--color-accent-hover); }
+
+code, pre, .mono { font-family: var(--font-mono); }
+
+*:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent-deep);
+}
+
+/*
+USO DE COLOR — reglas del sistema
+
+--color-accent (morado):
+  Acciones primarias. Botones principales, enlaces de texto,
+  estado activo de navegación. Es el color que dirige al usuario.
+
+--color-warm (terracota):
+  Acentos editoriales y estados temporales. Etiquetas tipo
+  "en curso", "activo", "nuevo". Highlights de información,
+  badges secundarios. NUNCA para acciones primarias —
+  ese rol es del morado.
+
+Regla de oro: en cualquier vista, el morado lidera y la terracota
+acompaña. Si un componente necesita los dos, el morado va en la
+acción principal y la terracota en el estado o etiqueta.
+*/
