@@ -1,9 +1,9 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
 
-const writings = defineCollection({
-  // API moderna de Astro (Content Layer). Lee markdown de src/content/writings/.
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/writings' }),
+const astillas = defineCollection({
+  // API moderna de Astro (Content Layer). Lee markdown de src/content/astillas/.
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/astillas' }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -14,4 +14,4 @@ const writings = defineCollection({
   }),
 });
 
-export const collections = { writings };
+export const collections = { astillas };

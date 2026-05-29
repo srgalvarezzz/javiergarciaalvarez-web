@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import VoiceMarker from '../components/VoiceMarker.astro';
 
-const allWritings = await getCollection('writings', ({ data }) => !data.draft);
+const allWritings = await getCollection('astillas', ({ data }) => !data.draft);
 const sortedWritings = allWritings.sort(
   (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
 );
@@ -11,12 +11,12 @@ const hasWritings = sortedWritings.length > 0;
 ---
 
 <BaseLayout
-  title="Writings"
+  title="Astillas"
   description="Notas, ensayos y reflexiones cortas sobre investigación, juego y aprendizaje."
 >
   <div class="writings-page">
     <header class="page-header">
-      <p class="eyebrow">04 / Writings</p>
+      <p class="eyebrow">04 / Astillas</p>
       <h1 class="page-title">Notas y ensayos</h1>
       <p class="page-lead">
         Reflexiones cortas que no encajan en un paper pero que merecen publicarse en algún sitio.
@@ -28,7 +28,7 @@ const hasWritings = sortedWritings.length > 0;
       <ul class="writings-list">
         {sortedWritings.map((writing) => (
           <li class="writing-item">
-            <a href={`/writings/${writing.id}`} class="writing-link">
+            <a href={`/astillas/${writing.id}`} class="writing-link">
               <time class="writing-date" datetime={writing.data.publishedAt.toISOString()}>
                 {writing.data.publishedAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
               </time>

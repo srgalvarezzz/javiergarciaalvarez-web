@@ -3,7 +3,7 @@ import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 export async function getStaticPaths() {
-  const writings = await getCollection('writings', ({ data }) => !data.draft);
+  const writings = await getCollection('astillas', ({ data }) => !data.draft);
   return writings.map((writing) => ({
     params: { slug: writing.id },
     props: { writing },
@@ -17,7 +17,7 @@ const { Content } = await render(writing);
 <BaseLayout title={writing.data.title} description={writing.data.description}>
   <article class="writing-article">
     <header class="writing-article-header">
-      <a href="/writings" class="writing-back-link">← Writings</a>
+      <a href="/astillas" class="writing-back-link">← Astillas</a>
       <p class="writing-article-date">
         <time datetime={writing.data.publishedAt.toISOString()}>
           {writing.data.publishedAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
