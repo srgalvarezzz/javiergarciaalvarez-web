@@ -1,72 +1,187 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const canales = [
+  { icon: '✉️', label: 'Email UEx', value: 'alvarez@unex.es', href: 'https://mail.google.com/mail/?view=cm&fs=1&to=alvarez@unex.es' },
+  { icon: '🐦', label: 'Twitter / X', value: '@sralvarezzz_', href: 'https://x.com/sralvarezzz_' },
+  { icon: '💼', label: 'LinkedIn', value: 'Javier García Álvarez', href: 'https://www.linkedin.com/in/javier-garcía-álvarez-807854201/' },
+];
 ---
 
 <BaseLayout
   title="Contacto"
-  description="Contacta con Javier García-Álvarez para colaboraciones académicas, consultas sobre investigación o simplemente charlar sobre educación y tecnología."
+  description="Contacta con Javier García-Álvarez para colaboraciones académicas, consultas sobre investigación o simplemente intercambiar perspectivas sobre educación."
 >
-  <div class="max-w-3xl mx-auto px-6 py-16 space-y-16">
+  <div class="contact-page">
 
-    <!-- Header -->
-    <section class="space-y-4">
-      <p class="text-sm font-medium text-brand-600 tracking-wide uppercase">Contacto</p>
-      <h1 class="text-4xl font-heading font-semibold text-slate-900">Hablemos</h1>
-      <p class="text-lg text-slate-600 leading-relaxed">
+    <header class="page-header">
+      <p class="eyebrow">Contacto</p>
+      <h1 class="page-title">Hablemos</h1>
+      <p class="page-lead">
         Estoy disponible para colaboraciones de investigación o simplemente para intercambiar perspectivas sobre educación.
       </p>
-    </section>
+    </header>
 
-    <div class="border-t border-zinc-200" />
-
-    <div class="grid md:grid-cols-2 gap-10">
-
-      <!-- Formas de contacto -->
-      <section class="space-y-5">
-        <h2 class="text-xl font-heading font-semibold text-slate-900">Canales</h2>
-        <div class="space-y-4">
-          {[
-            { icon: '✉️', label: 'Email UEx', value: 'alvarez@unex.es', href: 'https://mail.google.com/mail/?view=cm&fs=1&to=alvarez@unex.es' },
-            { icon: '🐦', label: 'Twitter / X', value: '@sralvarezzz_', href: 'https://x.com/sralvarezzz_' },
-            { icon: '💼', label: 'LinkedIn', value: 'Javier García Álvarez', href: 'https://www.linkedin.com/in/javier-garcía-álvarez-807854201/' },
-          ].map(({ icon, label, value, href }) => (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-brand-200 hover:bg-brand-50/50 transition-all group"
-            >
-              <span class="text-xl">{icon}</span>
-              <div>
-                <p class="text-xs text-slate-400 font-medium">{label}</p>
-                <p class="text-sm text-slate-700 group-hover:text-brand-700 font-medium">{value}</p>
-              </div>
+    <div class="contact-grid">
+      <section class="contact-col">
+        <h2 class="contact-label">Canales</h2>
+        <div class="contact-channels">
+          {canales.map(({ icon, label, value, href }) => (
+            <a href={href} target="_blank" rel="noopener noreferrer" class="contact-channel">
+              <span class="contact-channel-icon">{icon}</span>
+              <span class="contact-channel-text">
+                <span class="contact-channel-label">{label}</span>
+                <span class="contact-channel-value">{value}</span>
+              </span>
             </a>
           ))}
         </div>
       </section>
 
-      <!-- Afiliación -->
-      <section class="space-y-5">
-        <h2 class="text-xl font-heading font-semibold text-slate-900">Afiliación</h2>
-        <div class="space-y-3 text-sm text-slate-600">
-          <p><strong class="text-slate-800">Universidad de Extremadura</strong></p>
-          <p>Grupo de investigación: Nodo Educativo</p>
-          <p>Departamento: Ciencias de la Educación</p>
-          <p class="text-slate-400 text-xs pt-2">Actualmente en Cáceres, Extremadura, España.</p>
-        </div>
+      <section class="contact-col">
+        <h2 class="contact-label">Afiliación</h2>
+        <dl class="contact-affiliation">
+          <div><dt>Universidad</dt><dd>Universidad de Extremadura</dd></div>
+          <div><dt>Grupo de investigación</dt><dd>Nodo Educativo</dd></div>
+          <div><dt>Departamento</dt><dd>Ciencias de la Educación</dd></div>
+          <div><dt>Ubicación</dt><dd>Cáceres, Extremadura, España</dd></div>
+        </dl>
       </section>
-
     </div>
 
-    <div class="border-t border-zinc-200" />
-
-    <!-- Nota sobre respuesta -->
-    <section class="rounded-xl bg-slate-50 border border-slate-100 p-6">
-      <p class="text-sm text-slate-600 leading-relaxed">
-        <strong class="text-slate-800">Tiempo de respuesta habitual:</strong> intento contestar en 2–3 días hábiles. Para colaboraciones con plazos ajustados, indícalo en el asunto del email.
+    <aside class="contact-note">
+      <p>
+        <strong>Tiempo de respuesta habitual:</strong> intento contestar en 2–3 días hábiles.
+        Para colaboraciones con plazos ajustados, indícalo en el asunto del email.
       </p>
-    </section>
+    </aside>
 
   </div>
 </BaseLayout>
+
+<style>
+  .contact-page {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  /* Header de página */
+  .page-header { margin-bottom: calc(var(--space-section) * 0.6); max-width: 42rem; }
+  .page-header .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+  }
+  .page-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 36rem;
+  }
+
+  /* Grid de dos columnas */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 56rem;
+  }
+
+  .contact-label {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* Canales */
+  .contact-channels { display: flex; flex-direction: column; gap: 0.75rem; }
+  .contact-channel {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: border-color var(--transition-fast);
+  }
+  .contact-channel:hover { border-color: var(--color-border-strong); }
+  .contact-channel-icon { font-size: 1.15rem; line-height: 1; flex-shrink: 0; }
+  .contact-channel-text { display: flex; flex-direction: column; gap: 0.1rem; }
+  .contact-channel-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+  }
+  .contact-channel-value {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    transition: color var(--transition-fast);
+  }
+  .contact-channel:hover .contact-channel-value { color: var(--color-accent); }
+
+  /* Afiliación */
+  .contact-affiliation { display: flex; flex-direction: column; gap: 1.1rem; margin: 0; }
+  .contact-affiliation div { display: flex; flex-direction: column; gap: 0.2rem; }
+  .contact-affiliation dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+    margin: 0;
+  }
+  .contact-affiliation dd {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink);
+    font-weight: var(--weight-medium);
+    margin: 0;
+  }
+
+  /* Nota de respuesta */
+  .contact-note {
+    margin-top: calc(var(--space-section) * 0.5);
+    max-width: 56rem;
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 1.75rem;
+  }
+  .contact-note p {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+  .contact-note strong { color: var(--color-ink); font-weight: var(--weight-semibold); }
+
+  @media (max-width: 768px) {
+    .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+</style>

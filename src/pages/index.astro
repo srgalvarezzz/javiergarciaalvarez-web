@@ -71,19 +71,14 @@ import Icon from '../components/Icon.astro';
     </div>
   </section>
 
-  <!-- ── CTA herramientas ──────────────────────────────────────────── -->
-  <section class="max-w-5xl mx-auto px-6 pb-20">
-    <div class="rounded-2xl bg-gradient-to-br from-brand-50 to-brand-100/60 border border-brand-100 p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-      <div class="space-y-1">
-        <h2 class="text-xl font-heading font-semibold text-brand-900">Recursos abiertos</h2>
-        <p class="text-sm text-slate-600">Datasets, calculadora de baremos y herramientas para investigadores.</p>
+  <!-- ── CTA recursos ──────────────────────────────────────────────── -->
+  <section class="home-cta">
+    <div class="home-cta-inner">
+      <div class="home-cta-text">
+        <h2 class="home-cta-title">Recursos abiertos</h2>
+        <p class="home-cta-lead">Datasets, calculadora de baremos y herramientas para investigadores.</p>
       </div>
-      <a
-        href="/recursos"
-        class="flex-shrink-0 px-5 py-2.5 bg-brand-700 text-white rounded-lg text-sm font-medium hover:bg-brand-600 transition-colors shadow-sm"
-      >
-        Explorar herramientas →
-      </a>
+      <a href="/recursos" class="btn-primary">Explorar recursos →</a>
     </div>
   </section>
 
@@ -303,6 +298,39 @@ import Icon from '../components/Icon.astro';
     font-size: var(--text-sm);
     line-height: var(--leading-normal);
     color: var(--color-ink-soft);
+  }
+
+  /* ── CTA recursos ── */
+  .home-cta {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: 0 1.5rem calc(var(--space-section) * 0.8);
+  }
+  .home-cta-inner {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-warm);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    padding: 2rem 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .home-cta-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin-bottom: 0.35rem;
+  }
+  .home-cta-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-ink-soft);
+    max-width: 34rem;
   }
 
   /* ── Fade-in inicial (solo home, Fase 7) ── */
