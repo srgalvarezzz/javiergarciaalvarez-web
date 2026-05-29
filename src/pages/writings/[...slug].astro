@@ -1,0 +1,176 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const writings = await getCollection('writings', ({ data }) => !data.draft);
+  return writings.map((writing) => ({
+    params: { slug: writing.id },
+    props: { writing },
+  }));
+}
+
+const { writing } = Astro.props;
+const { Content } = await render(writing);
+---
+
+<BaseLayout title={writing.data.title} description={writing.data.description}>
+  <article class="writing-article">
+    <header class="writing-article-header">
+      <a href="/writings" class="writing-back-link">← Writings</a>
+      <p class="writing-article-date">
+        <time datetime={writing.data.publishedAt.toISOString()}>
+          {writing.data.publishedAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+        </time>
+      </p>
+      <h1 class="writing-article-title">{writing.data.title}</h1>
+      <p class="writing-article-description">{writing.data.description}</p>
+    </header>
+
+    <div class="writing-article-content">
+      <Content />
+    </div>
+
+    {writing.data.tags.length > 0 && (
+      <footer class="writing-article-footer">
+        <ul class="writing-article-tags">
+          {writing.data.tags.map((tag) => <li>{tag}</li>)}
+        </ul>
+      </footer>
+    )}
+  </article>
+</BaseLayout>
+
+<style>
+  .writing-article {
+    max-width: 38rem;
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+  .writing-article-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .writing-back-link {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color var(--transition-fast);
+  }
+  .writing-back-link:hover { color: var(--color-ink); }
+  .writing-article-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-warm);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1.25rem;
+  }
+  .writing-article-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3rem);
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.025em;
+    color: var(--color-ink);
+    line-height: 1.1;
+    margin-bottom: 1rem;
+  }
+  .writing-article-description {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    color: var(--color-ink-soft);
+    line-height: var(--leading-normal);
+    font-style: italic;
+  }
+  .writing-article-content {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: 1.75;
+    color: var(--color-ink);
+  }
+  .writing-article-content p { margin-bottom: 1.5rem; color: var(--color-ink-soft); }
+  .writing-article-content h2 {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.015em;
+    color: var(--color-ink);
+    margin-top: 3rem;
+    margin-bottom: 1.25rem;
+    line-height: 1.2;
+  }
+  .writing-article-content h3 {
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    font-weight: var(--weight-regular);
+    color: var(--color-ink);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  .writing-article-content a {
+    color: var(--color-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--color-warm);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color var(--transition-fast);
+  }
+  .writing-article-content a:hover { text-decoration-color: var(--color-accent); }
+  .writing-article-content blockquote {
+    margin: 2rem 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--color-warm);
+    font-style: italic;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: var(--text-xl);
+    line-height: 1.4;
+  }
+  .writing-article-content code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    background: var(--color-surface-soft);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+  }
+  .writing-article-content pre {
+    background: var(--color-surface-soft);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    font-size: var(--text-sm);
+    line-height: 1.6;
+  }
+  .writing-article-content ul,
+  .writing-article-content ol { margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--color-ink-soft); }
+  .writing-article-content li { margin-bottom: 0.5rem; }
+  .writing-article-footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .writing-article-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .writing-article-tags li {
+    font-family: var(--font-body);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink-soft);
+    padding: 0.3rem 0.7rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+  }
+</style>

@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import VoiceMarker from '../components/VoiceMarker.astro';
 ---
 
 <BaseLayout title="404" description="Página no encontrada">
   <div class="error-page">
+    <VoiceMarker size={40} class="error-marker" />
     <p class="error-code">404</p>
     <h1 class="error-title">Esta ruta no lleva a ningún lugar conocido.</h1>
     <p class="error-lead">
@@ -27,6 +29,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     margin: 0 auto;
     padding: calc(var(--space-section) * 1.2) 1.5rem;
     text-align: center;
+  }
+
+  .error-marker {
+    margin: 0 auto 1.5rem;
+    display: block;
   }
 
   .error-code {

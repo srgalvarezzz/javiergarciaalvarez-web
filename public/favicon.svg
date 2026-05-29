@@ -1,14 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <rect width="32" height="32" rx="6" fill="#5046E4"/>
-  <text
-    x="50%"
-    y="50%"
-    dominant-baseline="central"
-    text-anchor="middle"
-    font-family="'Instrument Serif', Georgia, 'Times New Roman', serif"
-    font-size="20"
-    font-weight="400"
-    fill="#FAFAF7"
-    letter-spacing="-0.5"
-  >jg</text>
+  <rect width="32" height="32" rx="6" fill="#FAFAF7"/>
+  <line x1="8" y1="10" x2="24" y2="15" stroke="#D86842" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="24" y1="15" x2="13" y2="25" stroke="#D86842" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="13" y1="25" x2="8" y2="10" stroke="#D86842" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="8" cy="10" r="2.5" fill="#D86842"/>
+  <circle cx="13" cy="25" r="2.5" fill="#D86842"/>
+  <rect x="22" y="13" width="4" height="4" fill="#D86842"/>
 </svg>

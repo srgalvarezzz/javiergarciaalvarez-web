@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import VoiceMarker from '../components/VoiceMarker.astro';
+
+const allWritings = await getCollection('writings', ({ data }) => !data.draft);
+const sortedWritings = allWritings.sort(
+  (a, b) => b.data.publishedAt.getTime() - a.data.publishedAt.getTime(),
+);
+const hasWritings = sortedWritings.length > 0;
+---
+
+<BaseLayout
+  title="Writings"
+  description="Notas, ensayos y reflexiones cortas sobre investigación, juego y aprendizaje."
+>
+  <div class="writings-page">
+    <header class="page-header">
+      <p class="eyebrow">04 / Writings</p>
+      <h1 class="page-title">Notas y ensayos</h1>
+      <p class="page-lead">
+        Reflexiones cortas que no encajan en un paper pero que merecen publicarse en algún sitio.
+        Cuando algo de lo que pienso necesita forma escrita, va aquí.
+      </p>
+    </header>
+
+    {hasWritings ? (
+      <ul class="writings-list">
+        {sortedWritings.map((writing) => (
+          <li class="writing-item">
+            <a href={`/writings/${writing.id}`} class="writing-link">
+              <time class="writing-date" datetime={writing.data.publishedAt.toISOString()}>
+                {writing.data.publishedAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </time>
+              <h2 class="writing-title">{writing.data.title}</h2>
+              <p class="writing-description">{writing.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="writings-empty">
+        <VoiceMarker size={40} class="writings-empty-marker" />
+        <h2 class="writings-empty-title">Próximamente.</h2>
+        <p class="writings-empty-body">
+          Este espacio existe pero todavía está vacío. Estoy escribiendo el primer texto;
+          cuando esté listo, aparecerá aquí.
+        </p>
+        <p class="writings-empty-note">
+          Si quieres saberlo cuando se publique, <a href="/contacto">escríbeme</a>.
+        </p>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .writings-page {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  /* Header de página (mismo patrón que las demás) */
+  .page-header { margin-bottom: 3rem; max-width: 42rem; }
+  .page-header .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+  }
+  .page-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 36rem;
+  }
+
+  /* Lista */
+  .writings-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .writing-item { border-bottom: 1px solid var(--color-border); }
+  .writing-item:last-child { border-bottom: none; }
+  .writing-link {
+    display: block;
+    padding: 2rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding var(--transition-base);
+  }
+  .writing-link:hover { padding-left: 1rem; }
+  .writing-date {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  .writing-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+  }
+  .writing-description {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-ink-soft);
+    line-height: var(--leading-normal);
+    max-width: 42rem;
+  }
+
+  /* Estado vacío */
+  .writings-empty {
+    text-align: center;
+    padding: 4rem 1rem 6rem;
+    max-width: 32rem;
+    margin: 0 auto;
+  }
+  .writings-empty-marker { margin: 0 auto 2rem; display: block; opacity: 0.6; }
+  .writings-empty-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+    font-weight: var(--weight-regular);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin-bottom: 1.25rem;
+  }
+  .writings-empty-body {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-soft);
+    margin-bottom: 1.5rem;
+  }
+  .writings-empty-note {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    letter-spacing: 0.05em;
+  }
+  .writings-empty-note a { color: var(--color-warm); text-decoration: underline; text-underline-offset: 3px; }
+</style>
