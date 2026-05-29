@@ -10,16 +10,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <header class="about-header">
       <p class="eyebrow">Sobre mí</p>
       <h1 class="about-headline">
-        Investigo cómo el juego puede evaluar el aprendizaje y cómo la inteligencia artificial puede impulsar el pensamiento crítico en la universidad.
+        Me interesa menos qué pensamos que cómo lo pensamos.
       </h1>
     </header>
 
     <article class="about-article">
       <aside class="about-meta">
         <dl>
-          <div><dt>Rol</dt><dd>Doctorando FPI</dd></div>
+          <div><dt>Rol</dt><dd>Personal Docente e Investigador</dd></div>
           <div><dt>Institución</dt><dd>Universidad de Extremadura</dd></div>
-          <div><dt>Proyecto</dt><dd>DIDACT.IA</dd></div>
           <div><dt>Grupo</dt><dd>Nodo Educativo</dd></div>
           <div><dt>Ubicación</dt><dd>Cáceres, España</dd></div>
         </dl>
@@ -27,34 +26,19 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       <div class="about-body">
         <p class="about-first-paragraph">
-          <span class="dropcap">S</span>oy doctorando FPI en el programa de Educación Tecnológica de la Universidad de Extremadura. Mi trabajo se sitúa en la intersección entre el Aprendizaje Basado en Juegos, las mecánicas de juego como medio de evaluación y la Inteligencia Artificial aplicada a la Educación Superior.
+          <span class="dropcap">H</span>ago investigación, pero lo que de verdad me engancha es la operación que viene antes: cómo se construye el saber sobre cualquier cosa, qué hace que un razonamiento funcione, por qué unas maneras de pensar dejan huella y otras se olvidan en una semana.
         </p>
 
         <p>
-          Estudio el juego entendido como sistema: qué condiciones hacen falta para que produzca aprendizaje significativo en contextos universitarios formales, y cómo sus mecánicas pueden convertirse en evidencia evaluable de ese aprendizaje.
+          Trabajo desde una intuición simple: el tiempo bien gastado casi nunca está donde uno cree. Suelo dedicarle más esfuerzo del que parece razonable a la fase previa, esa que no produce nada visible — pensar el problema, montar el sistema, preparar la herramienta, dudar antes de empezar. La parte siguiente, la que sí se ve, es fácil cuando lo de antes está bien hecho.
         </p>
 
         <blockquote class="about-pullquote">
-          Los juegos no enseñan por accidente. Las mecánicas que producen aprendizaje pueden identificarse, evaluarse y diseñarse.
+          Dame seis horas para cortar un árbol y pasaré las primeras cuatro afilando el hacha. <span class="about-pullquote-cite">— Abraham Lincoln</span>
         </blockquote>
 
         <p>
-          En paralelo participo en <strong>DIDACT.IA</strong>, un proyecto orientado a impulsar el pensamiento crítico del alumnado mediado por Inteligencia Artificial. Me interesa de forma particular el uso ético de la IA, tanto en la investigación como en el aula.
-        </p>
-
-        <h2>Formación</h2>
-        <p>
-          Me formé primero como maestro —Grado en Educación Primaria (UEx)— y después como investigador, con el Máster Universitario de Investigación en Ciencias Sociales (UEx). Actualmente curso el Doctorado en Educación Tecnológica con contrato FPI y, en paralelo, el Grado en Filosofía en la UNED.
-        </p>
-
-        <h2>Líneas activas</h2>
-        <p>
-          Mis intereses se concentran en el aprendizaje basado en juegos y videojuegos, los learning analytics y las mecánicas de juego, Minecraft Education como entorno de investigación, y el uso ético de la Inteligencia Artificial.
-        </p>
-
-        <h2>Más allá de la investigación</h2>
-        <p>
-          Cuando no investigo, construyo herramientas. He desarrollado una calculadora de baremos para convocatorias académicas, trabajo en <strong>Foco</strong> —una extensión de navegador para la concentración— y mantengo esta web. Esa parte maker complementa la académica: una me obliga a sintetizar, la otra a publicar.
+          Eso se traslada a cómo investigo. Me interesa más afinar la mirada que producir resultados rápidos. Una mirada bien hecha sirve para muchos temas; un resultado, solo para el suyo. Por eso prefiero cuestionar las premisas que me dan, antes que cerrar conclusiones a tiempo. Los atajos en resultados normalmente son triviales. Lo que se aprende sobre cómo funciona el mundo, no.
         </p>
       </div>
     </article>
@@ -184,6 +168,16 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     border-left: 2px solid var(--color-warm);
     font-weight: var(--weight-regular);
     letter-spacing: -0.01em;
+  }
+
+  .about-pullquote-cite {
+    display: block;
+    margin-top: 0.75rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-style: normal;
+    color: var(--color-ink-muted);
+    letter-spacing: 0;
   }
 
   @media (max-width: 900px) {
