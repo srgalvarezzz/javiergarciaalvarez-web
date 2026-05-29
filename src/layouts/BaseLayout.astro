@@ -99,11 +99,7 @@ const isEnglish = currentPath.startsWith('/en');
         </nav>
 
         <div class="site-header-actions">
-          <div class="lang-toggle" role="group" aria-label="Selector de idioma">
-            <a href="/" class="lang-toggle-option" data-lang="es" aria-current={!isEnglish ? 'true' : 'false'}>ES</a>
-            <span class="lang-toggle-separator" aria-hidden="true">/</span>
-            <a href="/en/" class="lang-toggle-option" data-lang="en" aria-current={isEnglish ? 'true' : 'false'}>EN</a>
-          </div>
+          {/* Toggle ES/EN oculto hasta que la traducción esté lista (rama traduccion-en) */}
           <label for="mobile-menu-toggle" class="site-burger">
             <span class="sr-only">Menú</span>
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
