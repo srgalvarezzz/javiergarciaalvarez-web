@@ -72,13 +72,13 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
 
       <article class="main-project-card">
         <h2 class="main-project-title">
-          Revisión Sistemática de Literatura sobre el uso de Inteligencia Artificial para el desarrollo del pensamiento crítico en Educación Superior
+          Umbrella review sobre Inteligencia Artificial Generativa y pensamiento crítico en Educación Superior
         </h2>
         <p class="main-project-body">
-          Esta RSL examina el estado de la evidencia empírica sobre el uso de herramientas y metodologías basadas en Inteligencia Artificial para el desarrollo del pensamiento crítico en entornos universitarios. El objetivo es identificar enfoques pedagógicos efectivos, condiciones de implementación y lagunas de conocimiento que orienten el diseño educativo con IA.
+          Umbrella review que sintetiza la evidencia de revisiones sistemáticas y meta-análisis sobre el impacto de la Inteligencia Artificial Generativa en el pensamiento crítico del alumnado universitario. Focos: alfabetización en IAG, instrumentos validados para medir AI literacy y pensamiento crítico, y modalidades de integración didáctica. Metodología: registro en PROSPERO, JBI Critical Appraisal Checklist y PRIOR/PRISMA 2020. Constituye el Capítulo 4 de la tesis y su primera publicación derivada, en el marco del proyecto DIDACT.IA.
         </p>
         <ul class="main-project-tags" aria-label="Temas del proyecto">
-          {['Inteligencia Artificial', 'Pensamiento Crítico', 'Educación Superior', 'RSL / Systematic Review', 'Diseño instruccional', 'IA generativa'].map(tag => (
+          {['Umbrella Review', 'IA Generativa', 'Pensamiento Crítico', 'Educación Superior', 'AI Literacy', 'DIDACT.IA'].map(tag => (
             <li>{tag}</li>
           ))}
         </ul>
@@ -140,6 +140,20 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
     <!-- Publicaciones -->
     <section class="publications">
       <h2 class="subsection-title">Publicaciones</h2>
+
+      <article class="publication">
+        <span class="publication-status status-pill status-active">
+          <span class="status-dot" aria-hidden="true"></span>
+          Aceptado para publicación
+        </span>
+        <h3 class="publication-title">
+          Evolución de los niveles educativos en la provincia de Cáceres (España, 1991–2021): desigualdades territoriales y de género a partir del Censo de Población
+        </h3>
+        <p class="publication-meta">
+          García-Álvarez, J. &amp; Santos-Pérez, C. (en prensa). <em>Revista de Estudios Extremeños</em>.
+        </p>
+      </article>
+
       <article class="publication">
         <h3 class="publication-title">
           <a href={SCHOLAR_PUB} target="_blank" rel="noopener">
@@ -472,6 +486,15 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
     transition: color var(--transition-fast);
   }
   .publication-link:hover { color: var(--color-ink); }
+  .publication + .publication {
+    margin-top: 1.75rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+  .publication-status {
+    display: inline-flex;
+    margin-bottom: 0.75rem;
+  }
 
   /* Métricas (adaptada al sistema, sin morado) */
   .metrics { margin-top: calc(var(--space-section) * 0.6); }
