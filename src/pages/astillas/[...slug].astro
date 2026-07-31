@@ -14,7 +14,11 @@ const { writing } = Astro.props;
 const { Content } = await render(writing);
 ---
 
-<BaseLayout title={writing.data.title} description={writing.data.description}>
+<BaseLayout
+  title={writing.data.title}
+  description={writing.data.description}
+  ogImage="/og-astillas.png"
+>
   <article class="writing-article">
     <header class="writing-article-header">
       <a href="/astillas" class="writing-back-link">← Astillas</a>

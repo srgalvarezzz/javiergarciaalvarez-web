@@ -5,12 +5,12 @@
   <!-- Marca terracota: barra vertical izquierda -->
   <rect x="80" y="80" width="6" height="470" fill="#D86842" rx="3"/>
 
-  <text x="120" y="180" font-family="'JetBrains Mono', monospace" font-size="22" fill="#8B8B9E" letter-spacing="2.5">DOCTORANDO FPI · UNIVERSIDAD DE EXTREMADURA</text>
+  <text x="120" y="180" font-family="'JetBrains Mono', monospace" font-size="22" fill="#8B8B9E" letter-spacing="2.5">SOBRE MÍ</text>
 
   <text x="120" y="285" font-family="'Instrument Serif', Georgia, serif" font-size="84" fill="#0F0F1A" letter-spacing="-2">Javier García-Álvarez</text>
 
-  <text x="120" y="365" font-family="'Inter Tight', sans-serif" font-size="32" fill="#4A4A5C" font-weight="400">Tecnología educativa, con evidencia.</text>
-  <text x="120" y="408" font-family="'Inter Tight', sans-serif" font-size="32" fill="#4A4A5C" font-weight="400">IA generativa y aprendizaje en juegos.</text>
+  <text x="120" y="365" font-family="'Inter Tight', sans-serif" font-size="32" fill="#4A4A5C" font-weight="400">Doctorando FPI en la Universidad</text>
+  <text x="120" y="408" font-family="'Inter Tight', sans-serif" font-size="32" fill="#4A4A5C" font-weight="400">de Extremadura.</text>
 
   <line x1="120" y1="455" x2="320" y2="455" stroke="#D86842" stroke-width="3"/>
 

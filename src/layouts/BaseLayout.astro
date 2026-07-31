@@ -6,15 +6,22 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  /** Imagen de compartido, ruta desde la raíz. Por sección (tarea 5.9). */
+  ogImage?: string;
   /** Objetos schema.org para el <head> (tarea 5.7). Uno o varios. */
   jsonLd?: object | object[];
 }
 
-const { title, description = 'Javier García-Álvarez — Doctorando en Educación Tecnológica, UEx', jsonLd } = Astro.props;
+const {
+  title,
+  description = 'Javier García-Álvarez — Doctorando en Educación Tecnológica, UEx',
+  ogImage: rutaOgImage = '/og-image.png',
+  jsonLd,
+} = Astro.props;
 
 const bloquesJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://javiergarciaalvarez.com');
-const ogImage = new URL('/og-image.png', Astro.site ?? 'https://javiergarciaalvarez.com');
+const ogImage = new URL(rutaOgImage, Astro.site ?? 'https://javiergarciaalvarez.com');
 
 // Astillas tiene una sola entrada y el nav la anunciaba como si fuera un blog
 // activo. Sale del menú (escritorio y móvil); la ruta y el post siguen vivos y
@@ -85,6 +92,9 @@ const isEnglish = currentPath.startsWith('/en');
     {bloquesJsonLd.map((bloque) => (
       <script type="application/ld+json" set:html={JSON.stringify(bloque)} />
     ))}
+
+    <!-- Feed de Astillas (Fase 5.4) -->
+    <link rel="alternate" type="application/rss+xml" title="Astillas · Javier García-Álvarez" href="/rss.xml" />
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
