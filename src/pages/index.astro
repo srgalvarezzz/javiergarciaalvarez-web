@@ -55,19 +55,27 @@ import { persona } from '../utils/jsonld';
           icon: 'BrainCircuit' as const,
           title: 'IA Generativa',
           desc: 'Síntesis de la evidencia sobre IA generativa y pensamiento crítico en educación superior, en el marco del proyecto DIDACT.IA.',
+          enlace: { href: '/investigacion/didactia', label: 'El proyecto DIDACT.IA' },
         },
         {
           icon: 'Gamepad2' as const,
           title: 'Game-Based Learning',
           desc: 'Diseño y evaluación de experiencias de aprendizaje mediadas por el juego, y análisis de las mecánicas como indicador de lo que se aprende.',
+          enlace: null,
         },
-      ]).map(({ icon, title, desc }) => (
+      ]).map(({ icon, title, desc, enlace }) => (
         <article class="research-card">
           <div class="research-card-icon" aria-hidden="true">
             <Icon name={icon} size={28} />
           </div>
           <h3 class="research-card-title">{title}</h3>
           <p class="research-card-body">{desc}</p>
+          {enlace && (
+            <a href={enlace.href} class="research-card-link">
+              {enlace.label}
+              <span aria-hidden="true">→</span>
+            </a>
+          )}
         </article>
       ))}
     </div>
@@ -301,6 +309,22 @@ import { persona } from '../utils/jsonld';
     line-height: var(--leading-normal);
     color: var(--color-ink-soft);
   }
+
+  .research-card-link {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    text-decoration: none;
+    align-self: flex-start;
+    transition: gap var(--transition-base), color var(--transition-fast);
+  }
+  .research-card-link:hover { color: var(--color-accent); gap: 0.7rem; }
 
   /* ── CTA recursos ── */
   .home-cta {

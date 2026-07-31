@@ -1,0 +1,200 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import contenido from '../../data/investigacion.json';
+
+/**
+ * Página del proyecto DIDACT.IA (tarea 4.5).
+ *
+ * Solo datos que el propio proyecto hace públicos: código, IP, financiador,
+ * periodo y mi papel dentro de él. Ni cuantía ni tamaño del equipo, por
+ * decisión expresa.
+ */
+
+const p = contenido.didactia;
+
+const ficha = [
+  { campo: 'Referencia', valor: p.codigo },
+  { campo: 'Investigador principal', valor: p.ip },
+  { campo: 'Entidad financiadora', valor: p.financia },
+  { campo: 'Entidad de realización', valor: p.entidad },
+  { campo: 'Periodo', valor: p.periodo },
+];
+---
+
+<BaseLayout
+  title={p.acronimo}
+  description={`${p.acronimo}: ${p.titulo}. Proyecto de la Universidad de Extremadura financiado por la Agencia Estatal de Investigación.`}
+  ogImage="/og-investigacion.png"
+>
+  <div class="proyecto-page">
+
+    <a href="/investigacion" class="volver">← Investigación</a>
+
+    <header class="page-header">
+      <p class="eyebrow">Proyecto financiado</p>
+      <h1 class="page-title">{p.acronimo}</h1>
+      <p class="page-lead">{p.titulo}</p>
+    </header>
+
+    <section class="ficha-seccion" aria-labelledby="ficha-titulo">
+      <h2 id="ficha-titulo" class="subsection-title">Ficha</h2>
+      <dl class="ficha">
+        {ficha.map(({ campo, valor }) => (
+          <div>
+            <dt>{campo}</dt>
+            <dd>{valor}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="rol-seccion" aria-labelledby="rol-titulo">
+      <h2 id="rol-titulo" class="subsection-title">Mi papel</h2>
+      <p class="rol-cargo">
+        <strong>{p.rol}</strong> · contrato {p.contrato}
+      </p>
+      <ul class="rol-funciones">
+        {p.funciones.map(funcion => <li>{funcion}</li>)}
+      </ul>
+      <p class="rol-nota">
+        La <a href="/investigacion">umbrella review sobre IA generativa y pensamiento crítico</a>,
+        que es el capítulo 4 de mi tesis, se enmarca en este proyecto.
+      </p>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .proyecto-page {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  .volver {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color var(--transition-fast);
+  }
+  .volver:hover { color: var(--color-ink); }
+
+  .page-header { margin-bottom: calc(var(--space-section) * 0.5); max-width: 46rem; }
+  .page-header .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.25rem;
+  }
+  .page-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 42rem;
+  }
+
+  .subsection-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  /* Ficha: mismo patrón que la tabla de afiliación de /contacto */
+  .ficha {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 3rem;
+    margin: 0;
+    max-width: 46rem;
+  }
+  .ficha div { display: flex; flex-direction: column; gap: 0.25rem; }
+  .ficha dt {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+    margin: 0;
+  }
+  .ficha dd {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .rol-seccion { margin-top: calc(var(--space-section) * 0.6); }
+  .rol-cargo {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-ink-soft);
+    margin-bottom: 1.25rem;
+  }
+  .rol-cargo strong { color: var(--color-ink); font-weight: var(--weight-semibold); }
+
+  .rol-funciones {
+    list-style: none;
+    margin: 0 0 1.75rem;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    max-width: 42rem;
+  }
+  .rol-funciones li {
+    position: relative;
+    padding-left: 1.25rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+  }
+  .rol-funciones li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-warm);
+  }
+
+  .rol-nota {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-soft);
+    max-width: 42rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  @media (max-width: 640px) {
+    .ficha { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
+</style>

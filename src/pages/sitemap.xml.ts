@@ -16,6 +16,7 @@ const RUTAS_FIJAS = [
   '/',
   '/sobre-mi',
   '/investigacion',
+  '/investigacion/didactia',
   '/recursos',
   '/recursos/calculadora-baremos',
   '/astillas',

@@ -4,7 +4,9 @@ import contenido from '../data/investigacion.json';
 import { ultimaActualizacion } from '../utils/fechas';
 import { articulo } from '../utils/jsonld';
 
-const { proyectoPrincipal, publicaciones } = contenido;
+const { proyectoPrincipal, publicaciones, comunicaciones, revisiones } = contenido;
+
+const totalRevisiones = revisiones.reduce((suma, r) => suma + r.numero, 0);
 
 // Se deriva del máximo de las entradas, nunca se escribe a mano (tarea 3.3).
 const actualizado = ultimaActualizacion([proyectoPrincipal, ...publicaciones]);
@@ -91,6 +93,42 @@ const datosEstructurados = publicaciones.map(articulo);
           )}
         </article>
       ))}
+    </section>
+
+    <!-- Comunicaciones y congresos (4.3) -->
+    <section class="publications">
+      <h2 class="subsection-title">Comunicaciones y congresos</h2>
+
+      {comunicaciones.map(com => (
+        <article class="publication">
+          <h3 class="publication-title">{com.titulo}</h3>
+          {com.autores && com.autores.length > 0 && (
+            <p class="publication-meta">{listarAutores(com.autores)}</p>
+          )}
+          <p class="publication-meta">
+            {com.tipo} · <em>{com.congreso}</em>. {com.lugar}, {com.fechaTexto}.
+          </p>
+        </article>
+      ))}
+    </section>
+
+    <!-- Revisión por pares (4.4): bloque compacto, sin ficha por entrada -->
+    <section class="peer-review">
+      <h2 class="subsection-title">Revisión por pares</h2>
+      <p class="peer-review-lead">
+        {totalRevisiones} revisiones para {revisiones.length} revistas.
+      </p>
+      <ul class="peer-review-list">
+        {revisiones.map(rev => (
+          <li>
+            <span class="peer-review-journal">{rev.revista}</span>
+            {rev.editorial && <span class="peer-review-publisher"> · {rev.editorial}</span>}
+            <span class="peer-review-count">
+              {rev.anio} · {rev.numero} {rev.numero === 1 ? 'revisión' : 'revisiones'}
+            </span>
+          </li>
+        ))}
+      </ul>
     </section>
 
     {actualizado && (
@@ -332,6 +370,54 @@ const datosEstructurados = publicaciones.map(articulo);
     color: var(--color-ink-soft);
     max-width: 42rem;
     margin-bottom: 0.6rem;
+  }
+
+  /* Revisión por pares (4.4): compacto a propósito, una línea por revista. */
+  .peer-review { margin-top: calc(var(--space-section) * 0.6); }
+  .peer-review-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    color: var(--color-ink-soft);
+    margin-bottom: 1.25rem;
+  }
+  .peer-review-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+  .peer-review-list li {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding-bottom: 0.9rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .peer-review-list li:last-child { border-bottom: none; padding-bottom: 0; }
+  .peer-review-journal {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+  }
+  .peer-review-publisher {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+  }
+  .peer-review-count {
+    margin-left: auto;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .peer-review-count { margin-left: 0; }
   }
 
   /* Pie de última actualización (tarea 3.3) */

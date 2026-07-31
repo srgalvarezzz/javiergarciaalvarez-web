@@ -51,5 +51,98 @@
       "resumen": "Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.",
       "actualizado": "2026-07-31"
     }
+  ],
+  "comunicaciones": [
+    {
+      "titulo": "Robótica educativa y pensamiento computacional en educación infantil: una experiencia de innovación pedagógica",
+      "autores": null,
+      "tipo": "Comunicación",
+      "congreso": "ieTIC2026 — Inovação na Educação com TIC",
+      "organiza": "Universidad Complutense de Madrid",
+      "lugar": "Madrid, España",
+      "fecha": "2026-02-19",
+      "fechaTexto": "19–20 de febrero de 2026"
+    },
+    {
+      "titulo": "Action Triggered Operation Matrix (ATOM). Mecánicas de juego para el aprendizaje a través de videojuegos",
+      "autores": null,
+      "tipo": "Comunicación",
+      "congreso": "EDUTEC 2025 — Congreso Internacional sobre Tecnología Educativa en las Universidades en la Era de la Inteligencia Artificial",
+      "organiza": "Pontificia Universidad Católica Madre y Maestra",
+      "lugar": "Santiago de los Caballeros, República Dominicana",
+      "fecha": "2025-11-19",
+      "fechaTexto": "19–21 de noviembre de 2025"
+    },
+    {
+      "titulo": "Implementación de la Inteligencia Artificial en la Formación Inicial del Profesorado de Educación Primaria",
+      "autores": null,
+      "tipo": "Comunicación",
+      "congreso": "VI Fenda Dixital — Inteligencia Artificial Generativa e os novos desafios na educação",
+      "organiza": "Universidade Federal do Paraná",
+      "lugar": "Curitiba, Brasil",
+      "fecha": "2025-07-16",
+      "fechaTexto": "16–18 de julio de 2025"
+    },
+    {
+      "titulo": "Never Alone como paradigma de videojuego histórico-cultural",
+      "autores": null,
+      "tipo": "Comunicación",
+      "congreso": "VIII Congreso Internacional Historia y Videojuegos",
+      "organiza": "Universidad de Murcia",
+      "lugar": "Murcia, España",
+      "fecha": "2025-05-14",
+      "fechaTexto": "14–16 de mayo de 2025"
+    },
+    {
+      "titulo": "Taxonomía de Bloom revisada: modelo GPT para clasificar criterios de evaluación",
+      "autores": ["García-Álvarez, J.", "Porras Masero, I.", "Mejías López, M."],
+      "tipo": "Comunicación",
+      "congreso": "VII Congreso Internacional sobre Innovación Pedagógica y Praxis Educativa — INNOVAGOGÍA",
+      "organiza": "Colectivo Docente Innovagogía",
+      "lugar": "Sevilla, España",
+      "fecha": "2024-05-28",
+      "fechaTexto": "28–29 de mayo de 2024"
+    },
+    {
+      "titulo": "H.E.R.M.E.S: Inteligencia artificial para la evaluación automatizada de trabajos fin de estudios",
+      "autores": null,
+      "tipo": "Comunicación",
+      "congreso": "X ieTIC — Inovação na Educação com TIC",
+      "organiza": "Universidade Aberta",
+      "lugar": "Madeira, Portugal",
+      "fecha": "2024-02-15",
+      "fechaTexto": "15–16 de febrero de 2024"
+    }
+  ],
+  "didactia": {
+    "acronimo": "DIDACT.IA",
+    "titulo": "Didáctica Universitaria con Inteligencia Artificial (IA). Creencias, prácticas y propuestas para enseñar el pensamiento crítico",
+    "codigo": "PID2024-157674NB-I00",
+    "ip": "Jesús Valverde Berrocoso",
+    "financia": "Agencia Estatal de Investigación",
+    "entidad": "Universidad de Extremadura",
+    "periodo": "Abril de 2026 – abril de 2030",
+    "rol": "Personal Investigador en Formación (FPI)",
+    "contrato": "PREP2024-002324",
+    "funciones": [
+      "Colaborar en la revisión teórica y el análisis de creencias y prácticas del profesorado y el alumnado sobre IA.",
+      "Participar en el diseño y la experimentación del modelo didáctico para enseñar pensamiento crítico con IA en asignaturas de grados y posgrados en Educación.",
+      "Recoger, procesar y analizar datos cualitativos y cuantitativos de la investigación.",
+      "Contribuir a la elaboración de publicaciones científicas y comunicaciones en congresos."
+    ]
+  },
+  "revisiones": [
+    {
+      "revista": "Education and Information Technologies",
+      "editorial": "Springer",
+      "anio": "2025",
+      "numero": 1
+    },
+    {
+      "revista": "ACADEMO. Revista de Investigación en Ciencias Sociales y Humanidades",
+      "editorial": null,
+      "anio": "2025",
+      "numero": 2
+    }
   ]
 }
