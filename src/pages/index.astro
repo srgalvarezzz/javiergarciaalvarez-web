@@ -5,22 +5,17 @@ import Icon from '../components/Icon.astro';
 
 <BaseLayout
   title="Inicio"
-  description="Javier García-Álvarez, doctorando FPI en Educación Tecnológica en la Universidad de Extremadura. Investigación en Aprendizaje Basado en Juegos y tecnología educativa."
+  description="Javier García-Álvarez, doctorando FPI en la Universidad de Extremadura. Evidencia sobre IA generativa y pensamiento crítico, y sobre el aprendizaje en los juegos."
 >
 
   <!-- ── Hero ─────────────────────────────────────────────────────── -->
   <section class="hero">
     <div class="hero-content">
       <h1 class="hero-title">
-        Investigando el aprendizaje en un <span class="hero-title-mark">mundo tecnológico</span>
+        Tecnología educativa, con <span class="hero-title-mark">evidencia</span>
       </h1>
-      {/* TODO (Bloque 2 · 2.2): subtítulo pendiente de reescritura completa.
-          Bloqueado por la decisión de línea principal del sitio. Dos puntos a
-          resolver aquí: "transformar el aprendizaje" (1.6) y la promesa de
-          "escribo sobre lo que me incomoda" (3.2, queda huérfana al sacar
-          Astillas del nav). Hasta entonces se mantiene el texto en producción. */}
       <p class="hero-subtitle">
-        Doctorando FPI en la Universidad de Extremadura, investigando cómo los juegos pueden transformar el aprendizaje. Fuera de la investigación, escribo sobre lo que me incomoda.
+        Doctorando FPI en la Universidad de Extremadura. Trabajo en los dos sitios donde la tecnología promete más de lo que demuestra: la IA generativa en la universidad y los juegos en el aula. A veces escribo sobre lo que me incomoda.
       </p>
       <div class="hero-actions">
         <a href="/investigacion" class="btn-primary">Mi investigación</a>
@@ -48,21 +43,21 @@ import Icon from '../components/Icon.astro';
       <h2 class="section-title">En qué investigo</h2>
     </div>
     <div class="research-areas-grid">
+      {/* Dos tarjetas, una por línea de trabajo, en el mismo orden en que las
+          nombra el subtítulo del hero y en que las presenta /investigacion.
+          Game Mechanics era una subdivisión de Game-Based Learning: separadas
+          sumaban 2 contra 1 y hacían que la home leyera como si los juegos
+          fueran la línea principal, que es justo lo que el marco común niega. */}
       {([
+        {
+          icon: 'BrainCircuit' as const,
+          title: 'IA Generativa',
+          desc: 'Síntesis de la evidencia sobre IA generativa y pensamiento crítico en educación superior, en el marco del proyecto DIDACT.IA.',
+        },
         {
           icon: 'Gamepad2' as const,
           title: 'Game-Based Learning',
-          desc: 'Diseño y evaluación de experiencias de aprendizaje mediadas por el juego en contextos universitarios formales.',
-        },
-        {
-          icon: 'Cog' as const,
-          title: 'Game Mechanics',
-          desc: 'Análisis de las mecánicas de juego como medio para evaluar el aprendizaje.',
-        },
-        {
-          icon: 'BrainCircuit' as const,
-          title: 'Inteligencia Artificial',
-          desc: 'Participación como FPI en DIDACT.IA, proyecto que impulsa el pensamiento crítico mediado por la IA.',
+          desc: 'Diseño y evaluación de experiencias de aprendizaje mediadas por el juego, y análisis de las mecánicas como indicador de lo que se aprende.',
         },
       ]).map(({ icon, title, desc }) => (
         <article class="research-card">
@@ -249,7 +244,7 @@ import Icon from '../components/Icon.astro';
 
   .research-areas-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
 
