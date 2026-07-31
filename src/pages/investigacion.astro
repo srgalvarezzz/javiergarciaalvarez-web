@@ -2,16 +2,24 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import contenido from '../data/investigacion.json';
 import { ultimaActualizacion } from '../utils/fechas';
+import { articulo } from '../utils/jsonld';
 
 const { proyectoPrincipal, publicaciones } = contenido;
 
 // Se deriva del máximo de las entradas, nunca se escribe a mano (tarea 3.3).
 const actualizado = ultimaActualizacion([proyectoPrincipal, ...publicaciones]);
+
+// "A, B & C": coma entre todos menos el último, que va con ampersand.
+const listarAutores = (nombres: string[]) =>
+  nombres.length <= 1 ? nombres[0] ?? '' : `${nombres.slice(0, -1).join(', ')} & ${nombres[nombres.length - 1]}`;
+
+const datosEstructurados = publicaciones.map(articulo);
 ---
 
 <BaseLayout
   title="Investigación"
   description="Proyectos de investigación de Javier García-Álvarez sobre Aprendizaje Basado en Juegos y tecnología educativa. Revisión Sistemática de Literatura en curso."
+  jsonLd={datosEstructurados}
 >
   <div class="research-page">
 
@@ -67,9 +75,9 @@ const actualizado = ultimaActualizacion([proyectoPrincipal, ...publicaciones]);
           </h3>
           {/* Una entrada en revisión aún no tiene revista ni año que citar, así
               que la línea de referencia solo se pinta cuando hay algo que poner. */}
-          {pub.autores && pub.revista && (
+          {pub.autores && pub.autores.length > 0 && pub.revista && (
             <p class="publication-meta">
-              {pub.autores} ({pub.anio}). <em>{pub.revista}</em>.{pub.editorial ? ` ${pub.editorial}.` : ''}
+              {listarAutores(pub.autores)} ({pub.anio}). <em>{pub.revista}</em>.{pub.editorial ? ` ${pub.editorial}.` : ''}
             </p>
           )}
           {pub.resumen && (

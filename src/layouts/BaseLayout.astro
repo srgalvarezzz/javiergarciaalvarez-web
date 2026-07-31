@@ -6,9 +6,13 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  /** Objetos schema.org para el <head> (tarea 5.7). Uno o varios. */
+  jsonLd?: object | object[];
 }
 
-const { title, description = 'Javier García-Álvarez — Doctorando en Educación Tecnológica, UEx' } = Astro.props;
+const { title, description = 'Javier García-Álvarez — Doctorando en Educación Tecnológica, UEx', jsonLd } = Astro.props;
+
+const bloquesJsonLd = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://javiergarciaalvarez.com');
 const ogImage = new URL('/og-image.png', Astro.site ?? 'https://javiergarciaalvarez.com');
 
@@ -76,6 +80,11 @@ const isEnglish = currentPath.startsWith('/en');
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Datos estructurados (Fase 5.7) -->
+    {bloquesJsonLd.map((bloque) => (
+      <script type="application/ld+json" set:html={JSON.stringify(bloque)} />
+    ))}
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />

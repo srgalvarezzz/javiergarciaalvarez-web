@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import recursosData from '../data/recursos.json';
 import { ultimaActualizacion } from '../utils/fechas';
+import { dataset } from '../utils/jsonld';
 
 // Solo lo publicado llega a la vista. Para reactivar un recurso basta con
 // quitar (o poner a true) su "published" en src/data/recursos.json: vuelve
@@ -26,6 +27,10 @@ const disponibles = countFor('all');
 // Del máximo de lo publicado, nunca escrita a mano (tarea 3.3). Los recursos
 // ocultos no cuentan: no se ven, así que no pueden justificar la fecha.
 const actualizado = ultimaActualizacion(recursos);
+
+// Solo los recursos con DOI: sin identificador persistente no hay Dataset
+// que declarar, y hoy eso deja fuera al mapa y a la calculadora (tarea 5.7).
+const datosEstructurados = recursos.filter((r) => r.doi).map(dataset);
 
 // ── Feedback por recurso ──
 // Estos enlaces apuntaban a /contacto?recurso=… dando por hecho que allí había
@@ -98,6 +103,7 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
 <BaseLayout
   title="Recursos"
   description="Recursos abiertos, datasets y herramientas de Javier García-Álvarez para docentes e investigadores en educación y tecnología educativa."
+  jsonLd={datosEstructurados}
 >
   <div class="resources-page">
 

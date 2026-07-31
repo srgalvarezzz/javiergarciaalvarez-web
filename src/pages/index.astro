@@ -1,11 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
+import { persona } from '../utils/jsonld';
 ---
 
 <BaseLayout
   title="Inicio"
   description="Javier García-Álvarez, doctorando FPI en la Universidad de Extremadura. Evidencia sobre IA generativa y pensamiento crítico, y sobre el aprendizaje en los juegos."
+  jsonLd={persona}
 >
 
   <!-- ── Hero ─────────────────────────────────────────────────────── -->
