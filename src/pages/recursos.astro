@@ -22,6 +22,28 @@ const chips = filtros.filter((f) => f.key === 'all' || countFor(f.key) > 0);
 // Misma fuente que el chip "Todos": los dos números no pueden divergir.
 const disponibles = countFor('all');
 
+// ── Feedback por recurso ──
+// Estos enlaces apuntaban a /contacto?recurso=… dando por hecho que allí había
+// un formulario que leyera el parámetro. No lo hay: /contacto son enlaces y una
+// tabla de afiliación, así que el parámetro se descartaba en silencio y el
+// visitante llegaba a una página que no le preguntaba nada.
+//
+// Parche: abrir el correo con el asunto ya puesto. Cumple la intención original
+// sin construir backend.
+//
+// NOTA INTERNA (tarea 3.4, pendiente). Esto no cierra el asunto, lo aplaza.
+// Construir el formulario de verdad obliga a elegir backend —Astro Actions con
+// prerender = false sobre el Worker de Cloudflare, o un servicio externo— y es
+// la tarea más grande que queda en la lista. Cuando se retome, este helper es
+// el único punto que hay que cambiar en /recursos.
+//
+// Se usa mailto: a propósito, no el deeplink de Outlook que emplea /contacto:
+// aquí el destinatario es un visitante cualquiera, que debe abrir su propio
+// cliente de correo y no un login de Office 365. Ver el resumen del PR.
+const CONTACTO_EMAIL = 'alvarez@unex.es';
+const feedbackHref = (titulo: string) =>
+  `mailto:${CONTACTO_EMAIL}?subject=${encodeURIComponent(`Feedback: ${titulo}`)}`;
+
 // ── Generación dinámica de citas a partir de los metadatos ──
 const TIPO_APA: Record<string, string> = { dataset: 'Conjunto de datos', tool: 'Herramienta', template: 'Plantilla' };
 const RIS_TY: Record<string, string> = { dataset: 'DATA', tool: 'COMP', template: 'GEN' };
@@ -171,7 +193,7 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
             )}
 
             {r.status !== 'upcoming' && (
-              <a href={`/contacto?recurso=${encodeURIComponent(r.titulo)}`} class="resource-card-feedback">Feedback</a>
+              <a href={feedbackHref(r.titulo)} class="resource-card-feedback">Feedback</a>
             )}
           </div>
 
