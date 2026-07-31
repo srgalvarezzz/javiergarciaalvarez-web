@@ -4,6 +4,12 @@ import Icon from '../components/Icon.astro';
 import recursosData from '../data/recursos.json';
 import { ultimaActualizacion } from '../utils/fechas';
 import { dataset } from '../utils/jsonld';
+import type { ComponentProps } from 'astro/types';
+
+// Los iconos vienen del JSON como string. Se deriva la unión del propio
+// componente en vez de repetirla aquí: si Icon gana o pierde un icono, esto
+// se entera solo. Un valor inválido revienta el build, no el sitio.
+type NombreIcono = ComponentProps<typeof Icon>['name'];
 
 // Solo lo publicado llega a la vista. Para reactivar un recurso basta con
 // quitar (o poner a true) su "published" en src/data/recursos.json: vuelve
@@ -134,7 +140,7 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
         <li class="resource-card" data-type={r.type}>
           <div class="resource-card-header">
             <div class="resource-card-type">
-              <span class="resource-card-icon" aria-hidden="true"><Icon name={r.icon} size={16} /></span>
+              <span class="resource-card-icon" aria-hidden="true"><Icon name={r.icon as NombreIcono} size={16} /></span>
               <span class="resource-card-type-label">{r.tipo}</span>
             </div>
             <span class:list={['status-pill', `status-${r.status}`]}>

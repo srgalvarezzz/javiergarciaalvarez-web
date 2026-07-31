@@ -1,32 +1,17 @@
 @import "tailwindcss";
 
+/* Tailwind se conserva solo por las pocas utilidades de layout que usa
+   BaseLayout (min-h-screen, flex, flex-col, flex-1). Todo lo visual vive en
+   tokens.css.
+
+   Aquí había además una paleta brand-* y accent-*, y las familias Space
+   Grotesk e Inter del diseño anterior. Ninguna se usaba: las clases brand-*
+   no aparecían en ningún componente, y tokens.css redefine --font-body y
+   estiliza h1-h4 fuera de @layer, así que ganaba siempre. */
+
 @theme {
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #e0e7ff;
-  --color-brand-500: #6366f1;
-  --color-brand-600: #4f46e5;
-  --color-brand-700: #4338ca;
-  --color-brand-900: #312e81;
-
-  --color-accent-400: #fb923c;
-  --color-accent-500: #f97316;
-
-  --font-heading: "Space Grotesk", system-ui, sans-serif;
-  --font-body: "Inter", system-ui, sans-serif;
-
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
-}
-
-@layer base {
-  html {
-    font-family: var(--font-body);
-    -webkit-font-smoothing: antialiased;
-  }
-
-  h1, h2, h3, h4 {
-    font-family: var(--font-heading);
-  }
 }

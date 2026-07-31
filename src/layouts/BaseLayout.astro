@@ -77,11 +77,9 @@ const isActive = (route: string): boolean =>
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Fase 1 rediseño: tipografías del nuevo sistema -->
+    {/* Las tres del sistema actual. Antes había además una hoja con Inter y
+        Space Grotesk, del diseño anterior: tokens.css las pisaba enteras, así
+        que era una petición bloqueante que no pintaba una sola letra. */}
     <link
       href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
       rel="stylesheet"
@@ -99,7 +97,12 @@ const isActive = (route: string): boolean =>
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   </head>
-  <body class="min-h-screen bg-white text-slate-800 flex flex-col">
+  <body class="min-h-screen flex flex-col">
+
+    {/* Del <body> se cayeron bg-white y text-slate-800: tokens.css fija color
+        y fondo aquí mismo sin capa, así que ganaba siempre. El fondo real es
+        #FAFAF7, y esa discrepancia despistaba al calcular contrastes.
+        Quedan solo las utilidades de layout, que sí son necesarias. */}
 
     {/* Primero en el DOM a propósito (tarea 6.4): quien navegue con teclado
         debe poder saltarse el menú antes de tabular por él entero. */}

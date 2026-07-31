@@ -102,9 +102,10 @@ const datosEstructurados = publicaciones.map(articulo);
       {comunicaciones.map(com => (
         <article class="publication">
           <h3 class="publication-title">{com.titulo}</h3>
-          {com.autores && com.autores.length > 0 && (
-            <p class="publication-meta">{listarAutores(com.autores)}</p>
-          )}
+          {/* Las comunicaciones no son en solitario, pero no se listan los
+              demás participantes por decisión del autor. Se omite la línea de
+              autoría en todas por igual: mostrarla solo en algunas haría leer
+              la ausencia como "esta sí fue en solitario". */}
           <p class="publication-meta">
             {com.tipo} · <em>{com.congreso}</em>. {com.lugar}, {com.fechaTexto}.
           </p>
