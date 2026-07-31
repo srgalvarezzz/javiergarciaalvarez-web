@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
 import recursosData from '../data/recursos.json';
+import { ultimaActualizacion } from '../utils/fechas';
 
 // Solo lo publicado llega a la vista. Para reactivar un recurso basta con
 // quitar (o poner a true) su "published" en src/data/recursos.json: vuelve
@@ -21,6 +22,10 @@ const chips = filtros.filter((f) => f.key === 'all' || countFor(f.key) > 0);
 
 // Misma fuente que el chip "Todos": los dos números no pueden divergir.
 const disponibles = countFor('all');
+
+// Del máximo de lo publicado, nunca escrita a mano (tarea 3.3). Los recursos
+// ocultos no cuentan: no se ven, así que no pueden justificar la fecha.
+const actualizado = ultimaActualizacion(recursos);
 
 // ── Feedback por recurso ──
 // Estos enlaces apuntaban a /contacto?recurso=… dando por hecho que allí había
@@ -221,6 +226,10 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
     <div class="resources-empty" hidden>
       <p>No hay recursos de este tipo todavía.</p>
     </div>
+
+    {actualizado && (
+      <p class="page-updated">Última actualización: {actualizado}</p>
+    )}
 
   </div>
 </BaseLayout>
@@ -635,6 +644,16 @@ const cards = recursos.map((r) => ({ ...r, cites: buildCitations(r) }));
     font-size: var(--text-sm);
   }
   .resources-empty[hidden] { display: none; }
+
+  /* Pie de última actualización (tarea 3.3) */
+  .page-updated {
+    margin-top: calc(var(--space-section) * 0.5);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+  }
 
   /* Responsive */
   @media (max-width: 768px) {

@@ -4,6 +4,7 @@
     "cuerpo": "Umbrella review que sintetiza la evidencia de revisiones sistemáticas y meta-análisis sobre el impacto de la Inteligencia Artificial Generativa en el pensamiento crítico del alumnado universitario. Focos: alfabetización en IAG, instrumentos validados para medir AI literacy y pensamiento crítico, y modalidades de integración didáctica. Metodología: registro en PROSPERO, JBI Critical Appraisal Checklist y PRIOR/PRISMA 2020. Constituye el Capítulo 4 de la tesis y su primera publicación derivada, en el marco del proyecto DIDACT.IA.",
     "estado": "En curso",
     "estadoClase": "status-active",
+    "actualizado": "2026-07-20",
     "tags": [
       "Umbrella Review",
       "IA Generativa",
@@ -13,36 +14,6 @@
       "DIDACT.IA"
     ]
   },
-  "otrosProyectos": [
-    {
-      "titulo": "La Mecánica de Juego como Indicador del Aprendizaje: una Revisión Sistemática de la Evaluación Integrada en los Juegos Educativos",
-      "cuerpo": "Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.",
-      "estado": "Pendiente de publicar",
-      "estadoClase": "status-completed",
-      "tags": [
-        "Mecánicas de juego",
-        "Evaluación integrada",
-        "Game-Based Learning",
-        "Educación Superior",
-        "Stealth Assessment",
-        "RSL / Systematic Review"
-      ]
-    },
-    {
-      "titulo": "Ontología de mecánicas de juego",
-      "cuerpo": "Desarrollo de una ontología formal que clasifica y estructura las mecánicas de juego como unidades de análisis en el diseño de juegos educativos. El objetivo es proporcionar un marco conceptual compartido que facilite la comparación entre estudios, el diseño fundamentado y la operacionalización de mecánicas en contextos de investigación.",
-      "estado": "En curso",
-      "estadoClase": "status-active",
-      "tags": [
-        "Ontología",
-        "Mecánicas de juego",
-        "Game Design",
-        "Game-Based Learning",
-        "Marco conceptual",
-        "Taxonomía"
-      ]
-    }
-  ],
   "publicaciones": [
     {
       "titulo": "Minecraft as a Pedagogical Tool: A Systematic Literature Review (2014–2024)",
@@ -51,7 +22,10 @@
       "revista": "Games and Culture",
       "editorial": "SAGE",
       "url": "https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C",
-      "estado": null
+      "estado": null,
+      "estadoClase": null,
+      "resumen": null,
+      "actualizado": "2025-05-15"
     },
     {
       "titulo": "Evolución de los niveles educativos en la provincia de Cáceres (España, 1991–2021): desigualdades territoriales y de género a partir del Censo de Población",
@@ -60,7 +34,22 @@
       "revista": "Revista de Estudios Extremeños",
       "editorial": null,
       "url": null,
-      "estado": "Aceptado para publicación"
+      "estado": "En producción",
+      "estadoClase": "status-active",
+      "resumen": null,
+      "actualizado": "2026-07-31"
+    },
+    {
+      "titulo": "La Mecánica de Juego como Indicador del Aprendizaje: una Revisión Sistemática de la Evaluación Integrada en los Juegos Educativos",
+      "autores": null,
+      "anio": null,
+      "revista": null,
+      "editorial": null,
+      "url": null,
+      "estado": "En revisión por pares",
+      "estadoClase": "status-completed",
+      "resumen": "Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.",
+      "actualizado": "2026-07-31"
     }
   ]
 }

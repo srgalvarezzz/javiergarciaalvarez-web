@@ -1,6 +1,7 @@
 [
   {
     "id": "minecraft-component-lists",
+    "actualizado": "2025-06-10",
     "published": true,
     "tipo": "Dataset",
     "type": "dataset",
@@ -16,7 +17,7 @@
     "publicadoISO": "2025-06",
     "anio": 2025,
     "mes": "jun",
-    "version": "Minecraft 1.21.6",
+    "version": "1.21.06",
     "licencia": "CC-BY 4.0",
     "editor": "Zenodo",
     "autorApa": "García-Álvarez, J.",
@@ -26,6 +27,7 @@
   },
   {
     "id": "calculadora-baremos",
+    "actualizado": "2026-05-29",
     "published": true,
     "tipo": "Herramienta",
     "type": "tool",
@@ -51,6 +53,7 @@
   },
   {
     "id": "educraft-map",
+    "actualizado": "2025-02-14",
     "published": true,
     "tipo": "Mapa",
     "type": "map",

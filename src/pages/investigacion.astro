@@ -1,8 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import contenido from '../data/investigacion.json';
+import { ultimaActualizacion } from '../utils/fechas';
 
-const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
+const { proyectoPrincipal, publicaciones } = contenido;
+
+// Se deriva del máximo de las entradas, nunca se escribe a mano (tarea 3.3).
+const actualizado = ultimaActualizacion([proyectoPrincipal, ...publicaciones]);
 ---
 
 <BaseLayout
@@ -44,36 +48,6 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
       </article>
     </section>
 
-    <!-- Otros proyectos -->
-    <section class="other-projects">
-      <h2 class="subsection-title">Otros proyectos</h2>
-      <ul class="other-projects-list">
-        {otrosProyectos.map(proyecto => (
-          <li class="other-project">
-            <div class="other-project-main">
-              <h3 class="other-project-title">
-                {proyecto.titulo}
-              </h3>
-              <p class="other-project-body">
-                {proyecto.cuerpo}
-              </p>
-            </div>
-            <div class="other-project-meta">
-              <span class:list={['other-project-status', proyecto.estadoClase]}>
-                <span class="status-dot" aria-hidden="true"></span>
-                {proyecto.estado}
-              </span>
-              <ul class="other-project-tags">
-                {proyecto.tags.map(tag => (
-                  <li>{tag}</li>
-                ))}
-              </ul>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
-
     <!-- Publicaciones -->
     <section class="publications">
       <h2 class="subsection-title">Publicaciones</h2>
@@ -81,7 +55,7 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
       {publicaciones.map(pub => (
         <article class="publication">
           {pub.estado && (
-            <span class="publication-status status-pill status-active">
+            <span class:list={['publication-status', 'status-pill', pub.estadoClase]}>
               <span class="status-dot" aria-hidden="true"></span>
               {pub.estado}
             </span>
@@ -91,9 +65,16 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
               <a href={pub.url} target="_blank" rel="noopener">{pub.titulo}</a>
             ) : pub.titulo}
           </h3>
-          <p class="publication-meta">
-            {pub.autores} ({pub.anio}). <em>{pub.revista}</em>.{pub.editorial ? ` ${pub.editorial}.` : ''}
-          </p>
+          {/* Una entrada en revisión aún no tiene revista ni año que citar, así
+              que la línea de referencia solo se pinta cuando hay algo que poner. */}
+          {pub.autores && pub.revista && (
+            <p class="publication-meta">
+              {pub.autores} ({pub.anio}). <em>{pub.revista}</em>.{pub.editorial ? ` ${pub.editorial}.` : ''}
+            </p>
+          )}
+          {pub.resumen && (
+            <p class="publication-body">{pub.resumen}</p>
+          )}
           {pub.url && (
             <a class="publication-link" href={pub.url} target="_blank" rel="noopener">
               Ver en Google Scholar <span aria-hidden="true">↗</span>
@@ -102,6 +83,10 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
         </article>
       ))}
     </section>
+
+    {actualizado && (
+      <p class="page-updated">Última actualización: {actualizado}</p>
+    )}
 
   </div>
 </BaseLayout>
@@ -260,10 +245,6 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
     background: transparent;
   }
 
-  /* Otros proyectos — lista editorial */
-  .other-projects {
-    margin-top: calc(var(--space-section) * 0.6);
-  }
   .subsection-title {
     font-family: var(--font-display);
     font-size: var(--text-2xl);
@@ -274,96 +255,20 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--color-border);
   }
-  .other-projects-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
-  .other-project {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 2.5rem;
-    padding: 2rem 0;
-    border-bottom: 1px solid var(--color-border);
-    align-items: start;
-  }
-  .other-project:last-child { border-bottom: none; }
-  .other-project-title {
-    font-family: var(--font-display);
-    font-size: var(--text-xl);
-    line-height: 1.25;
-    letter-spacing: -0.01em;
-    color: var(--color-ink);
-    font-weight: var(--weight-regular);
-    margin-bottom: 0.75rem;
-  }
-  .other-project-body {
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    line-height: var(--leading-normal);
-    color: var(--color-ink-soft);
-    max-width: 42rem;
-  }
-  .other-project-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.75rem;
-    min-width: 12rem;
-  }
-  .other-project-status {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-family: var(--font-body);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
-    padding: 0.3rem 0.6rem;
-    border-radius: var(--radius-sm);
-    white-space: nowrap;
-  }
-  .other-project-status.status-active { background: var(--color-success-soft); color: var(--color-success); }
-  .other-project-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    justify-content: flex-end;
-  }
-  .other-project-tags li {
-    font-family: var(--font-body);
-    font-size: 0.7rem;
-    font-weight: var(--weight-medium);
-    color: var(--color-ink-muted);
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-sm);
-  }
-
   /* Estados alternativos (preparados) */
-  .status-pill.status-completed,
-  .other-project-status.status-completed {
+  .status-pill.status-completed {
     background: var(--color-surface-soft);
     color: var(--color-ink-soft);
   }
-  .status-pill.status-completed .status-dot,
-  .other-project-status.status-completed .status-dot { background: var(--color-ink-muted); }
-  .status-pill.status-completed .status-dot::after,
-  .other-project-status.status-completed .status-dot::after { display: none; }
+  .status-pill.status-completed .status-dot { background: var(--color-ink-muted); }
+  .status-pill.status-completed .status-dot::after { display: none; }
 
-  .status-pill.status-paused,
-  .other-project-status.status-paused {
+  .status-pill.status-paused {
     background: #FBE9D9;
     color: var(--color-warm-deep);
   }
-  .status-pill.status-paused .status-dot,
-  .other-project-status.status-paused .status-dot { background: var(--color-warm); }
-  .status-pill.status-paused .status-dot::after,
-  .other-project-status.status-paused .status-dot::after { display: none; }
+  .status-pill.status-paused .status-dot { background: var(--color-warm); }
+  .status-pill.status-paused .status-dot::after { display: none; }
 
   /* Publicaciones (adaptada al sistema, sin morado) */
   .publications { margin-top: calc(var(--space-section) * 0.6); }
@@ -409,17 +314,24 @@ const { proyectoPrincipal, otrosProyectos, publicaciones } = contenido;
     display: inline-flex;
     margin-bottom: 0.75rem;
   }
+  /* Resumen de una entrada aún sin referencia que mostrar. Hereda del cuerpo
+     que usaba la lista de proyectos, para no introducir un tamaño nuevo. */
+  .publication-body {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 42rem;
+    margin-bottom: 0.6rem;
+  }
 
-  /* Responsive */
-  @media (max-width: 768px) {
-    .other-project {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    .other-project-meta {
-      align-items: flex-start;
-      min-width: 0;
-    }
-    .other-project-tags { justify-content: flex-start; }
+  /* Pie de última actualización (tarea 3.3) */
+  .page-updated {
+    margin-top: calc(var(--space-section) * 0.5);
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
   }
 </style>
