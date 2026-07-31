@@ -33,10 +33,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           Trabajo desde una intuición simple: el tiempo bien gastado casi nunca está donde uno cree. Suelo dedicarle más esfuerzo del que parece razonable a la fase previa, esa que no produce nada visible — pensar el problema, montar el sistema, preparar la herramienta, dudar antes de empezar. La parte siguiente, la que sí se ve, es fácil cuando lo de antes está bien hecho.
         </p>
 
-        <blockquote class="about-pullquote">
-          Dame seis horas para cortar un árbol y pasaré las primeras cuatro afilando el hacha. <span class="about-pullquote-cite">— Abraham Lincoln</span>
-        </blockquote>
-
         <p>
           Eso se traslada a cómo investigo. Me interesa más afinar la mirada que producir resultados rápidos. Una mirada bien hecha sirve para muchos temas; un resultado, solo para el suyo. Por eso prefiero cuestionar las premisas que me dan, antes que cerrar conclusiones a tiempo. Los atajos en resultados normalmente son triviales. Lo que se aprende sobre cómo funciona el mundo, no.
         </p>
@@ -160,29 +156,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   .about-first-paragraph {
     color: var(--color-ink) !important;
     font-weight: var(--weight-regular);
-  }
-
-  .about-pullquote {
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    line-height: 1.3;
-    font-style: italic;
-    color: var(--color-ink);
-    margin: 3rem 0;
-    padding: 0 0 0 2rem;
-    border-left: 2px solid var(--color-warm);
-    font-weight: var(--weight-regular);
-    letter-spacing: -0.01em;
-  }
-
-  .about-pullquote-cite {
-    display: block;
-    margin-top: 0.75rem;
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    font-style: normal;
-    color: var(--color-ink-muted);
-    letter-spacing: 0;
   }
 
   @media (max-width: 900px) {

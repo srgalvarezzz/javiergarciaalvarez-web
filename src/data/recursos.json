@@ -1,6 +1,7 @@
 [
   {
     "id": "minecraft-component-lists",
+    "published": true,
     "tipo": "Dataset",
     "type": "dataset",
     "estado": "Disponible",
@@ -25,6 +26,7 @@
   },
   {
     "id": "calculadora-baremos",
+    "published": true,
     "tipo": "Herramienta",
     "type": "tool",
     "estado": "Disponible",
@@ -49,6 +51,7 @@
   },
   {
     "id": "educraft-map",
+    "published": true,
     "tipo": "Mapa",
     "type": "map",
     "estado": "Disponible",
@@ -73,6 +76,7 @@
   },
   {
     "id": "gdd-estandarizado",
+    "published": false,
     "tipo": "Plantilla",
     "type": "template",
     "estado": "Próximamente",
@@ -97,6 +101,7 @@
   },
   {
     "id": "rsl-dataset-template",
+    "published": false,
     "tipo": "Plantilla",
     "type": "template",
     "estado": "Próximamente",

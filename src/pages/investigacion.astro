@@ -1,47 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import metricsFallback from '../data/metrics.json';
-
-// Métricas de Google Scholar — se intentan leer en tiempo de build.
-// Si Scholar bloquea la petición o cambia el HTML, se usan los últimos
-// valores conocidos de src/data/metrics.json (respaldo).
-const SCHOLAR_PROFILE = 'https://scholar.google.com/citations?hl=es&user=mYf-JyQAAAAJ&pagesize=100';
-
-async function getMetrics() {
-  try {
-    const res = await fetch(SCHOLAR_PROFILE, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-        'Accept-Language': 'es-ES,es;q=0.9',
-      },
-      signal: AbortSignal.timeout(8000),
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const html = await res.text();
-
-    // Tabla de estadísticas: columna "Todo" en el orden Citas, Índice h, Índice i10.
-    const stats = [...html.matchAll(/<td class="gsc_rsb_std">(\d[\d.,]*)<\/td>/g)].map((m) =>
-      m[1].replace(/[.,]/g, ''),
-    );
-    const citas = stats[0];
-    const hIndex = stats[2];
-
-    if (!citas || !hIndex) throw new Error('No se pudo parsear el perfil');
-
-    return {
-      citas,
-      hIndex,
-      // Nº de publicaciones se fija a mano: Scholar mezcla artículos y datasets.
-      publicaciones: metricsFallback.publicaciones,
-      updated: new Date().toISOString().slice(0, 10),
-    };
-  } catch {
-    return metricsFallback;
-  }
-}
-
-const metrics = await getMetrics();
 
 const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C';
 ---
@@ -142,19 +100,6 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
       <h2 class="subsection-title">Publicaciones</h2>
 
       <article class="publication">
-        <span class="publication-status status-pill status-active">
-          <span class="status-dot" aria-hidden="true"></span>
-          Aceptado para publicación
-        </span>
-        <h3 class="publication-title">
-          Evolución de los niveles educativos en la provincia de Cáceres (España, 1991–2021): desigualdades territoriales y de género a partir del Censo de Población
-        </h3>
-        <p class="publication-meta">
-          García-Álvarez, J. &amp; Santos-Pérez, C. (en prensa). <em>Revista de Estudios Extremeños</em>.
-        </p>
-      </article>
-
-      <article class="publication">
         <h3 class="publication-title">
           <a href={SCHOLAR_PUB} target="_blank" rel="noopener">
             Minecraft as a Pedagogical Tool: A Systematic Literature Review (2014–2024)
@@ -167,26 +112,19 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
           Ver en Google Scholar <span aria-hidden="true">↗</span>
         </a>
       </article>
-    </section>
 
-    <!-- Métricas -->
-    <section class="metrics">
-      <h2 class="subsection-title">Métricas</h2>
-      <div class="metrics-grid">
-        {([
-          { label: 'Citas', value: metrics.citas },
-          { label: 'Índice h', value: metrics.hIndex },
-          { label: 'Publicaciones', value: metrics.publicaciones },
-        ]).map(({ label, value }) => (
-          <div class="metric">
-            <p class="metric-value">{value}</p>
-            <p class="metric-label">{label}</p>
-          </div>
-        ))}
-      </div>
-      <p class="metrics-source">
-        Fuente: <a href="https://scholar.google.es/citations?user=mYf-JyQAAAAJ&hl=es" target="_blank" rel="noopener">Google Scholar</a> · actualizado el {metrics.updated}.
-      </p>
+      <article class="publication">
+        <span class="publication-status status-pill status-active">
+          <span class="status-dot" aria-hidden="true"></span>
+          Aceptado para publicación
+        </span>
+        <h3 class="publication-title">
+          Evolución de los niveles educativos en la provincia de Cáceres (España, 1991–2021): desigualdades territoriales y de género a partir del Censo de Población
+        </h3>
+        <p class="publication-meta">
+          García-Álvarez, J. &amp; Santos-Pérez, C. (en prensa). <em>Revista de Estudios Extremeños</em>.
+        </p>
+      </article>
     </section>
 
   </div>
@@ -496,47 +434,6 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
     margin-bottom: 0.75rem;
   }
 
-  /* Métricas (adaptada al sistema, sin morado) */
-  .metrics { margin-top: calc(var(--space-section) * 0.6); }
-  .metrics-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-  }
-  .metric {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 1.75rem 1rem;
-    text-align: center;
-  }
-  .metric-value {
-    font-family: var(--font-display);
-    font-size: var(--text-3xl);
-    line-height: 1;
-    letter-spacing: -0.02em;
-    color: var(--color-ink);
-  }
-  .metric-label {
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    color: var(--color-ink-muted);
-    margin-top: 0.5rem;
-  }
-  .metrics-source {
-    font-family: var(--font-body);
-    font-size: var(--text-sm);
-    color: var(--color-ink-muted);
-  }
-  .metrics-source a {
-    color: var(--color-ink-soft);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    transition: color var(--transition-fast);
-  }
-  .metrics-source a:hover { color: var(--color-ink); }
-
   /* Responsive */
   @media (max-width: 768px) {
     .other-project {
@@ -548,6 +445,5 @@ const SCHOLAR_PUB = 'https://scholar.google.com/citations?view_op=view_citation&
       min-width: 0;
     }
     .other-project-tags { justify-content: flex-start; }
-    .metrics-grid { grid-template-columns: 1fr 1fr; }
   }
 </style>

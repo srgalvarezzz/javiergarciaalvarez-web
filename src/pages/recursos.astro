@@ -1,7 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Icon from '../components/Icon.astro';
-import recursos from '../data/recursos.json';
+import recursosData from '../data/recursos.json';
+
+// Solo lo publicado llega a la vista. Para reactivar un recurso basta con
+// quitar (o poner a true) su "published" en src/data/recursos.json: vuelve
+// a la lista y los contadores se recalculan solos.
+const recursos = recursosData.filter((r) => r.published !== false);
 
 // ── Filtros (contadores dinámicos en server-side) ──
 const filtros = [
@@ -14,8 +19,8 @@ const filtros = [
 const countFor = (k: string) => (k === 'all' ? recursos.length : recursos.filter((r) => r.type === k).length);
 const chips = filtros.filter((f) => f.key === 'all' || countFor(f.key) > 0);
 
-// Recursos accesibles (en abierto) — excluye los que están en proceso.
-const disponibles = recursos.filter((r) => r.status === 'active').length;
+// Misma fuente que el chip "Todos": los dos números no pueden divergir.
+const disponibles = countFor('all');
 
 // ── Generación dinámica de citas a partir de los metadatos ──
 const TIPO_APA: Record<string, string> = { dataset: 'Conjunto de datos', tool: 'Herramienta', template: 'Plantilla' };

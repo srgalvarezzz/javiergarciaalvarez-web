@@ -30,7 +30,7 @@ const hasWritings = sortedWritings.length > 0;
           <li class="writing-item">
             <a href={`/astillas/${writing.id}`} class="writing-link">
               <time class="writing-date" datetime={writing.data.publishedAt.toISOString()}>
-                {writing.data.publishedAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' })}
+                {writing.data.publishedAt.toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
               </time>
               <h2 class="writing-title">{writing.data.title}</h2>
               <p class="writing-description">{writing.data.description}</p>
