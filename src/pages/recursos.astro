@@ -15,7 +15,6 @@ const filtros = [
   { key: 'all', label: 'Todos' },
   { key: 'dataset', label: 'Datasets' },
   { key: 'tool', label: 'Herramientas' },
-  { key: 'map', label: 'Mapas' },
   { key: 'template', label: 'Plantillas' },
 ];
 const countFor = (k: string) => (k === 'all' ? recursos.length : recursos.filter((r) => r.type === k).length);

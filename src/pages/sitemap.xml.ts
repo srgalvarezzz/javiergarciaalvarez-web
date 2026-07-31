@@ -12,7 +12,14 @@ import { getCollection } from 'astro:content';
  * precio de no usar la integración; a cambio, nada se publica por descuido.
  */
 
-const RUTAS_FIJAS = ['/', '/sobre-mi', '/investigacion', '/recursos', '/astillas'];
+const RUTAS_FIJAS = [
+  '/',
+  '/sobre-mi',
+  '/investigacion',
+  '/recursos',
+  '/recursos/calculadora-baremos',
+  '/astillas',
+];
 
 const FALLBACK = 'https://javiergarciaalvarez.com';
 

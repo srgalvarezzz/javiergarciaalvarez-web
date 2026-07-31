@@ -1,0 +1,267 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import recursosData from '../../data/recursos.json';
+
+/**
+ * Página del recurso "Calculadora de baremos" (tarea 5.3).
+ *
+ * Alcance deliberado: página contenedora y maqueta de la interfaz. Aquí NO se
+ * calcula nada. Los campos están deshabilitados y los valores son de ejemplo,
+ * marcados como tales, para que nadie confunda esto con una herramienta que
+ * funciona. La salida real sigue siendo Notion hasta que se implemente.
+ */
+
+const recurso = recursosData.find((r) => r.id === 'calculadora-baremos')!;
+
+// URL de trabajo en Notion, conservada como salida provisional.
+const NOTION = 'https://www.notion.so/Tutorial-herramientas-de-c-lculo-2c0334b437154f7f9abcc2d82c1abd59';
+
+// Campos de ejemplo. No son un baremo real: son el esqueleto de la interfaz.
+const camposEjemplo = [
+  { etiqueta: 'Convocatoria', valor: 'Ejemplo — sin datos reales' },
+  { etiqueta: 'Nota media del expediente', valor: '0,00' },
+  { etiqueta: 'Créditos superados', valor: '0' },
+];
+---
+
+<BaseLayout
+  title="Calculadora de baremos"
+  description="Calculadora de baremos universitarios de Javier García-Álvarez para convocatorias predoctorales españolas. Página del recurso."
+  ogImage="/og-recursos.png"
+>
+  <div class="recurso-page">
+
+    <a href="/recursos" class="volver">← Recursos</a>
+
+    <header class="page-header">
+      <p class="eyebrow">Herramienta</p>
+      <h1 class="page-title">{recurso.titulo}</h1>
+      <p class="page-lead">{recurso.descripcion}</p>
+    </header>
+
+    <div class="aviso" role="note">
+      <p>
+        <strong>Esto es una maqueta.</strong> La calculadora todavía no funciona en esta
+        página: los campos de abajo enseñan cómo será la interfaz, pero no calculan nada.
+        Para usarla hoy, abre la versión de Notion.
+      </p>
+    </div>
+
+    <section class="maqueta" aria-labelledby="maqueta-titulo">
+      <h2 id="maqueta-titulo" class="subsection-title">Vista previa de la interfaz</h2>
+
+      <form class="maqueta-form" inert>
+        {camposEjemplo.map(({ etiqueta, valor }) => (
+          <div class="campo">
+            <label class="campo-label">{etiqueta}</label>
+            <input class="campo-input" type="text" value={valor} disabled readonly />
+          </div>
+        ))}
+
+        <div class="resultado">
+          <p class="resultado-label">Puntuación total</p>
+          <p class="resultado-valor">—</p>
+        </div>
+      </form>
+    </section>
+
+    <section class="salida">
+      <h2 class="subsection-title">Mientras tanto</h2>
+      <p class="salida-texto">
+        La versión que funciona vive en Notion. Es la misma herramienta que uso yo;
+        si encuentras un error en los baremos, dímelo.
+      </p>
+      <div class="salida-acciones">
+        <a href={NOTION} class="btn-primary" target="_blank" rel="noopener noreferrer">
+          Abrir en Notion
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14">
+            <path d="M7 17L17 7M17 7H8M17 7V16" />
+          </svg>
+        </a>
+        <a
+          href={`mailto:alvarez@unex.es?subject=${encodeURIComponent(`Feedback: ${recurso.titulo}`)}`}
+          class="link-arrow"
+        >
+          Feedback
+          <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</BaseLayout>
+
+<style>
+  .recurso-page {
+    max-width: var(--max-content);
+    margin: 0 auto;
+    padding: var(--space-section) 1.5rem;
+  }
+
+  .volver {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    margin-bottom: 2rem;
+    transition: color var(--transition-fast);
+  }
+  .volver:hover { color: var(--color-ink); }
+
+  .page-header { margin-bottom: 2.5rem; max-width: 42rem; }
+  .page-header .eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--color-ink-muted);
+    margin-bottom: 1rem;
+  }
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 5vw, 3.25rem);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+  }
+  .page-lead {
+    font-family: var(--font-body);
+    font-size: var(--text-lg);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 36rem;
+  }
+
+  /* Aviso de maqueta: tiene que verse, o la página engaña. */
+  .aviso {
+    background: var(--color-warm-soft);
+    border-left: 3px solid var(--color-warm);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: 1.25rem 1.5rem;
+    max-width: 42rem;
+    margin-bottom: calc(var(--space-section) * 0.5);
+  }
+  .aviso p {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-relaxed);
+    color: var(--color-ink-soft);
+    margin: 0;
+  }
+  .aviso strong { color: var(--color-ink); font-weight: var(--weight-semibold); }
+
+  .subsection-title {
+    font-family: var(--font-display);
+    font-size: var(--text-2xl);
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    font-weight: var(--weight-regular);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .maqueta { margin-bottom: calc(var(--space-section) * 0.5); }
+
+  /* Atenuada a propósito: comunica "esto no está vivo todavía". */
+  .maqueta-form {
+    max-width: 32rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    opacity: 0.65;
+  }
+
+  .campo { display: flex; flex-direction: column; gap: 0.4rem; }
+  .campo-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+  }
+  .campo-input {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    color: var(--color-ink-soft);
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.7rem 0.9rem;
+    width: 100%;
+  }
+
+  .resultado {
+    margin-top: 0.75rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .resultado-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+  }
+  .resultado-valor {
+    font-family: var(--font-display);
+    font-size: var(--text-3xl);
+    line-height: 1;
+    color: var(--color-ink);
+  }
+
+  .salida-texto {
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 36rem;
+    margin-bottom: 1.5rem;
+  }
+  .salida-acciones {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-accent);
+    color: white;
+    border-radius: var(--radius-md);
+    font-family: var(--font-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-base);
+    text-decoration: none;
+    transition: background var(--transition-fast);
+  }
+  .btn-primary:hover { background: var(--color-accent-hover); color: white; }
+
+  .link-arrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: var(--weight-medium);
+    font-size: var(--text-base);
+    text-decoration: none;
+    transition: gap var(--transition-base), color var(--transition-fast);
+  }
+  .link-arrow:hover { color: var(--color-accent); gap: 0.7rem; }
+</style>
