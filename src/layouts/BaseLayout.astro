@@ -42,7 +42,6 @@ const currentPath = Astro.url.pathname;
 
 const isActive = (route: string): boolean =>
   route === '/' ? currentPath === '/' : currentPath.startsWith(route);
-const isEnglish = currentPath.startsWith('/en');
 ---
 
 <!doctype html>
@@ -124,7 +123,6 @@ const isEnglish = currentPath.startsWith('/en');
         </nav>
 
         <div class="site-header-actions">
-          {/* Toggle ES/EN oculto hasta que la traducción esté lista (rama traduccion-en) */}
           <label for="mobile-menu-toggle" class="site-burger">
             <span class="sr-only">Menú</span>
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -228,33 +226,13 @@ const isEnglish = currentPath.startsWith('/en');
       .site-nav-link.is-active { color: var(--color-ink); }
       .site-nav-link.is-active::after { transform: scaleX(1); }
 
-      /* Acciones (lang toggle + burger) */
+      /* Acciones (burger) */
       .site-header-actions {
         justify-self: end;
         display: inline-flex;
         align-items: center;
         gap: 1rem;
       }
-
-      .lang-toggle {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-family: var(--font-mono);
-        font-size: var(--text-xs);
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-      }
-      .lang-toggle-option {
-        color: var(--color-ink-muted);
-        text-decoration: none;
-        padding: 0.25rem 0.4rem;
-        border-radius: var(--radius-sm);
-        transition: color var(--transition-fast), background var(--transition-fast);
-      }
-      .lang-toggle-option:hover { color: var(--color-ink); background: var(--color-surface-soft); }
-      .lang-toggle-option[aria-current="true"] { color: var(--color-ink); font-weight: var(--weight-medium); }
-      .lang-toggle-separator { color: var(--color-border-strong); user-select: none; }
 
       /* Burger (solo móvil) */
       .site-burger {
@@ -275,7 +253,6 @@ const isEnglish = currentPath.startsWith('/en');
       @media (max-width: 768px) {
         .site-header-inner { grid-template-columns: 1fr auto; gap: 1rem; }
         .site-nav { display: none; }
-        .lang-toggle { display: none; }
         .site-burger { display: inline-flex; }
 
         .site-nav-mobile {
