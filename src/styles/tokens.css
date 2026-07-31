@@ -23,7 +23,12 @@
   /* Tinta — texto */
   --color-ink: #0F0F1A;          /* texto principal, no negro puro */
   --color-ink-soft: #4A4A5C;     /* texto secundario */
-  --color-ink-muted: #8B8B9E;    /* captions, eyebrows, metadata */
+  /* 6.2 — era #8B8B9E, que daba 3,2:1 sobre --color-bg y 3,03:1 sobre
+     --color-surface-soft, por debajo del 4,5:1 que exige WCAG AA en texto
+     normal. Se oscurece manteniendo el mismo tono azulado: ahora 4,79:1 y
+     4,54:1. Es el token más extendido del sitio (kickers, metadatos, fechas,
+     pies), así que el cambio se nota en todas las rutas. */
+  --color-ink-muted: #6E6E7D;    /* captions, eyebrows, metadata */
 
   /* Superficies */
   --color-bg: #FAFAF7;           /* fondo de página, con calidez sutil */
@@ -35,7 +40,9 @@
   --color-border-strong: #D0D0D8;
 
   /* Semánticos */
-  --color-success: #4D8B2E;
+  /* 6.2 — era #4D8B2E: 3,64:1 sobre --color-success-soft, que es el fondo
+     con el que siempre se combina en las píldoras de estado. Ahora 4,53:1. */
+  --color-success: #447A28;
   --color-success-soft: #EAF3DE;
   --color-danger: #C2362F;
   --color-danger-soft: #FCEBEB;

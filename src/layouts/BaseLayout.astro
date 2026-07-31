@@ -101,6 +101,10 @@ const isActive = (route: string): boolean =>
   </head>
   <body class="min-h-screen bg-white text-slate-800 flex flex-col">
 
+    {/* Primero en el DOM a propósito (tarea 6.4): quien navegue con teclado
+        debe poder saltarse el menú antes de tabular por él entero. */}
+    <a href="#contenido" class="skip-link">Saltar al contenido</a>
+
     <!-- Header (Fase 4) -->
     <header class="site-header">
       <div class="site-header-inner">
@@ -123,18 +127,28 @@ const isActive = (route: string): boolean =>
         </nav>
 
         <div class="site-header-actions">
-          <label for="mobile-menu-toggle" class="site-burger">
+          {/* Era un <label> gobernando un checkbox con display:none: ninguno de
+              los dos recibe foco, así que con teclado el menú no se podía abrir
+              y a 375 px no había forma de salir de la página. Ahora es un botón
+              de verdad, que enfoca y responde a Enter y Espacio de serie. */}
+          <button
+            type="button"
+            class="site-burger"
+            aria-expanded="false"
+            aria-controls="nav-movil"
+            data-burger
+          >
             <span class="sr-only">Menú</span>
             <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
             </svg>
-          </label>
+          </button>
         </div>
       </div>
 
-      <!-- Nav móvil (menú hamburguesa CSS conservado) -->
-      <input type="checkbox" id="mobile-menu-toggle" class="site-nav-toggle" />
-      <nav class="site-nav-mobile" aria-label="Navegación móvil">
+      {/* Sin JS el menú se queda desplegado, que es utilizable. Es el script
+          quien lo cierra al arrancar y quien lo convierte en desplegable. */}
+      <nav id="nav-movil" class="site-nav-mobile" aria-label="Navegación móvil">
         {navLinks.map(({ href, label }) => (
           <a
             href={href}
@@ -144,8 +158,34 @@ const isActive = (route: string): boolean =>
       </nav>
     </header>
 
+    <script>
+      const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+      const navMovil = document.querySelector<HTMLElement>('#nav-movil');
+
+      if (burger && navMovil) {
+        const abrir = (valor: boolean) => {
+          burger.setAttribute('aria-expanded', String(valor));
+          navMovil.dataset.abierto = String(valor);
+        };
+
+        abrir(false);
+        burger.addEventListener('click', () => {
+          abrir(burger.getAttribute('aria-expanded') !== 'true');
+        });
+
+        // Escape cierra y devuelve el foco al botón, para no dejar al teclado
+        // dentro de un menú que ya no se ve.
+        navMovil.addEventListener('keydown', (evento) => {
+          if (evento.key === 'Escape') {
+            abrir(false);
+            burger.focus();
+          }
+        });
+      }
+    </script>
+
     <!-- Page content -->
-    <main class="flex-1">
+    <main id="contenido" class="flex-1" tabindex="-1">
       <slot />
     </main>
 
@@ -153,6 +193,37 @@ const isActive = (route: string): boolean =>
     <Footer />
 
     <style>
+      /* ── Saltar al contenido (Fase 6.4) ──
+         Fuera de pantalla, no display:none: lo segundo lo sacaría del orden
+         de tabulación y no habría nada que enfocar. */
+      .skip-link {
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 100;
+        transform: translateY(-120%);
+        background: var(--color-ink);
+        color: var(--color-bg);
+        font-family: var(--font-body);
+        font-size: var(--text-sm);
+        font-weight: var(--weight-medium);
+        padding: 0.75rem 1.25rem;
+        border-radius: 0 0 var(--radius-md) 0;
+        text-decoration: none;
+        transition: transform var(--transition-fast);
+      }
+      .skip-link:focus {
+        transform: translateY(0);
+        color: var(--color-bg);
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .skip-link { transition: none; }
+      }
+
+      /* El foco programático de <main> no debe dibujar un contorno alrededor
+         de la página entera al llegar desde el enlace de salto. */
+      main:focus { outline: none; }
+
       /* ── Header / Nav (Fase 4) ── usa tokens de tokens.css ── */
       .site-header {
         position: sticky;
@@ -246,8 +317,7 @@ const isActive = (route: string): boolean =>
       }
       .site-burger:hover { color: var(--color-ink); }
 
-      /* Nav móvil */
-      .site-nav-toggle { display: none; }
+      /* Nav móvil: en escritorio nunca se pinta. */
       .site-nav-mobile { display: none; }
 
       @media (max-width: 768px) {
@@ -255,12 +325,15 @@ const isActive = (route: string): boolean =>
         .site-nav { display: none; }
         .site-burger { display: inline-flex; }
 
+        /* Desplegado por defecto; el script lo cierra marcando data-abierto.
+           Así, sin JS, el menú sigue siendo navegable. */
         .site-nav-mobile {
+          display: flex;
           flex-direction: column;
           border-top: 1px solid var(--color-border);
           padding: 0.25rem 1.5rem 0.75rem;
         }
-        .site-nav-toggle:checked ~ .site-nav-mobile { display: flex; }
+        .site-nav-mobile[data-abierto='false'] { display: none; }
 
         .site-nav-mobile-link {
           font-family: var(--font-body);
