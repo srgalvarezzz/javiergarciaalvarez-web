@@ -12,12 +12,18 @@ const { title, description = 'Javier García-Álvarez — Doctorando en Educaci�
 const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://javiergarciaalvarez.com');
 const ogImage = new URL('/og-image.png', Astro.site ?? 'https://javiergarciaalvarez.com');
 
+// Astillas tiene una sola entrada y el nav la anunciaba como si fuera un blog
+// activo. Sale del menú (escritorio y móvil); la ruta y el post siguen vivos y
+// accesibles por URL directa, y el footer los enlaza.
+// Para devolverla al nav cuando haya 4 entradas: poner esto a true. Nada más.
+const ASTILLAS_EN_NAV: boolean = false;
+
 const navLinks = [
   { href: '/',              label: 'Inicio'        },
   { href: '/sobre-mi',      label: 'Sobre mí'      },
   { href: '/investigacion', label: 'Investigación' },
   { href: '/recursos',      label: 'Recursos'      },
-  { href: '/astillas',      label: 'Astillas'      },
+  ...(ASTILLAS_EN_NAV ? [{ href: '/astillas', label: 'Astillas' }] : []),
   { href: '/contacto',      label: 'Contacto'      },
 ];
 

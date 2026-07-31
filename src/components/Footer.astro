@@ -7,6 +7,8 @@ const year = new Date().getFullYear();
   <div class="site-footer-inner">
     <div class="site-footer-left">
       <a href="mailto:alvarez@unex.es" class="site-footer-email">alvarez@unex.es</a>
+      {/* Única entrada al blog mientras Astillas esté fuera del nav (tarea 3.1). */}
+      <a href="/astillas" class="site-footer-link">Astillas</a>
     </div>
 
     <div class="site-footer-right">
@@ -65,6 +67,13 @@ const year = new Date().getFullYear();
     flex-wrap: wrap;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--color-border);
+  }
+
+  .site-footer-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
   }
 
   .site-footer-email {
