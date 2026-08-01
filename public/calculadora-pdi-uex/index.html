@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Bolsa PCD — UEx C2 2024/25</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  /* Paleta y tipografías de javiergarciaalvarez.com */
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --surface2: #F4F4EF;
+    --border: #E8E8EC;
+    --border2: #D0D0D8;
+    --text: #0F0F1A;
+    --text2: #4A4A5C;
+    --text3: #6E6E7D;
+    --green: #5046E4;
+    --green-dim: #EEEDFE;
+    --green-mid: #3F35C7;
+    --amber: #8C3F22;
+    --amber-dim: #F5E3DA;
+    --blue: #3C3489;
+    --blue-dim: #EEEDFE;
+    --red: #C2362F;
+    --red-dim: #FCEBEB;
+    --purple: #B85432;
+    --purple-dim: #F5E3DA;
+    --success: #447A28;
+    --success-dim: #EAF3DE;
+    --accent: #5046E4;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    --serif: 'Instrument Serif', Georgia, serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 56px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-title {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .header-title .fig-accent { color: var(--accent); }
+  .header-sub {
+    font-size: 11px;
+    color: var(--text3);
+    font-family: var(--mono);
+  }
+
+  /* ── SCORE BAR ── */
+  .score-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .score-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 72px;
+  }
+  .score-val {
+    font-family: var(--mono);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--accent);
+    transition: color .3s;
+  }
+  .score-val.warn { color: var(--amber); }
+  .score-val.zero { color: var(--red); }
+  .score-lbl {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+    text-align: center;
+    line-height: 1.3;
+    margin-top: 2px;
+  }
+  .score-sep { width: 1px; height: 36px; background: var(--border); flex-shrink: 0; }
+  .score-total { min-width: 90px; }
+  .score-total .score-val { font-size: 28px; }
+  .aneca-badge {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    color: var(--text2);
+    cursor: pointer;
+    font-family: var(--mono);
+    user-select: none;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .aneca-badge.active {
+    border-color: var(--green);
+    color: var(--green);
+    background: var(--green-dim);
+  }
+  .aneca-badge input { display: none; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border2); transition: background .2s; }
+  .aneca-badge.active .dot { background: var(--green); }
+
+  /* ── LAYOUT ── */
+  .layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 130px);
+    min-height: 500px;
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .sidebar {
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 16px 0;
+    overflow-y: auto;
+  }
+  .nav-section {
+    padding: 4px 12px;
+    margin-bottom: 2px;
+  }
+  .nav-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    background: transparent;
+    color: var(--text2);
+    font-family: var(--sans);
+    font-size: 12px;
+    cursor: pointer;
+    text-align: left;
+    transition: all .15s;
+    position: relative;
+  }
+  .nav-btn:hover { background: var(--surface2); color: var(--text); }
+  .nav-btn.active { background: var(--green-dim); color: var(--green); }
+  .nav-num {
+    font-family: var(--mono);
+    font-size: 10px;
+    background: var(--surface2);
+    padding: 2px 5px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    min-width: 22px;
+    text-align: center;
+  }
+  .nav-btn.active .nav-num { background: var(--green-dim); color: var(--green); }
+  .nav-pts {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--green);
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+  .nav-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 12px;
+  }
+  .nav-group-label {
+    font-size: 10px;
+    color: var(--text3);
+    font-family: var(--mono);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 4px 12px 4px 24px;
+  }
+
+  /* ── CONTENT ── */
+  .content {
+    overflow-y: auto;
+    padding: 20px 24px;
+    background: var(--bg);
+  }
+  .panel { display: none; }
+  .panel.active { display: block; }
+
+  .panel-title {
+    font-family: var(--serif);
+    font-size: 24px;
+    font-weight: 400;
+    color: var(--text);
+    letter-spacing: -0.02em;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .panel-title .peso-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0;
+  }
+  .panel-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 2px rgba(15, 15, 26, .04);
+  }
+  .card-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-pts {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--green);
+    font-weight: 600;
+  }
+
+  /* ── FIELD ROWS ── */
+  .field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .field:last-child { border-bottom: none; }
+  .field-lbl {
+    flex: 1;
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.4;
+  }
+  .field-rate {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    min-width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .field-inp { flex-shrink: 0; display: flex; align-items: center; gap: 6px; }
+  .unit {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    width: 56px;
+    flex-shrink: 0;
+  }
+
+  input[type=number] {
+    width: 64px;
+    padding: 5px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    text-align: center;
+    transition: border-color .15s;
+    -moz-appearance: textfield;
+  }
+  input[type=number]::-webkit-inner-spin-button,
+  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
+  input[type=number]:focus { outline: none; border-color: var(--accent); }
+  input[type=number]:out-of-range { border-color: var(--red); }
+
+  /* ── TOGGLE SÍ/NO ── */
+  input[type=checkbox].bool {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 38px;
+    height: 20px;
+    border-radius: 20px;
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    position: relative;
+    cursor: pointer;
+    transition: all .2s;
+    margin: 0;
+    vertical-align: middle;
+    flex-shrink: 0;
+  }
+  input[type=checkbox].bool::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--text3);
+    transition: all .2s;
+  }
+  input[type=checkbox].bool:checked {
+    background: var(--green-dim);
+    border-color: var(--green);
+  }
+  input[type=checkbox].bool:checked::after {
+    left: 20px;
+    background: var(--green);
+  }
+  input[type=checkbox].bool:focus-visible { outline: 1px solid var(--accent); }
+
+  select {
+    padding: 5px 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 11px;
+    max-width: 160px;
+    transition: border-color .15s;
+  }
+  select:focus { outline: none; border-color: var(--accent); }
+
+  /* ── ALERTS ── */
+  .alert {
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    line-height: 1.5;
+    margin-bottom: 10px;
+  }
+  .alert-amber { background: var(--amber-dim); color: var(--amber); border-left: 2px solid var(--amber); }
+  .alert-blue  { background: var(--blue-dim);  color: var(--blue);  border-left: 2px solid var(--blue);  }
+  .alert-green { background: var(--green-dim); color: var(--green); border-left: 2px solid var(--green); }
+  .alert-red   { background: var(--red-dim);   color: var(--red);   border-left: 2px solid var(--red);   }
+  .alert-purple{ background: var(--purple-dim);color: var(--purple);border-left: 2px solid var(--purple);}
+
+  .sub-lbl {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text3);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin: 12px 0 6px;
+  }
+
+  /* ── RESUMEN BARS ── */
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .bar-lbl {
+    font-size: 11px;
+    color: var(--text2);
+    width: 160px;
+    flex-shrink: 0;
+    text-align: right;
+    font-family: var(--mono);
+  }
+  .bar-wrap {
+    flex: 1;
+    background: var(--surface2);
+    border-radius: 3px;
+    height: 18px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 18px;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    min-width: 2px;
+    transition: width .4s ease;
+    font-family: var(--mono);
+  }
+  .b1 { background: #5046E4; color: #fff; }
+  .b2 { background: #3C3489; color: #fff; }
+  .b3 { background: #D86842; color: #fff; }
+  .b4 { background: #8C3F22; color: #fff; }
+  .b5 { background: #8B8B9E; color: #fff; }
+  .btot { background: var(--text); color: #fff; }
+
+  /* ── TABLA PESOS ── */
+  table.pesos {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    font-family: var(--mono);
+    margin-top: 8px;
+  }
+  table.pesos th {
+    color: var(--text3);
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-weight: 500;
+  }
+  table.pesos td {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+  }
+  table.pesos td.w { text-align: center; color: var(--green); font-weight: 600; }
+  table.pesos tr:last-child td { border-bottom: none; }
+
+  /* ── F FACTOR BOX ── */
+  .f-box {
+    background: var(--surface2);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .f-title { font-family: var(--mono); font-size: 11px; color: var(--purple); font-weight: 600; margin-bottom: 8px; }
+  .f-formula { font-family: var(--mono); font-size: 10px; color: var(--text3); line-height: 1.7; margin-bottom: 8px; }
+  .f-inputs { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+  .f-inp-lbl { font-size: 10px; color: var(--text3); margin-bottom: 4px; font-family: var(--mono); }
+  .f-inp-lbl input[type=number] { width: 100%; }
+  .f-result { display: flex; align-items: center; gap: 10px; }
+  .f-val { font-family: var(--mono); font-size: 22px; font-weight: 600; color: var(--purple); }
+  .f-note { font-size: 10px; color: var(--text3); }
+
+  /* ── MIN THRESHOLD ── */
+  .min-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 11px;
+    font-family: var(--mono);
+    margin-bottom: 12px;
+    border: 1px solid var(--border2);
+    background: var(--surface2);
+    transition: all .3s;
+  }
+  .min-bar.ok { border-color: var(--success); background: var(--success-dim); color: var(--success); }
+  .min-bar.fail { border-color: var(--red); background: var(--red-dim); color: var(--red); }
+  .min-icon { font-size: 14px; }
+
+  /* ── GRID 3 ── */
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 8px; }
+  .g-block { background: var(--surface2); border-radius: 6px; padding: 10px; text-align: center; }
+  .g-val { font-family: var(--mono); font-size: 18px; font-weight: 600; color: var(--accent); }
+  .g-lbl { font-size: 10px; color: var(--text3); margin-top: 2px; }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  @media (max-width: 700px) {
+    .layout { grid-template-columns: 1fr; height: auto; }
+    .sidebar { display: flex; overflow-x: auto; padding: 8px; border-right: none; border-bottom: 1px solid var(--border); }
+    .nav-section { padding: 0 4px; margin: 0; }
+    .nav-btn { white-space: nowrap; }
+    .nav-group-label, .nav-divider { display: none; }
+    .content { height: auto; }
+    .f-inputs { grid-template-columns: 1fr 1fr; }
+    .grid3 { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<style>
+  /* Añadido para javiergarciaalvarez.com: vuelta al sitio y contacto.
+     Usa las variables que ya define la calculadora, para no introducir
+     colores ni tipografías nuevas. */
+  .jga-volver {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 16px 20px 0; padding: 5px 12px;
+    font-family: var(--mono); font-size: 11px;
+    color: var(--text2); text-decoration: none;
+    border: 1px solid var(--border2); border-radius: 20px;
+    transition: color .2s, border-color .2s;
+  }
+  .jga-volver:hover { color: var(--text); border-color: var(--text2); }
+
+  .jga-contacto {
+    max-width: 780px; margin: 48px auto 40px; padding: 0 20px;
+  }
+  .jga-contacto-caja {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0; padding: 28px 30px;
+  }
+  .jga-contacto h2 {
+    font-family: var(--serif); font-size: 26px; font-weight: 400;
+    color: var(--text); margin: 0 0 12px; letter-spacing: -.02em; line-height: 1.2;
+  }
+  .jga-contacto p {
+    font-family: var(--sans); font-size: 14px; line-height: 1.65;
+    color: var(--text2); margin: 0 0 10px; max-width: 62ch;
+  }
+  .jga-contacto p:last-of-type { margin-bottom: 22px; }
+  .jga-acciones { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .jga-btn {
+    display: inline-flex; align-items: center; padding: 10px 20px;
+    background: var(--accent); color: #fff; border-radius: 8px;
+    font-family: var(--sans); font-size: 14px; font-weight: 500;
+    text-decoration: none; transition: background .2s;
+  }
+  .jga-btn:hover { background: var(--green-mid); }
+  .jga-enlace {
+    font-family: var(--sans); font-size: 14px; font-weight: 500;
+    color: var(--text); text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px; transition: color .2s, gap .2s;
+  }
+  .jga-enlace:hover { color: var(--accent); gap: 10px; }
+
+  @media (max-width: 640px) {
+    .jga-contacto-caja { padding: 22px 20px; }
+    .jga-contacto h2 { font-size: 22px; }
+  }
+</style>
+
+<body>
+
+<a class="jga-volver" href="https://javiergarciaalvarez.com/recursos/calculadora-baremos">← Volver a javiergarciaalvarez.com</a>
+
+<div class="header">
+  <div>
+    <div class="header-title">Calculadora PDI — UEx · <span id="hdr-figura" class="fig-accent">PAD</span></div>
+    <div class="header-sub">Concurso C2 · Resolución 18/08/2025 · DOE núm. 164 · <span id="hdr-figura-long">Profesor/a Ayudante Doctor/a</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <div style="display:flex;border:1px solid var(--border2);border-radius:20px;overflow:hidden;font-family:var(--mono);font-size:11px">
+      <button id="btn-pad" onclick="setFigura('pad')" style="padding:5px 14px;background:var(--green-dim);color:var(--green);border:none;cursor:pointer;transition:all .2s">PAD</button>
+      <button id="btn-sust" onclick="setFigura('sust')" style="padding:5px 14px;background:transparent;color:var(--text3);border:none;cursor:pointer;transition:all .2s">Sustituto/a</button>
+    </div>
+    <label class="aneca-badge" id="aneca-badge">
+      <div class="dot" id="aneca-dot"></div>
+      <input type="checkbox" id="chk-aneca" onchange="syncAneca()">
+      ANECA PAD+ → ×1,20
+    </label>
+    <button onclick="guardarDatos()" style="padding:5px 12px;background:var(--green-dim);color:var(--green);border:1px solid var(--green);border-radius:20px;cursor:pointer;font-family:var(--mono);font-size:11px;white-space:nowrap" title="Descarga un archivo .json con todos tus datos">↓ Guardar datos</button>
+    <label style="padding:5px 12px;background:transparent;color:var(--text2);border:1px solid var(--border2);border-radius:20px;cursor:pointer;font-family:var(--mono);font-size:11px;white-space:nowrap" title="Carga un archivo .json guardado anteriormente">↑ Cargar datos<input type="file" id="file-load" accept=".json" onchange="cargarDatos(event)" style="display:none"></label>
+  </div>
+</div>
+
+<!-- SCORE BAR -->
+<div class="score-bar">
+  <div class="score-block">
+    <div class="score-val" id="t2">0,00</div>
+    <div class="score-lbl">2. Acad.<br><span id="lbl-w2">×0,10</span></div>
+  </div>
+  <div class="score-sep"></div>
+  <div class="score-block">
+    <div class="score-val" id="t3">0,00</div>
+    <div class="score-lbl">3. Cargos<br><span id="lbl-w3">×0,10</span></div>
+  </div>
+  <div class="score-sep"></div>
+  <div class="score-block">
+    <div class="score-val" id="t4">0,00</div>
+    <div class="score-lbl">4. Docente<br><span id="lbl-w4">×0,35</span></div>
+  </div>
+  <div class="score-sep"></div>
+  <div class="score-block">
+    <div class="score-val" id="t5">0,00</div>
+    <div class="score-lbl">5. Investig.<br><span id="lbl-w5">×0,35</span></div>
+  </div>
+  <div class="score-sep"></div>
+  <div class="score-block">
+    <div class="score-val" id="t6">0,00</div>
+    <div class="score-lbl">6. Profes.<br><span id="lbl-w6">×0,10</span></div>
+  </div>
+  <div class="score-sep"></div>
+  <div class="score-block score-total">
+    <div class="score-val" id="t-total">0,00</div>
+    <div class="score-lbl">TOTAL<br>ponderado</div>
+  </div>
+  <div id="min-top" class="min-bar" style="margin:0;flex:1;max-width:220px">
+    <span class="min-icon">○</span>
+    <span id="min-text">2a+2b: — / 4,5 mín.</span>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- SIDEBAR NAV -->
+<nav class="sidebar">
+  <div class="nav-group-label">Apartados</div>
+  <div class="nav-section">
+    <button class="nav-btn active" onclick="showPanel('p-acad', this)">
+      <span class="nav-num">2</span>Académico<span class="nav-pts" id="n2">0,00</span>
+    </button>
+    <button class="nav-btn" onclick="showPanel('p-cargos', this)">
+      <span class="nav-num">3</span>Cargos acad.<span class="nav-pts" id="n3">0,00</span>
+    </button>
+    <button class="nav-btn" onclick="showPanel('p-doc', this)">
+      <span class="nav-num">4</span>Docente<span class="nav-pts" id="n4">0,00</span>
+    </button>
+    <button class="nav-btn" onclick="showPanel('p-inv', this)">
+      <span class="nav-num">5</span>Investigador<span class="nav-pts" id="n5">0,00</span>
+    </button>
+    <button class="nav-btn" onclick="showPanel('p-prof', this)">
+      <span class="nav-num">6</span>Profesional<span class="nav-pts" id="n6">0,00</span>
+    </button>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-section">
+    <button class="nav-btn" onclick="showPanel('p-resumen', this)">
+      <span class="nav-num">∑</span>Resumen
+    </button>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-group-label" style="margin-top:8px">Pesos <span id="sidebar-figura-lbl">PAD</span></div>
+  <div style="padding: 6px 12px 0 24px;">
+    <div id="sidebar-pesos" style="font-family:var(--mono);font-size:10px;color:var(--text3);line-height:2">
+      2. Acad. → ×0,10<br>
+      3. Cargos → ×0,10<br>
+      4. Docente → ×0,35<br>
+      5. Investig. → ×0,35<br>
+      6. Profes. → ×0,10
+    </div>
+    <div style="font-size:10px;color:var(--text3);margin-top:8px;line-height:1.5" id="sidebar-nota">Figura PAD · Resolución C2 18/08/2025</div>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ═══ PANEL 2: ACADÉMICO ═══ -->
+  <div id="p-acad" class="panel active">
+    <div class="panel-title">2 · Currículum académico <span id="lbl-panel2" class="peso-tag">peso ×0,10</span></div>
+
+    <div id="min-card" class="min-bar">
+      <span class="min-icon">○</span>
+      <span id="min-card-text">Umbral mínimo 2a + 2b: — / 4,5 pts (sin ponderar)</span>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2a) Titulación de acceso<span class="card-pts" id="p2a">0,00</span></div>
+      <div class="alert alert-amber">Nota entre 5–10, multiplicada ×0,5. Premios suman % adicional.</div>
+      <div class="field">
+        <span class="field-lbl">Nota media expediente (escala 5–10)</span>
+        <span class="field-rate">× 0,5 → pts</span>
+        <div class="field-inp"><input type="number" id="a-nota" min="0" max="10" step="0.01" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Premio nacional de licenciatura/grado</span>
+        <span class="field-rate">+ 20% de nota</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-pnac" onchange="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Premio extraordinario (universidad propia)</span>
+        <span class="field-rate">+ 10% de nota</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-pext" onchange="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2b) Grado de Doctor/a<span class="card-pts" id="p2b">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Calificación de la tesis</span>
+        <span class="field-rate"></span>
+        <div class="field-inp">
+          <select id="a-tesis" onchange="recalc()">
+            <option value="0">— Sin doctorado —</option>
+            <option value="3">Doctor/a — 3 pts</option>
+            <option value="5">Cum Laude — 5 pts</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Premio extraordinario de doctorado</span>
+        <span class="field-rate">+ 0,5 pts</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-pextdr" onchange="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Mención doctorado internacional</span>
+        <span class="field-rate">+ 1 pt</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-intl" onchange="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2c) Másteres / Cursos doctorado / CAP<span class="card-pts" id="p2c">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Créditos de máster oficial / cursos doctorado (máx. 3 pts)</span>
+        <span class="field-rate">× 0,02/cr</span>
+        <div class="field-inp"><input type="number" id="a-mastcr" min="0" max="300" step="1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Especialista Ciencias de la Salud (si el área lo requiere)</span>
+        <span class="field-rate">+ 1 pt</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-esp" onchange="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Acreditación EBVS o ABVP (plazas de Veterinaria)</span>
+        <span class="field-rate">+ 1 pt</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-ebvs" onchange="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Titulación con competencias profesionales &gt;4 años o &gt;240 cr.</span>
+        <span class="field-rate">+ 1 pt</span>
+        <div class="field-inp"><input type="checkbox" class="bool" id="a-comp" onchange="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2d) Otras titulaciones oficiales adicionales<span class="card-pts" id="p2d">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Créditos únicos no solapados con 2a (máx. 3 pts)</span>
+        <span class="field-rate">× 0,01/cr</span>
+        <div class="field-inp"><input type="number" id="a-titcr" min="0" max="500" step="1" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">2e) Conocimiento de idiomas<span class="card-pts" id="p2e">0,00</span></div>
+      <div class="alert alert-blue">Solo títulos oficiales ACLES/CRUE. Mínimo B2. 0,3 pts/nivel. Máx. 3 pts.</div>
+      <div class="field">
+        <span class="field-lbl">Idiomas con certificado oficial nivel B2 o superior</span>
+        <span class="field-rate">× 0,3 pt/idioma</span>
+        <div class="field-inp"><input type="number" id="a-idio" min="0" max="10" step="1" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 3: CARGOS ═══ -->
+  <div id="p-cargos" class="panel">
+    <div class="panel-title">3 · Cargos académicos no docentes <span class="peso-tag">peso ×0,10</span></div>
+
+    <div class="card">
+      <div class="card-title">3a) Becas y contratos de investigación<span class="card-pts" id="p3a">0,00</span></div>
+      <div class="sub-lbl">a1 — Predoctorales FPI / FPU y equivalentes</div>
+      <div class="field">
+        <span class="field-lbl">Años beca/contrato predoctoral (FPI, FPU, La Caixa, Marie Curie PhD, PFIS…)</span>
+        <span class="field-rate">× 4,8 pt/año</span>
+        <div class="field-inp"><input type="number" id="c-fpi" min="0" max="6" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="sub-lbl">a2 — Postdoctorales competitivos</div>
+      <div class="field">
+        <span class="field-lbl">Años de contrato/beca postdoctoral competitivo</span>
+        <span class="field-rate">× 4,8 pt/año</span>
+        <div class="field-inp"><input type="number" id="c-postdoc" min="0" max="20" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="sub-lbl">a3 — Otros contratos de investigación (PCI, convenio…)</div>
+      <div class="field">
+        <span class="field-lbl">Años de otras becas/contratos de investigación</span>
+        <span class="field-rate">× 1,2 pt/año</span>
+        <div class="field-inp"><input type="number" id="c-otras" min="0" max="20" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="alert alert-amber" style="margin-top:8px">El proyecto que financia la beca predoctoral no se computa además en 5d.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">3b) Representación PDI en órganos de gobierno<span class="card-pts" id="p3b">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Órganos × años (claustro, junta de centro, consejo depto., comité empresa)</span>
+        <span class="field-rate">× 0,2 pt</span>
+        <div class="field-inp"><input type="number" id="c-org" min="0" max="50" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 4: DOCENTE ═══ -->
+  <div id="p-doc" class="panel">
+    <div class="panel-title">4 · Currículum docente <span id="lbl-panel4" class="peso-tag">peso ×0,35</span></div>
+
+    <div class="card">
+      <div class="card-title">4a) Docencia universitaria oficial<span class="card-pts" id="p4a">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Años tiempo completo (idóneos/afines)</span>
+        <span class="field-rate">× 2,4 pt/año</span>
+        <div class="field-inp"><input type="number" id="d-tc" min="0" max="40" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Años tiempo parcial</span>
+        <span class="field-rate">proporcional</span>
+        <div class="field-inp"><input type="number" id="d-tp" min="0" max="40" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">% dedicación tiempo parcial (0,0–1,0)</span>
+        <span class="field-rate"></span>
+        <div class="field-inp"><input type="number" id="d-tp-pct" min="0" max="1" step="0.01" value="0.5" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Docencia en FPI/PCI — créditos idóneos totales (máx. 6 cr/año · 0,1 pt/cr)</span>
+        <span class="field-rate">× 0,1 pt/cr</span>
+        <div class="field-inp"><input type="number" id="d-fpi-cr" min="0" max="30" step="0.5" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4b) Docencia no universitaria reglada<span class="card-pts" id="p4b">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Años tiempo completo</span>
+        <span class="field-rate">× 0,4 pt/año</span>
+        <div class="field-inp"><input type="number" id="d-noutc" min="0" max="40" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">Años tiempo parcial × % dedicación</span>
+        <span class="field-rate">proporcional</span>
+        <div class="field-inp"><input type="number" id="d-noutp" min="0" max="40" step="0.1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="field">
+        <span class="field-lbl">% dedicación tiempo parcial</span>
+        <span class="field-rate"></span>
+        <div class="field-inp"><input type="number" id="d-nou-pct" min="0" max="1" step="0.01" value="0.5" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4c) Dirección de trabajos académicos (máx. 1 pt)<span class="card-pts" id="p4c">0,00</span></div>
+      <div class="field"><span class="field-lbl">PFC (unidirección equiv.)</span><span class="field-rate">× 0,1 pt</span><div class="field-inp"><input type="number" id="d-pfc" min="0" step="0.5" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">TFG (unidirección equiv.)</span><span class="field-rate">× 0,05 pt</span><div class="field-inp"><input type="number" id="d-tfg" min="0" step="0.5" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">TFM (unidirección equiv.)</span><span class="field-rate">× 0,1 pt</span><div class="field-inp"><input type="number" id="d-tfm" min="0" step="0.5" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Tesinas (unidirección equiv.)</span><span class="field-rate">× 0,1 pt</span><div class="field-inp"><input type="number" id="d-tesina" min="0" step="0.5" value="0" oninput="recalc()"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4d) Evaluación positiva docente (agencia externa)<span class="card-pts" id="p4d">0,00</span></div>
+      <div class="field"><span class="field-lbl">Tramos nivel "Destacado"</span><span class="field-rate">× 0,5 pt</span><div class="field-inp"><input type="number" id="d-dest" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Tramos nivel "Bueno"</span><span class="field-rate">× 0,3 pt</span><div class="field-inp"><input type="number" id="d-buen" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Evaluación profesorado novel (positiva)</span><span class="field-rate">+ 0,3 pt</span><div class="field-inp"><input type="checkbox" class="bool" id="d-novel" onchange="recalc()"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4e) Proyectos innovación docente (últ. 5 años)<span class="card-pts" id="p4e">0,00</span></div>
+      <div class="alert alert-blue">Máx. 1 proyecto/curso académico. La mera pertenencia a grupo de innovación NO puntúa.</div>
+      <div class="field"><span class="field-lbl">Como investigador/a principal</span><span class="field-rate">× 0,5 pt</span><div class="field-inp"><input type="number" id="d-pid-ip" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Como investigador/a secundario/a</span><span class="field-rate">× 0,25 pt</span><div class="field-inp"><input type="number" id="d-pid-nip" min="0" step="1" value="0" oninput="recalc()"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4f) Planes de acción tutorial (PAT)<span class="card-pts" id="p4f">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Cursos académicos con PAT (máx. 1/curso, no acumula distintos PAT mismo año)</span>
+        <span class="field-rate">× 0,25 pt</span>
+        <div class="field-inp"><input type="number" id="d-pat" min="0" step="1" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">4g) Divulgación universitaria (últ. 5 años, máx. 2 pts)<span class="card-pts" id="p4g">0,00</span></div>
+      <div class="alert alert-blue">Noche Investigadores, Desayunos Ciencia, Puertas Abiertas… No se cuenta participación como estudiante de grado.</div>
+      <div class="field">
+        <span class="field-lbl">Nº de eventos (con certificado vicerrectorado)</span>
+        <span class="field-rate">× 0,2 pt</span>
+        <div class="field-inp"><input type="number" id="d-ext" min="0" step="1" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 5: INVESTIGADOR ═══ -->
+  <div id="p-inv" class="panel">
+    <div class="panel-title">5 · Currículum investigador <span id="lbl-panel5" class="peso-tag">peso ×0,35</span></div>
+
+    <!-- Factor F -->
+    <div class="f-box">
+      <div class="f-title">⟨ FACTOR DE MODULACIÓN F ⟩ — divide puntuación de publicaciones, ponencias y patentes</div>
+      <div class="f-formula">
+        F = max(1, a / (2 · m))  donde:<br>
+        a = años desde primera a última publicación presentada<br>
+        m = max(nº total artículos presentados, nº capítulos ÷ 5)
+      </div>
+      <div class="f-inputs">
+        <div><div class="f-inp-lbl">Años publicaciones (a)</div><input type="number" id="f-a" min="0" max="50" step="1" value="0" oninput="recalc()"></div>
+        <div><div class="f-inp-lbl">Total artículos presentados</div><input type="number" id="f-arts" min="0" max="200" step="1" value="0" oninput="recalc()"></div>
+        <div><div class="f-inp-lbl">Total capítulos presentados</div><input type="number" id="f-caps" min="0" max="200" step="1" value="0" oninput="recalc()"></div>
+      </div>
+      <div class="f-result">
+        <div class="f-val" id="f-val">F = 1,00</div>
+        <div class="f-note">F = 1 → sin penalización &nbsp;|&nbsp; F &gt; 1 → reduce puntuación de publicaciones</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5a) Publicaciones científicas<span class="card-pts" id="p5a">0,00</span></div>
+      <div class="sub-lbl">a1 — Libros con ISBN (solo autoría)</div>
+      <div class="field"><span class="field-lbl">Libros 1er tramo SPI</span><span class="field-rate">4,8 / F pts</span><div class="field-inp"><input type="number" id="i-lib1" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Libros 2º tramo SPI</span><span class="field-rate">2,4 / F pts</span><div class="field-inp"><input type="number" id="i-lib2" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="sub-lbl">a2 — Capítulos con ISBN (solo autoría, ÷ nº capítulos del libro)</div>
+      <div class="field"><span class="field-lbl">Capítulos 1er tramo (equiv. ponderado)</span><span class="field-rate">4,8 / F pts</span><div class="field-inp"><input type="number" id="i-cap1" min="0" step="0.01" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Capítulos 2º tramo (equiv. ponderado)</span><span class="field-rate">2,4 / F pts</span><div class="field-inp"><input type="number" id="i-cap2" min="0" step="0.01" value="0" oninput="recalc()"></div></div>
+      <div class="sub-lbl">a3 — Artículos en revistas científicas indexadas</div>
+      <div class="field"><span class="field-lbl">Q1</span><span class="field-rate">2,4 / F pts</span><div class="field-inp"><input type="number" id="i-q1" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Q2</span><span class="field-rate">1,8 / F pts</span><div class="field-inp"><input type="number" id="i-q2" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Q3</span><span class="field-rate">1,2 / F pts</span><div class="field-inp"><input type="number" id="i-q3" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Q4</span><span class="field-rate">0,6 / F pts</span><div class="field-inp"><input type="number" id="i-q4" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Fuera de índice</span><span class="field-rate">0,3 / F pts</span><div class="field-inp"><input type="number" id="i-ni" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="alert alert-amber" style="margin-top:8px">No se valoran reseñas, cartas al editor, casos clínicos ni divulgación. Solo material publicado.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5b) Ponencias orales en congresos científicos (máx. 2,4/F pts)<span class="card-pts" id="p5b">0,00</span></div>
+      <div class="alert alert-blue">Solo 1 comunicación por año (la que más puntúe). Solo ponencias orales. No pósteres, paneles ni flash talks. El candidato debe ser quien imparte.</div>
+      <div class="field"><span class="field-lbl">Congresos internacionales</span><span class="field-rate">0,3 / F pts</span><div class="field-inp"><input type="number" id="i-pon-int" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Congresos nacionales</span><span class="field-rate">0,15 / F pts</span><div class="field-inp"><input type="number" id="i-pon-nac" min="0" step="1" value="0" oninput="recalc()"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5c) Estancias en centros de investigación<span class="card-pts" id="p5c">0,00</span></div>
+      <div class="alert alert-blue">Mínimo 1 mes por estancia. Máximo 3 meses computables por año.</div>
+      <div class="field">
+        <span class="field-lbl">Meses totales acreditados (dentro del límite 3 meses/año)</span>
+        <span class="field-rate">× 0,2 pt/mes</span>
+        <div class="field-inp"><input type="number" id="i-est" min="0" step="1" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5d) Proyectos competitivos como IP (máx. 1/año)<span class="card-pts" id="p5d">0,00</span></div>
+      <div class="alert alert-amber">No se computa el proyecto que financia la beca predoctoral. Solo 1 proyecto por año (el más favorable).</div>
+      <div class="field"><span class="field-lbl">Años como IP — proyectos autonómicos</span><span class="field-rate">× 0,6 pt/año</span><div class="field-inp"><input type="number" id="i-paut" min="0" step="0.1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Años como IP — proyectos nacionales</span><span class="field-rate">× 1,2 pt/año</span><div class="field-inp"><input type="number" id="i-pnac" min="0" step="0.1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Años como IP — proyectos internacionales</span><span class="field-rate">× 2,4 pt/año</span><div class="field-inp"><input type="number" id="i-pint" min="0" step="0.1" value="0" oninput="recalc()"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5e) Dirección de tesis doctorales<span class="card-pts" id="p5e">0,00</span></div>
+      <div class="field">
+        <span class="field-lbl">Tesis dirigidas ya defendidas (unidirección equiv.)</span>
+        <span class="field-rate">× 2 pts</span>
+        <div class="field-inp"><input type="number" id="i-tesis" min="0" step="0.5" value="0" oninput="recalc()"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5f) Exposiciones de arte con catálogo<span class="card-pts" id="p5f">0,00</span></div>
+      <div class="alert alert-purple">Solo áreas de Historia del Arte, Expresión Artística, Arquitectura e Ingeniería indicadas en el baremo. En otras áreas no puntúa.</div>
+      <div class="field"><span class="field-lbl">Individuales (máx. 4 pts)</span><span class="field-rate">× 1,0 pt</span><div class="field-inp"><input type="number" id="i-art-ind" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Colectivas (máx. 2 pts)</span><span class="field-rate">× 0,35 pt</span><div class="field-inp"><input type="number" id="i-art-col" min="0" step="1" value="0" oninput="recalc()"></div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">5g) Patentes y modelos de utilidad<span class="card-pts" id="p5g">0,00</span></div>
+      <div class="field"><span class="field-lbl">Patentes en explotación (o explotadas)</span><span class="field-rate">2,4 / F pts</span><div class="field-inp"><input type="number" id="i-pat-ex" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Patentes con examen previo NO explotadas</span><span class="field-rate">1,8 / F pts</span><div class="field-inp"><input type="number" id="i-pat-nex" min="0" step="1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Modelos de utilidad en explotación</span><span class="field-rate">1,2 / F pts</span><div class="field-inp"><input type="number" id="i-mod" min="0" step="1" value="0" oninput="recalc()"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL 6: PROFESIONAL ═══ -->
+  <div id="p-prof" class="panel">
+    <div class="panel-title">6 · Currículum profesional <span class="peso-tag">peso ×0,10</span></div>
+    <div class="card">
+      <div class="card-title">6. Experiencia profesional no docente ni investigadora<span class="card-pts" id="p6">0,00</span></div>
+      <div class="alert alert-blue">Actividades con relación directa o afín a la plaza. Acreditar con vida laboral + certificado de tareas. Autónomos: alta RETA + IAE.</div>
+      <div class="field"><span class="field-lbl">Años a tiempo completo</span><span class="field-rate">× 1,2 pt/año</span><div class="field-inp"><input type="number" id="pr-tc" min="0" step="0.1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">Años a tiempo parcial</span><span class="field-rate">proporcional</span><div class="field-inp"><input type="number" id="pr-tp" min="0" step="0.1" value="0" oninput="recalc()"></div></div>
+      <div class="field"><span class="field-lbl">% dedicación tiempo parcial (0,0–1,0)</span><span class="field-rate"></span><div class="field-inp"><input type="number" id="pr-pct" min="0" max="1" step="0.01" value="0.5" oninput="recalc()"></div></div>
+    </div>
+  </div>
+
+  <!-- ═══ PANEL RESUMEN ═══ -->
+  <div id="p-resumen" class="panel">
+    <div class="panel-title">Resumen de puntuación</div>
+
+    <div class="grid3" style="margin-bottom:16px">
+      <div class="g-block"><div class="g-val" id="r-total">0,00</div><div class="g-lbl">Total ponderado</div></div>
+      <div class="g-block"><div class="g-val" id="r-aneca" style="color:var(--amber)">0,00</div><div class="g-lbl">Con ANECA (×1,20)</div></div>
+      <div class="g-block"><div class="g-val" id="r-f" style="color:var(--purple)">1,00</div><div class="g-lbl">Factor F</div></div>
+    </div>
+
+    <div id="avisos-minimos" style="display:none;margin-bottom:12px"></div>
+
+    <div class="card">
+      <div class="card-title">Desglose ponderado — <span id="res-figura-lbl">PAD</span></div>
+      <div id="res-bars" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Puntuaciones brutas por apartado</div>
+      <div id="res-brutos" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tabla de pesos — <span id="res-tabla-lbl">Figura PAD</span></div>
+      <div class="alert alert-amber" style="margin-bottom:10px" id="res-tabla-nota">Pesos según Resolución C2 18/08/2025 (figura PAD).</div>
+      <table class="pesos">
+        <thead><tr><th>Apartado</th><th id="res-col-lbl">Peso PAD</th></tr></thead>
+        <tbody>
+          <tr><td>2. Currículum académico</td><td class="w" id="tw2">0,10</td></tr>
+          <tr><td>3. Puestos y cargos académicos no docentes</td><td class="w" id="tw3">0,10</td></tr>
+          <tr><td>4. Currículum docente</td><td class="w" id="tw4">0,35</td></tr>
+          <tr><td>5. Currículum investigador</td><td class="w" id="tw5">0,35</td></tr>
+          <tr><td>6. Currículum profesional</td><td class="w" id="tw6">0,10</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Notas de aplicación</div>
+      <div class="alert alert-blue" style="margin-bottom:8px">
+        <strong>Mínimo global:</strong> para adjudicar plaza la puntuación total debe ser ≥ 1,00 punto.<br>
+        <strong>Mínimo 2a+2b:</strong> la suma sin ponderar debe ser ≥ 4,5 pts; si no se alcanza, puntuación total = 0.<br>
+        <strong>ANECA PAD o superior:</strong> la acreditación en el área suma +20% sobre el total ponderado.<br>
+        <strong>Factor F:</strong> si F &gt; 1, divide la puntuación de publicaciones, ponencias y patentes. Con carrera corta F = 1.
+      </div>
+      <div class="alert alert-amber">
+        <strong>Relación directa/afín:</strong> los méritos idóneos puntúan al 100%; los afines al 50%. Los apartados 2c, 2d, 2e, 4d, 4e, 4f, 4g se evalúan sin considerar perfil de la plaza.
+      </div>
+    </div>
+  </div>
+
+</div><!-- content -->
+</div><!-- layout -->
+
+<script>
+  // ── Figura y pesos ──
+  const FIGURAS = {
+    pad: {
+      label: 'PAD',
+      labelLong: 'Profesor/a Ayudante Doctor/a',
+      w: [0.10, 0.10, 0.35, 0.35, 0.10],
+      sidebarPesos: '2. Acad. → ×0,10<br>3. Cargos → ×0,10<br>4. Docente → ×0,35<br>5. Investig. → ×0,35<br>6. Profes. → ×0,10',
+      sidebarNota: 'Figura PAD · Resolución C2 18/08/2025',
+      tablaNota: 'Pesos según Resolución C2 18/08/2025 (figura PAD).',
+      tablaLbl: 'Peso PAD',
+    },
+    sust: {
+      label: 'Sustituto/a',
+      labelLong: 'Profesor/a Sustituto/a',
+      w: [0.30, 0.10, 0.30, 0.20, 0.10],
+      sidebarPesos: '2. Acad. → ×0,30<br>3. Cargos → ×0,10<br>4. Docente → ×0,30<br>5. Investig. → ×0,20<br>6. Profes. → ×0,10',
+      sidebarNota: 'Bolsa sustitutos · Normativa de Contratación UEx (Anexo I) · bolsas DOE 15/06/2020',
+      tablaNota: 'Pesos de la figura Sustituto/a según la tabla de ponderaciones de la Normativa de Contratación vigente (Anexo I, norma Segunda). La normativa de bolsas (DOE 15/06/2020, arts. 2.3 y 4) remite a esa ponderación. Mínimo específico: 2a ≥ 1,5 pts sin ponderar.',
+      tablaLbl: 'Peso Sustituto/a',
+    }
+  };
+  let figKey = 'pad';
+
+  function setFigura(key) {
+    figKey = key;
+    const f = FIGURAS[key];
+    // Botones selector
+    document.getElementById('btn-pad').style.background  = key === 'pad'  ? 'var(--green-dim)' : 'transparent';
+    document.getElementById('btn-pad').style.color        = key === 'pad'  ? 'var(--green)'     : 'var(--text3)';
+    document.getElementById('btn-sust').style.background = key === 'sust' ? 'var(--green-dim)' : 'transparent';
+    document.getElementById('btn-sust').style.color       = key === 'sust' ? 'var(--green)'     : 'var(--text3)';
+    // Header
+    const hdrFig = document.getElementById('hdr-figura');
+    if(hdrFig) hdrFig.textContent = f.label;
+    const hdrLong = document.getElementById('hdr-figura-long');
+    if(hdrLong) hdrLong.textContent = f.labelLong;
+    const lblP2 = document.getElementById('lbl-panel2');
+    if(lblP2) lblP2.textContent = 'peso ×' + fmt(f.w[0]);
+    const lblP4 = document.getElementById('lbl-panel4');
+    if(lblP4) lblP4.textContent = 'peso ×' + fmt(f.w[2]);
+    const lblP5 = document.getElementById('lbl-panel5');
+    if(lblP5) lblP5.textContent = 'peso ×' + fmt(f.w[3]);
+    // Sidebar
+    document.getElementById('sidebar-figura-lbl').textContent = f.label;
+    document.getElementById('sidebar-pesos').innerHTML = f.sidebarPesos;
+    document.getElementById('sidebar-nota').textContent = f.sidebarNota;
+    // Score bar labels
+    const ws = f.w;
+    ['w2','w3','w4','w5','w6'].forEach((id, i) => {
+      document.getElementById('lbl-' + id).textContent = '×' + fmt(ws[i]);
+    });
+    // Resumen
+    document.getElementById('res-figura-lbl').textContent = f.labelLong;
+    document.getElementById('res-tabla-lbl').textContent = 'Figura ' + f.label;
+    document.getElementById('res-tabla-nota').textContent = f.tablaNota;
+    document.getElementById('res-col-lbl').textContent = f.tablaLbl;
+    ['tw2','tw3','tw4','tw5','tw6'].forEach((id, i) => {
+      document.getElementById(id).textContent = fmt(ws[i]);
+    });
+    recalc();
+  }
+
+  function clamp(x, lo, hi) { return Math.max(lo, Math.min(hi, x)); }
+  // Lee un input numérico recortando al rango min/max declarado en el HTML
+  function v(id) {
+    const el = document.getElementById(id);
+    let x = parseFloat(el.value) || 0;
+    const lo = parseFloat(el.min), hi = parseFloat(el.max);
+    if (!isNaN(lo)) x = Math.max(lo, x);
+    if (!isNaN(hi)) x = Math.min(hi, x);
+    return x;
+  }
+  // Lee un toggle Sí/No como 0/1
+  function chk(id) { return document.getElementById(id).checked ? 1 : 0; }
+  function fmt(n) { return n.toFixed(2).replace('.', ','); }
+  function setEl(id, val) { const e = document.getElementById(id); if(e) e.textContent = fmt(val); }
+
+  function syncAneca() {
+    const cb = document.getElementById('chk-aneca');
+    document.getElementById('aneca-badge').classList.toggle('active', cb.checked);
+    document.getElementById('aneca-dot').style.background = cb.checked ? 'var(--green)' : 'var(--border2)';
+    recalc();
+  }
+
+  function recalc() {
+    // ── Factor F ──
+    const fa = v('f-a'), fArts = v('f-arts'), fCaps = v('f-caps');
+    const m = Math.max(fArts, fCaps / 5);
+    const F = m > 0 ? Math.max(1, fa / (2 * m)) : 1;
+    document.getElementById('f-val').textContent = 'F = ' + fmt(F);
+    document.getElementById('r-f').textContent = fmt(F);
+
+    // ── APARTADO 2 ──
+    const notaRaw = v('a-nota');
+    const nota = notaRaw > 0 ? clamp(notaRaw, 5, 10) : 0;  // escala 5–10 del baremo
+    const notaAdj = nota * (1 + chk('a-pnac') * 0.20 + chk('a-pext') * 0.10);
+    const b2a = nota > 0 ? notaAdj * 0.5 : 0;
+    const tesis = parseFloat(document.getElementById('a-tesis').value) || 0;
+    const b2b = tesis + chk('a-pextdr') * 0.5 + chk('a-intl') * 1;
+    const b2c = clamp(v('a-mastcr') * 0.02, 0, 3) + chk('a-esp') + chk('a-ebvs') + chk('a-comp');
+    const b2d = clamp(v('a-titcr') * 0.01, 0, 3);
+    const b2e = clamp(v('a-idio') * 0.3, 0, 3);
+    const brutoAcad = b2a + b2b + b2c + b2d + b2e;
+    setEl('p2a', b2a); setEl('p2b', b2b); setEl('p2c', b2c); setEl('p2d', b2d); setEl('p2e', b2e);
+
+    // Umbral mínimo según figura: PAD → 2a+2b ≥ 4,5 · Sustituto/a → 2a ≥ 1,5 (art. 12.2.b Normativa de Contratación)
+    const esSust = figKey === 'sust';
+    const sumMin = esSust ? b2a : b2a + b2b;
+    const minReq = esSust ? 1.5 : 4.5;
+    const minLbl = esSust ? '2a' : '2a+2b';
+    const minOk = sumMin >= minReq;
+    const minText = `${minLbl}: ${fmt(sumMin)} / ${fmt(minReq)} mín. ${minOk ? '✓' : '⚠'}`;
+    document.getElementById('min-text').textContent = minText;
+    document.getElementById('min-card-text').textContent = 'Umbral mínimo ' + minLbl + ': ' + fmt(sumMin) + ' / ' + fmt(minReq) + ' pts  ' + (minOk ? '✓ OK' : '⚠ No alcanzado — en un concurso real la puntuación sería 0');
+    ['min-top','min-card'].forEach(id => {
+      const el = document.getElementById(id);
+      el.classList.toggle('ok', minOk);
+      el.classList.toggle('fail', !minOk);
+      el.querySelector('.min-icon').textContent = minOk ? '✓' : '⚠';
+    });
+
+    // ── APARTADO 3 ──
+    const b3a = v('c-fpi') * 4.8 + v('c-postdoc') * 4.8 + v('c-otras') * 1.2;
+    const b3b = v('c-org') * 0.2;
+    const brutoCargos = b3a + b3b;
+    setEl('p3a', b3a); setEl('p3b', b3b);
+
+    // ── APARTADO 4 ──
+    const b4a = v('d-tc') * 2.4 + v('d-tp') * 2.4 * v('d-tp-pct') + v('d-fpi-cr') * 0.1;
+    const b4b = v('d-noutc') * 0.4 + v('d-noutp') * 0.4 * v('d-nou-pct');
+    const b4c = clamp(v('d-pfc') * 0.1 + v('d-tfg') * 0.05 + v('d-tfm') * 0.1 + v('d-tesina') * 0.1, 0, 1);
+    const b4d = v('d-dest') * 0.5 + v('d-buen') * 0.3 + chk('d-novel') * 0.3;
+    const b4e = v('d-pid-ip') * 0.5 + v('d-pid-nip') * 0.25;
+    const b4f = v('d-pat') * 0.25;
+    const b4g = clamp(v('d-ext') * 0.2, 0, 2);
+    const brutoDoc = b4a + b4b + b4c + b4d + b4e + b4f + b4g;
+    setEl('p4a',b4a); setEl('p4b',b4b); setEl('p4c',b4c); setEl('p4d',b4d);
+    setEl('p4e',b4e); setEl('p4f',b4f); setEl('p4g',b4g);
+
+    // ── APARTADO 5 ──
+    const b5a = v('i-lib1')*(4.8/F) + v('i-lib2')*(2.4/F)
+              + v('i-cap1')*(4.8/F) + v('i-cap2')*(2.4/F)
+              + v('i-q1')*(2.4/F) + v('i-q2')*(1.8/F)
+              + v('i-q3')*(1.2/F) + v('i-q4')*(0.6/F) + v('i-ni')*(0.3/F);
+    const maxPon = 2.4 / F;
+    const b5b = clamp(v('i-pon-int')*(0.3/F) + v('i-pon-nac')*(0.15/F), 0, maxPon);
+    const b5c = v('i-est') * 0.2;
+    const b5d = v('i-paut')*0.6 + v('i-pnac')*1.2 + v('i-pint')*2.4;
+    const b5e = v('i-tesis') * 2;
+    const b5f = clamp(v('i-art-ind')*1,0,4) + clamp(v('i-art-col')*0.35,0,2);
+    const b5g = v('i-pat-ex')*(2.4/F) + v('i-pat-nex')*(1.8/F) + v('i-mod')*(1.2/F);
+    const brutoInv = b5a+b5b+b5c+b5d+b5e+b5f+b5g;
+    setEl('p5a',b5a); setEl('p5b',b5b); setEl('p5c',b5c); setEl('p5d',b5d);
+    setEl('p5e',b5e); setEl('p5f',b5f); setEl('p5g',b5g);
+
+    // ── APARTADO 6 ──
+    const brutoProf = (v('pr-tc') + v('pr-tp') * v('pr-pct')) * 1.2;
+    setEl('p6', brutoProf);
+
+    // ── PONDERACIÓN con pesos de la figura activa ──
+    const ws = FIGURAS[figKey].w;
+    const brutals = [brutoAcad, brutoCargos, brutoDoc, brutoInv, brutoProf];
+    const ponds = brutals.map((b, i) => b * ws[i]);
+    let total = ponds.reduce((a, b) => a + b, 0);
+    const aneca = document.getElementById('chk-aneca').checked;
+    const totalAneca = (ponds.reduce((a,b)=>a+b,0)) * 1.20;
+    if (aneca && minOk) total *= 1.20;
+
+    // Update score bar
+    ['t2','t3','t4','t5','t6'].forEach((id, i) => setEl(id, ponds[i]));
+    setEl('t-total', total);
+    setEl('r-total', total);
+    setEl('r-aneca', totalAneca);
+
+    // Update nav pts (brutos)
+    setEl('n2', brutoAcad); setEl('n3', brutoCargos);
+    setEl('n4', brutoDoc); setEl('n5', brutoInv); setEl('n6', brutoProf);
+
+    // Color the total
+    const tv = document.getElementById('t-total');
+    tv.className = 'score-val' + (total >= 1 ? '' : total > 0 ? ' warn' : ' zero');
+
+    // Avisos de requisitos mínimos en el resumen
+    const avisos = [];
+    if (!minOk) avisos.push('⚠ <strong>Umbral mínimo no alcanzado:</strong> ' + (esSust
+      ? 'la puntuación de 2a (expediente) es <strong>' + fmt(sumMin) + ' pts</strong>, inferior al mínimo de 1,5 pts exigido a la figura de Sustituto/a.'
+      : 'la suma de 2a (expediente) + 2b (doctorado) es <strong>' + fmt(sumMin) + ' pts</strong>, inferior al mínimo de 4,5 pts. Puede ocurrir si aún no tienes doctorado o si el expediente es bajo.')
+      + ' En un concurso real la puntuación total sería <strong>0</strong>.');
+    if (total < 1 && total > 0) avisos.push('⚠ <strong>Puntuación total inferior a 1,00 pt:</strong> no sería suficiente para adjudicar una plaza en concurso real.');
+    if (parseFloat(document.getElementById('a-tesis').value) === 0 && figKey === 'pad') avisos.push('ℹ <strong>Sin doctorado:</strong> la figura PAD requiere el título de Doctor/a. Esta simulación muestra cómo quedaría tu puntuación con los demás méritos.');
+    const avisoDiv = document.getElementById('avisos-minimos');
+    if(avisos.length > 0) {
+      avisoDiv.style.display = 'block';
+      avisoDiv.innerHTML = avisos.map(a => '<div style="background:var(--amber-dim);border-left:3px solid var(--amber);border-radius:6px;padding:9px 12px;margin-bottom:8px;font-size:12px;color:var(--amber);line-height:1.6">' + a + '</div>').join('');
+    } else {
+      avisoDiv.style.display = 'none';
+      avisoDiv.innerHTML = '';
+    }
+
+    // Bars
+    const labels = ['2. Académico','3. Cargos','4. Docente','5. Investigador','6. Profesional'];
+    const bCls = ['b1','b2','b3','b4','b5'];
+    const maxP = Math.max(...ponds, total, 0.01);
+    const maxB = Math.max(...brutals, 0.01);
+
+    document.getElementById('res-bars').innerHTML = labels.map((l,i) =>
+      `<div class="bar-row"><span class="bar-lbl">${l}</span><div class="bar-wrap"><div class="bar-fill ${bCls[i]}" style="width:${Math.max(1,ponds[i]/maxP*100).toFixed(1)}%">${fmt(ponds[i])}</div></div></div>`
+    ).join('') + `<div class="bar-row"><span class="bar-lbl" style="color:var(--text);font-weight:600">Total${aneca?' (ANECA)':''}</span><div class="bar-wrap"><div class="bar-fill btot" style="width:${Math.max(1,total/maxP*100).toFixed(1)}%">${fmt(total)}</div></div></div>`;
+
+    document.getElementById('res-brutos').innerHTML = labels.map((l,i) =>
+      `<div class="bar-row"><span class="bar-lbl">${l}</span><div class="bar-wrap"><div class="bar-fill ${bCls[i]}" style="width:${Math.max(1,brutals[i]/maxB*100).toFixed(1)}%">${fmt(brutals[i])}</div></div></div>`
+    ).join('');
+  }
+
+  function showPanel(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+
+  // ── GUARDAR / CARGAR DATOS ──
+  const CAMPOS_NUM = ['a-nota','a-mastcr',
+    'a-titcr','a-idio','c-fpi','c-postdoc','c-otras','c-org','d-tc','d-tp','d-tp-pct','d-fpi-cr',
+    'd-noutc','d-noutp','d-nou-pct','d-pfc','d-tfg','d-tfm','d-tesina','d-dest','d-buen',
+    'd-pid-ip','d-pid-nip','d-pat','d-ext','f-a','f-arts','f-caps','i-lib1','i-lib2','i-cap1','i-cap2',
+    'i-q1','i-q2','i-q3','i-q4','i-ni','i-pon-int','i-pon-nac','i-est','i-paut','i-pnac','i-pint',
+    'i-tesis','i-art-ind','i-art-col','i-pat-ex','i-pat-nex','i-mod','pr-tc','pr-tp','pr-pct'];
+  const CAMPOS_BOOL = ['a-pnac','a-pext','a-pextdr','a-intl','a-esp','a-ebvs','a-comp','d-novel'];
+
+  function guardarDatos() {
+    const datos = { _version: 2, _fecha: new Date().toLocaleDateString('es-ES'), figura: figKey };
+    CAMPOS_NUM.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) datos[id] = el.value;
+    });
+    CAMPOS_BOOL.forEach(id => {
+      const el = document.getElementById(id);
+      if(el) datos[id] = el.checked ? 1 : 0;
+    });
+    datos['a-tesis'] = document.getElementById('a-tesis').value;
+    datos['chk-aneca'] = document.getElementById('chk-aneca').checked;
+    const blob = new Blob([JSON.stringify(datos, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'baremo_PDI_UEx_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    URL.revokeObjectURL(a.href);
+  }
+
+  function cargarDatos(event) {
+    const file = event.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        const datos = JSON.parse(e.target.result);
+        if(datos.figura) setFigura(datos.figura);
+        CAMPOS_NUM.forEach(id => {
+          const el = document.getElementById(id);
+          if(el && datos[id] !== undefined) el.value = datos[id];
+        });
+        // Toggles Sí/No — acepta formato antiguo ("0"/"1") y nuevo (0/1/true)
+        CAMPOS_BOOL.forEach(id => {
+          const el = document.getElementById(id);
+          if(el && datos[id] !== undefined) el.checked = (datos[id] === true || parseFloat(datos[id]) > 0);
+        });
+        if(datos['a-tesis'] !== undefined) document.getElementById('a-tesis').value = datos['a-tesis'];
+        if(datos['chk-aneca'] !== undefined) {
+          const cb = document.getElementById('chk-aneca');
+          cb.checked = datos['chk-aneca'];
+          document.getElementById('aneca-badge').classList.toggle('active', cb.checked);
+          document.getElementById('aneca-dot').style.background = cb.checked ? 'var(--green)' : 'var(--border2)';
+        }
+        recalc();
+        // Toast
+        mostrarToast('✓ Datos cargados correctamente (' + (datos._fecha || '') + ')');
+      } catch(err) {
+        mostrarToast('✗ Error al leer el archivo. ¿Es un archivo de baremo válido?', true);
+      }
+      event.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
+  function mostrarToast(msg, error) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
+      'background:' + (error ? 'var(--red-dim)' : 'var(--green-dim)') + ';' +
+      'color:' + (error ? 'var(--red)' : 'var(--green)') + ';' +
+      'border:1px solid ' + (error ? 'var(--red)' : 'var(--green)') + ';' +
+      'padding:10px 20px;border-radius:20px;font-family:var(--mono);font-size:12px;' +
+      'z-index:9999;box-shadow:0 4px 12px rgba(0,0,0,.4);transition:opacity .4s';
+    document.body.appendChild(t);
+    setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 400); }, 2500);
+  }
+
+  // ── UNIDADES DE CADA CAMPO ──
+  // Etiqueta junto a cada casilla indicando qué magnitud se introduce
+  const UNIDADES = {
+    'a-nota': 'nota', 'a-mastcr': 'créditos', 'a-titcr': 'créditos', 'a-idio': 'idiomas',
+    'c-fpi': 'años', 'c-postdoc': 'años', 'c-otras': 'años', 'c-org': 'órg·años',
+    'd-tc': 'años', 'd-tp': 'años', 'd-tp-pct': 'fracción', 'd-fpi-cr': 'créditos',
+    'd-noutc': 'años', 'd-noutp': 'años', 'd-nou-pct': 'fracción',
+    'd-pfc': 'trabajos', 'd-tfg': 'trabajos', 'd-tfm': 'trabajos', 'd-tesina': 'trabajos',
+    'd-dest': 'tramos', 'd-buen': 'tramos', 'd-pid-ip': 'proyectos', 'd-pid-nip': 'proyectos',
+    'd-pat': 'cursos', 'd-ext': 'eventos',
+    'i-lib1': 'libros', 'i-lib2': 'libros', 'i-cap1': 'equiv.', 'i-cap2': 'equiv.',
+    'i-q1': 'artículos', 'i-q2': 'artículos', 'i-q3': 'artículos', 'i-q4': 'artículos', 'i-ni': 'artículos',
+    'i-pon-int': 'ponencias', 'i-pon-nac': 'ponencias', 'i-est': 'meses',
+    'i-paut': 'años', 'i-pnac': 'años', 'i-pint': 'años', 'i-tesis': 'tesis',
+    'i-art-ind': 'expos.', 'i-art-col': 'expos.',
+    'i-pat-ex': 'patentes', 'i-pat-nex': 'patentes', 'i-mod': 'modelos',
+    'pr-tc': 'años', 'pr-tp': 'años', 'pr-pct': 'fracción'
+  };
+  Object.entries(UNIDADES).forEach(([id, u]) => {
+    const el = document.getElementById(id);
+    if (!el || !el.closest('.field-inp')) return;
+    const s = document.createElement('span');
+    s.className = 'unit';
+    s.textContent = u;
+    el.insertAdjacentElement('afterend', s);
+  });
+
+  // Init con figura PAD
+  setFigura('pad');
+</script>
+
+<section class="jga-contacto" aria-labelledby="jga-contacto-titulo">
+  <div class="jga-contacto-caja">
+    <h2 id="jga-contacto-titulo">¿La necesitas para tu universidad?</h2>
+    <p>
+      Esta calculadora aplica los baremos de la <strong>Universidad de Extremadura</strong> y solo
+      sirve para ellos: cada universidad publica los suyos, con apartados y ponderaciones distintas.
+      Copiar los números de aquí a otra convocatoria daría un resultado equivocado.
+    </p>
+    <p>
+      Si te vendría bien una equivalente para la tuya, escríbeme y lo hablamos. Necesitaría el texto
+      de la convocatoria con el baremo detallado.
+    </p>
+    <div class="jga-acciones">
+      <a class="jga-btn" href="mailto:alvarez@unex.es?subject=Calculadora%20de%20baremos%20para%20otra%20universidad">
+        Escribir a alvarez@unex.es
+      </a>
+      <a class="jga-enlace" href="https://javiergarciaalvarez.com/recursos">
+        Otros recursos abiertos <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

@@ -5,22 +5,27 @@ import recursosData from '../../data/recursos.json';
 /**
  * Página del recurso "Calculadora de baremos" (tarea 5.3).
  *
- * Alcance deliberado: página contenedora y maqueta de la interfaz. Aquí NO se
- * calcula nada. Los campos están deshabilitados y los valores son de ejemplo,
- * marcados como tales, para que nadie confunda esto con una herramienta que
- * funciona. La salida real sigue siendo Notion hasta que se implemente.
+ * Ya no es una maqueta: la herramienta está publicada en el dominio, en
+ * public/calculadora-pdi-uex/. Esta página la presenta, acota para qué sirve
+ * y para qué no, y da la entrada.
+ *
+ * La calculadora es una página autónoma y no un componente Astro a propósito:
+ * trae sus propios estilos y su propia cabecera, y meterla dentro del layout
+ * del sitio duplicaría encabezados y arriesgaría choques de CSS.
  */
 
 const recurso = recursosData.find((r) => r.id === 'calculadora-baremos')!;
 
-// URL de trabajo en Notion, conservada como salida provisional.
+const CALCULADORA = '/calculadora-pdi-uex/';
+
+// Tutorial en Notion, anterior a la herramienta y conservado como apoyo.
 const NOTION = 'https://www.notion.so/Tutorial-herramientas-de-c-lculo-2c0334b437154f7f9abcc2d82c1abd59';
 
-// Campos de ejemplo. No son un baremo real: son el esqueleto de la interfaz.
-const camposEjemplo = [
-  { etiqueta: 'Convocatoria', valor: 'Ejemplo — sin datos reales' },
-  { etiqueta: 'Nota media del expediente', valor: '0,00' },
-  { etiqueta: 'Créditos superados', valor: '0' },
+const ficha = [
+  { campo: 'Universidad', valor: 'Universidad de Extremadura' },
+  { campo: 'Figuras', valor: 'Ayudante Doctor y Sustituto' },
+  { campo: 'Convocatoria', valor: 'Concurso C2 · Resolución de 18/08/2025, DOE núm. 164' },
+  { campo: 'Apartados', valor: 'Académico, cargos, docente, investigador y profesional' },
 ];
 ---
 
@@ -41,51 +46,58 @@ const camposEjemplo = [
 
     <div class="aviso" role="note">
       <p>
-        <strong>Esto es una maqueta.</strong> La calculadora todavía no funciona en esta
-        página: los campos de abajo enseñan cómo será la interfaz, pero no calculan nada.
-        Para usarla hoy, abre la versión de Notion.
+        <strong>Sirve solo para la Universidad de Extremadura.</strong> Cada universidad
+        publica sus propios baremos, con apartados y ponderaciones distintas. Aplicar
+        estos números a otra convocatoria da un resultado equivocado.
       </p>
     </div>
 
-    <section class="maqueta" aria-labelledby="maqueta-titulo">
-      <h2 id="maqueta-titulo" class="subsection-title">Vista previa de la interfaz</h2>
+    <section class="acceso">
+      <a href={CALCULADORA} class="btn-primary">Abrir la calculadora</a>
+      <p class="acceso-nota">
+        Funciona entera en tu navegador: lo que escribes no se envía a ningún sitio.
+        Puedes guardar tus datos en un archivo y recuperarlos después.
+      </p>
+    </section>
 
-      <form class="maqueta-form" inert>
-        {camposEjemplo.map(({ etiqueta, valor }) => (
-          <div class="campo">
-            <label class="campo-label">{etiqueta}</label>
-            <input class="campo-input" type="text" value={valor} disabled readonly />
+    <section class="ficha-seccion" aria-labelledby="ficha-titulo">
+      <h2 id="ficha-titulo" class="subsection-title">Qué cubre</h2>
+      <dl class="ficha">
+        {ficha.map(({ campo, valor }) => (
+          <div>
+            <dt>{campo}</dt>
+            <dd>{valor}</dd>
           </div>
         ))}
-
-        <div class="resultado">
-          <p class="resultado-label">Puntuación total</p>
-          <p class="resultado-valor">—</p>
-        </div>
-      </form>
+      </dl>
     </section>
 
     <section class="salida">
-      <h2 class="subsection-title">Mientras tanto</h2>
+      <h2 class="subsection-title">Otra universidad, dudas, errores</h2>
       <p class="salida-texto">
-        La versión que funciona vive en Notion. Es la misma herramienta que uso yo;
-        si encuentras un error en los baremos, dímelo.
+        Si te vendría bien una equivalente para tu convocatoria, escríbeme: haría falta
+        el texto con el baremo detallado. Y si encuentras un error en los cálculos,
+        dímelo — es la clase de fallo que conviene corregir rápido.
       </p>
       <div class="salida-acciones">
-        <a href={NOTION} class="btn-primary" target="_blank" rel="noopener noreferrer">
-          Abrir en Notion
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14">
-            <path d="M7 17L17 7M17 7H8M17 7V16" />
-          </svg>
+        <a
+          href={`mailto:alvarez@unex.es?subject=${encodeURIComponent('Calculadora de baremos para otra universidad')}`}
+          class="btn-primary"
+        >
+          Escribir sobre otra universidad
         </a>
         <a
           href={`mailto:alvarez@unex.es?subject=${encodeURIComponent(`Feedback: ${recurso.titulo}`)}`}
           class="link-arrow"
         >
-          Feedback
+          Avisar de un error
           <span aria-hidden="true">→</span>
         </a>
       </div>
+      <p class="salida-nota">
+        Hay además un <a href={NOTION} target="_blank" rel="noopener noreferrer">tutorial en
+        Notion</a> sobre las herramientas de cálculo, anterior a esta calculadora.
+      </p>
     </section>
 
   </div>
@@ -166,60 +178,57 @@ const camposEjemplo = [
     border-bottom: 1px solid var(--color-border);
   }
 
-  .maqueta { margin-bottom: calc(var(--space-section) * 0.5); }
-
-  /* Atenuada a propósito: comunica "esto no está vivo todavía". */
-  .maqueta-form {
-    max-width: 32rem;
+  .acceso {
+    margin-bottom: calc(var(--space-section) * 0.5);
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
-    opacity: 0.65;
+    align-items: flex-start;
+    gap: 0.9rem;
+  }
+  .acceso-nota {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    line-height: var(--leading-normal);
+    color: var(--color-ink-soft);
+    max-width: 40rem;
   }
 
-  .campo { display: flex; flex-direction: column; gap: 0.4rem; }
-  .campo-label {
+  /* Ficha: mismo patrón que la de DIDACT.IA y la afiliación de /contacto */
+  .ficha-seccion { margin-bottom: calc(var(--space-section) * 0.5); }
+  .ficha {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem 3rem;
+    margin: 0;
+    max-width: 46rem;
+  }
+  .ficha div { display: flex; flex-direction: column; gap: 0.25rem; }
+  .ficha dt {
     font-family: var(--font-mono);
     font-size: 0.7rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--color-ink-muted);
+    margin: 0;
   }
-  .campo-input {
+  .ficha dd {
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    margin: 0;
+  }
+
+  .salida-nota {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border);
     font-family: var(--font-body);
     font-size: var(--text-sm);
     color: var(--color-ink-soft);
-    background: var(--color-surface-soft);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 0.7rem 0.9rem;
-    width: 100%;
+    max-width: 40rem;
   }
-
-  .resultado {
-    margin-top: 0.75rem;
-    padding: 1.25rem 1.5rem;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .resultado-label {
-    font-family: var(--font-mono);
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-ink-muted);
-  }
-  .resultado-valor {
-    font-family: var(--font-display);
-    font-size: var(--text-3xl);
-    line-height: 1;
-    color: var(--color-ink);
-  }
+  .salida-nota a { color: var(--color-ink); text-decoration: underline; text-underline-offset: 2px; }
 
   .salida-texto {
     font-family: var(--font-body);
@@ -264,4 +273,8 @@ const camposEjemplo = [
     transition: gap var(--transition-base), color var(--transition-fast);
   }
   .link-arrow:hover { color: var(--color-accent); gap: 0.7rem; }
+
+  @media (max-width: 640px) {
+    .ficha { grid-template-columns: 1fr; gap: 1.25rem; }
+  }
 </style>

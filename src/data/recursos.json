@@ -34,10 +34,10 @@
     "estado": "Disponible",
     "status": "active",
     "icon": "Calculator",
-    "titulo": "Calculadora de baremos universitarios",
-    "descripcion": "Calcula automáticamente la puntuación de un expediente académico según los baremos de distintas convocatorias universitarias españolas (FPI, FPU, contratos predoctorales, etc.).",
+    "titulo": "Calculadora de baremos PDI — Universidad de Extremadura",
+    "descripcion": "Calcula la puntuación de un currículum según los baremos de las bolsas de Personal Docente e Investigador de la Universidad de Extremadura, para las figuras de Ayudante Doctor y Sustituto. Los datos no salen del navegador.",
     "doi": null,
-    "citeUrl": "https://javiergarciaalvarez.com/recursos",
+    "citeUrl": "https://javiergarciaalvarez.com/recursos/calculadora-baremos",
     "accion": { "label": "Ver la herramienta", "url": "/recursos/calculadora-baremos", "external": false },
     "publicado": "2024",
     "publicadoISO": null,
@@ -49,7 +49,7 @@
     "autorApa": "García-Álvarez, J.",
     "autorBibtex": "García-Álvarez, Javier",
     "bibtexKey": "garciaAlvarez2024baremos",
-    "tags": ["Baremos", "FPI", "FPU", "Universidad", "España"]
+    "tags": ["Baremos", "PDI", "Ayudante Doctor", "Universidad de Extremadura", "Bolsas de trabajo"]
   },
   {
     "id": "gdd-estandarizado",

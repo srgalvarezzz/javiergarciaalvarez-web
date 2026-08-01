@@ -19,6 +19,8 @@ const RUTAS_FIJAS = [
   '/investigacion/didactia',
   '/recursos',
   '/recursos/calculadora-baremos',
+  // Página autónoma servida desde public/, no una ruta de Astro.
+  '/calculadora-pdi-uex/',
   '/astillas',
 ];
 
