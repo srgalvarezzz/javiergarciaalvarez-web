@@ -34,7 +34,10 @@
     <div class="filters-inner">
       <div class="fbar">
         <div class="count">Selección actual: <b id="nsel">106</b> de 106 artículos</div>
-        <button class="reset" id="reset" type="button">Quitar todos los filtros</button>
+        <div class="fbar-acciones">
+          <button class="reset" id="fijar" type="button" aria-pressed="false">Fijar barra arriba</button>
+          <button class="reset" id="reset" type="button">Quitar todos los filtros</button>
+        </div>
       </div>
       <div id="fgroups" style="display:flex;gap:22px;flex-wrap:wrap;width:100%"></div>
     </div>
@@ -184,10 +187,15 @@ section{padding:56px 0}
 .secsub{color:var(--muted);max-width:66ch;font-size:16px;margin-bottom:26px}
 
 /* filters */
-/* top:0 la metía detrás de la cabecera del sitio, que también es sticky ahí y
-   va con más z-index. Se ancla justo debajo usando la altura que publica
-   BaseLayout; el 0px de reserva la deja donde estaba si la variable falta. */
-.filters{background:var(--card);border:1px solid var(--rule);position:sticky;top:var(--altura-cabecera,0px);z-index:20}
+/* Por defecto la barra NO es pegajosa. Dentro del layout del sitio ya hay una
+   cabecera sticky, y dos barras apiladas se comen demasiado alto en pantallas
+   cortas. Quien quiera tenerla siempre a mano la fija con el botón.
+   Al fijarla se ancla bajo la cabecera usando la altura que publica
+   BaseLayout, nunca en top:0, o quedaría tapada por ella. */
+.filters{background:var(--card);border:1px solid var(--rule)}
+.filters.fijada{position:sticky;top:var(--altura-cabecera,0px);z-index:20}
+.fbar-acciones{display:flex;gap:8px;flex-wrap:wrap}
+.reset[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
 .filters-inner{padding:14px 24px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;max-width:1080px;margin:0 auto}
 .fgroup{display:flex;flex-direction:column;gap:7px}
 .fgroup>span{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
@@ -298,6 +306,15 @@ FDEF.forEach(f => {
   });
   d.appendChild(c); fg.appendChild(d);
 });
+// Fijar o soltar la barra. Sin persistencia: el brief descarta
+// localStorage, así que la preferencia dura lo que la visita.
+const btnFijar = document.getElementById('fijar');
+btnFijar.onclick = () => {
+  const fijada = document.getElementById('filters').classList.toggle('fijada');
+  btnFijar.setAttribute('aria-pressed', String(fijada));
+  btnFijar.textContent = fijada ? 'Soltar barra' : 'Fijar barra arriba';
+};
+
 document.getElementById('reset').onclick = () => {
   FDEF.forEach(f => active[f.k].clear());
   document.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed','false'));

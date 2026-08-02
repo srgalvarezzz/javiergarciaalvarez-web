@@ -71,11 +71,19 @@ const datosEstructurados = publicaciones.map(articulo);
               {pub.estado}
             </span>
           )}
+          {/* Cuando hay divulgación propia, el título lleva ahí: es contenido
+              nuestro, abierto y en castellano. El artículo sigue a un clic, en
+              el enlace a Scholar de debajo. */}
           <h3 class="publication-title">
-            {pub.url ? (
+            {pub.paginaPropia ? (
+              <a href={pub.paginaPropia} class="publication-title-propia">{pub.titulo}</a>
+            ) : pub.url ? (
               <a href={pub.url} target="_blank" rel="noopener">{pub.titulo}</a>
             ) : pub.titulo}
           </h3>
+          {pub.paginaPropia && (
+            <p class="publication-propia-nota">Explorador de los 106 artículos, con los datos abiertos</p>
+          )}
           {/* Una entrada en revisión aún no tiene revista ni año que citar, así
               que la línea de referencia solo se pinta cuando hay algo que poner. */}
           {pub.autores && pub.autores.length > 0 && pub.revista && (
@@ -335,6 +343,41 @@ const datosEstructurados = publicaciones.map(articulo);
     transition: color var(--transition-fast);
   }
   .publication-title a:hover { color: var(--color-warm); }
+
+  /* Título que lleva a divulgación propia: una franja terracota barre de
+     izquierda a derecha para anunciar el enlace antes de pulsarlo.
+
+     Se dibuja con background-size y no con ::after porque el título se parte
+     en varias líneas en pantallas estrechas, y un pseudoelemento solo
+     subrayaría la última. Con box-decoration-break cada línea recibe la suya.
+
+     Va también en :focus-visible: quien navega con teclado necesita la misma
+     señal que quien usa ratón, y es la mitad del sentido de tenerla. */
+  .publication-title-propia {
+    background-image: linear-gradient(var(--color-warm), var(--color-warm));
+    background-repeat: no-repeat;
+    background-position: 0 92%;
+    background-size: 0 0.14em;
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
+    transition: background-size var(--transition-base), color var(--transition-fast);
+  }
+  .publication-title-propia:hover,
+  .publication-title-propia:focus-visible {
+    background-size: 100% 0.14em;
+    color: var(--color-warm-deep);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .publication-title-propia { transition: none; }
+  }
+
+  .publication-propia-nota {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    color: var(--color-ink-muted);
+    margin-bottom: 0.6rem;
+  }
   .publication-meta {
     font-family: var(--font-body);
     font-size: var(--text-sm);

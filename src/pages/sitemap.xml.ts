@@ -17,6 +17,7 @@ const RUTAS_FIJAS = [
   '/sobre-mi',
   '/investigacion',
   '/investigacion/didactia',
+  '/investigacion/minecraft',
   '/recursos',
   '/recursos/calculadora-baremos',
   // Página autónoma servida desde public/, no una ruta de Astro.
