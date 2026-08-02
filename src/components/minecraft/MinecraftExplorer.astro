@@ -184,7 +184,10 @@ section{padding:56px 0}
 .secsub{color:var(--muted);max-width:66ch;font-size:16px;margin-bottom:26px}
 
 /* filters */
-.filters{background:var(--card);border:1px solid var(--rule);position:sticky;top:0;z-index:20}
+/* top:0 la metía detrás de la cabecera del sitio, que también es sticky ahí y
+   va con más z-index. Se ancla justo debajo usando la altura que publica
+   BaseLayout; el 0px de reserva la deja donde estaba si la variable falta. */
+.filters{background:var(--card);border:1px solid var(--rule);position:sticky;top:var(--altura-cabecera,0px);z-index:20}
 .filters-inner{padding:14px 24px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;max-width:1080px;margin:0 auto}
 .fgroup{display:flex;flex-direction:column;gap:7px}
 .fgroup>span{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}

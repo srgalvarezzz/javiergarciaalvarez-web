@@ -166,6 +166,17 @@ const isActive = (route: string): boolean =>
     </header>
 
     <script>
+      // La cabecera es sticky en top:0. Cualquier otro elemento sticky de una
+      // página debe pegarse por debajo de ella y no detrás, así que se publica
+      // su altura real como variable en lugar de que cada página la adivine.
+      const cabecera = document.querySelector<HTMLElement>('.site-header');
+      if (cabecera) {
+        const medir = () =>
+          document.documentElement.style.setProperty('--altura-cabecera', cabecera.offsetHeight + 'px');
+        medir();
+        addEventListener('resize', medir);
+      }
+
       const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
       const navMovil = document.querySelector<HTMLElement>('#nav-movil');
 
