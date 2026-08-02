@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import MinecraftExplorer from '../../components/minecraft/MinecraftExplorer.astro';
+
+/**
+ * Divulgación en castellano de la revisión sobre el uso educativo de Minecraft.
+ *
+ * La página se construye íntegramente desde el conjunto de datos abierto
+ * depositado en Zenodo, no desde el artículo publicado en Games and Culture,
+ * que es de pago. La distinción es jurídica: ni el texto ni las figuras
+ * reproducen el artículo.
+ */
+---
+
+<BaseLayout
+  title="Diez años investigando Minecraft en educación"
+  description="Explorador interactivo de una revisión de 106 artículos sobre el uso educativo de Minecraft entre 2014 y 2024, construido desde el conjunto de datos abierto depositado en Zenodo."
+  ogImage="/og-investigacion.png"
+>
+  {/* Tipografías propias del explorador. Pendiente de decidir si se armoniza
+      con tokens.css, en cuyo caso esta hoja desaparece. */}
+  <Fragment slot="head">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap"
+      rel="stylesheet"
+    />
+  </Fragment>
+
+  <MinecraftExplorer />
+</BaseLayout>

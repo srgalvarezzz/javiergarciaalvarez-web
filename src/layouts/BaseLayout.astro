@@ -93,6 +93,10 @@ const isActive = (route: string): boolean =>
     <!-- Feed de Astillas (Fase 5.4) -->
     <link rel="alternate" type="application/rss+xml" title="Astillas · Javier García-Álvarez" href="/rss.xml" />
 
+    {/* Para páginas que necesitan algo propio en el head: por ahora, las
+        tipografías del explorador de Minecraft. */}
+    <slot name="head" />
+
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

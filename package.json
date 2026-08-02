@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
+    "test:datos": "node --test \"test/**/*.test.js\"",
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
