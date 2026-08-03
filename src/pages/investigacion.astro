@@ -11,10 +11,6 @@ const totalRevisiones = revisiones.reduce((suma, r) => suma + r.numero, 0);
 // Se deriva del máximo de las entradas, nunca se escribe a mano (tarea 3.3).
 const actualizado = ultimaActualizacion([proyectoPrincipal, ...publicaciones]);
 
-// "A, B & C": coma entre todos menos el último, que va con ampersand.
-const listarAutores = (nombres: string[]) =>
-  nombres.length <= 1 ? nombres[0] ?? '' : `${nombres.slice(0, -1).join(', ')} & ${nombres[nombres.length - 1]}`;
-
 const datosEstructurados = publicaciones.map(articulo);
 ---
 
@@ -71,33 +67,66 @@ const datosEstructurados = publicaciones.map(articulo);
               {pub.estado}
             </span>
           )}
-          {/* Cuando hay divulgación propia, el título lleva ahí: es contenido
-              nuestro, abierto y en castellano. El artículo sigue a un clic, en
-              el enlace a Scholar de debajo. */}
+          {/* El título lleva al DOI, que es la dirección canónica del trabajo.
+              Cuando no hay DOI todavía —en prensa o en revisión— se queda como
+              texto: enlazar a otra parte confundiría sobre qué es un DOI. */}
           <h3 class="publication-title">
-            {pub.paginaPropia ? (
-              <a href={pub.paginaPropia} class="publication-title-propia">{pub.titulo}</a>
-            ) : pub.url ? (
-              <a href={pub.url} target="_blank" rel="noopener">{pub.titulo}</a>
+            {pub.doi ? (
+              <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener">{pub.titulo}</a>
             ) : pub.titulo}
           </h3>
-          {pub.paginaPropia && (
-            <p class="publication-propia-nota">Explorador de los 106 artículos, con los datos abiertos</p>
-          )}
           {/* Una entrada en revisión aún no tiene revista ni año que citar, así
               que la línea de referencia solo se pinta cuando hay algo que poner. */}
           {pub.autores && pub.autores.length > 0 && pub.revista && (
             <p class="publication-meta">
-              {listarAutores(pub.autores)} ({pub.anio}). <em>{pub.revista}</em>.{pub.editorial ? ` ${pub.editorial}.` : ''}
+              {pub.autores.map((autor, i) => (
+                <Fragment>
+                  {i > 0 ? (i === pub.autores.length - 1 ? ' & ' : ', ') : ''}
+                  {autor.orcid ? (
+                    <a
+                      href={`https://orcid.org/${autor.orcid}`}
+                      target="_blank"
+                      rel="noopener"
+                      class="autor-orcid"
+                      title={`Perfil ORCID de ${autor.nombre}`}
+                    >{autor.nombre}</a>
+                  ) : autor.nombre}
+                </Fragment>
+              ))}
+              {' '}({pub.anio}).{' '}
+              <em>
+                {pub.revistaUrl ? (
+                  <a href={pub.revistaUrl} target="_blank" rel="noopener">{pub.revista}</a>
+                ) : pub.revista}
+              </em>.{pub.editorial ? ` ${pub.editorial}.` : ''}
+            </p>
+          )}
+          {pub.doi && (
+            <p class="publication-doi">
+              <span class="publication-doi-label">DOI</span>
+              <a href={`https://doi.org/${pub.doi}`} target="_blank" rel="noopener"><code>{pub.doi}</code></a>
             </p>
           )}
           {pub.resumen && (
             <p class="publication-body">{pub.resumen}</p>
           )}
-          {pub.url && (
-            <a class="publication-link" href={pub.url} target="_blank" rel="noopener">
-              Ver en Google Scholar <span aria-hidden="true">↗</span>
-            </a>
+          {/* La divulgación propia va como botón y no en el título: el título
+              pertenece al DOI, y mezclar ambos destinos en el mismo elemento
+              haría imposible saber adónde lleva un clic.
+
+              Ya no hay enlace a Google Scholar. El DOI del título es la
+              dirección canónica del artículo y Scholar solo era una segunda
+              puerta a lo mismo. Sigue declarado como sameAs en el JSON-LD,
+              donde sirve para desambiguar la identidad del trabajo. */}
+          {pub.paginaPropia && (
+            <div class="publication-actions">
+              <a href={pub.paginaPropia} class="btn-secondary">
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="15" height="15">
+                  <path d="M3 3v18h18" /><path d="M7 15l4-5 3 3 5-7" />
+                </svg>
+                Resultados
+              </a>
+            </div>
           )}
         </article>
       ))}
@@ -344,39 +373,87 @@ const datosEstructurados = publicaciones.map(articulo);
   }
   .publication-title a:hover { color: var(--color-warm); }
 
-  /* Título que lleva a divulgación propia: una franja terracota barre de
-     izquierda a derecha para anunciar el enlace antes de pulsarlo.
+  /* Autoría enlazada a ORCID. La franja terracota barre de izquierda a derecha
+     al pasar por encima y al recibir el foco, para anunciar que el nombre es
+     pulsable sin llenar la línea de subrayados permanentes.
 
-     Se dibuja con background-size y no con ::after porque el título se parte
-     en varias líneas en pantallas estrechas, y un pseudoelemento solo
-     subrayaría la última. Con box-decoration-break cada línea recibe la suya.
-
-     Va también en :focus-visible: quien navega con teclado necesita la misma
-     señal que quien usa ratón, y es la mitad del sentido de tenerla. */
-  .publication-title-propia {
+     Se dibuja con background-size y no con ::after porque un nombre puede
+     partirse de línea, y un pseudoelemento solo subrayaría el último trozo.
+     Con box-decoration-break cada fragmento recibe el suyo. */
+  .autor-orcid {
+    color: inherit;
+    text-decoration: none;
     background-image: linear-gradient(var(--color-warm), var(--color-warm));
     background-repeat: no-repeat;
-    background-position: 0 92%;
-    background-size: 0 0.14em;
+    background-position: 0 100%;
+    background-size: 0 1.5px;
     box-decoration-break: clone;
     -webkit-box-decoration-break: clone;
     transition: background-size var(--transition-base), color var(--transition-fast);
   }
-  .publication-title-propia:hover,
-  .publication-title-propia:focus-visible {
-    background-size: 100% 0.14em;
-    color: var(--color-warm-deep);
-  }
+  .autor-orcid:hover,
+  .autor-orcid:focus-visible { background-size: 100% 1.5px; color: var(--color-ink); }
 
-  @media (prefers-reduced-motion: reduce) {
-    .publication-title-propia { transition: none; }
+  .publication-meta em a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 2px;
+    transition: text-decoration-color var(--transition-fast);
   }
+  .publication-meta em a:hover { text-decoration-color: var(--color-warm); }
 
-  .publication-propia-nota {
+  .publication-doi {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.6rem;
+  }
+  .publication-doi-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-muted);
+  }
+  .publication-doi code {
     font-family: var(--font-mono);
     font-size: var(--text-xs);
-    color: var(--color-ink-muted);
-    margin-bottom: 0.6rem;
+    color: var(--color-ink-soft);
+  }
+  .publication-doi a { text-decoration: none; }
+  .publication-doi a:hover code { color: var(--color-warm-deep); }
+
+  .publication-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+    margin-top: 0.9rem;
+  }
+
+  /* Mismo botón que "Cómo citar" en /recursos, para que se lean como la misma
+     familia de acciones secundarias. */
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    background: transparent;
+    border: 1px solid var(--color-border-strong);
+    padding: 0.6rem 1.1rem;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    transition: background var(--transition-fast), border-color var(--transition-fast);
+  }
+  .btn-secondary:hover { background: var(--color-surface-soft); border-color: var(--color-ink); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .autor-orcid { transition: none; }
   }
   .publication-meta {
     font-family: var(--font-body);

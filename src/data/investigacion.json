@@ -18,9 +18,14 @@
     {
       "titulo": "Minecraft as a Pedagogical Tool: A Systematic Literature Review (2014–2024)",
       "paginaPropia": "/investigacion/minecraft",
-      "autores": ["García-Álvarez, J.", "Acevedo-Borrega, J."],
+      "doi": "10.1177/15554120251341034",
+      "autores": [
+        { "nombre": "García-Álvarez, J.", "orcid": "0009-0002-2876-2683" },
+        { "nombre": "Acevedo-Borrega, J.", "orcid": "0000-0002-7234-8263" }
+      ],
       "anio": "2025",
       "revista": "Games and Culture",
+      "revistaUrl": "https://journals.sagepub.com/home/gac",
       "editorial": "SAGE",
       "url": "https://scholar.google.com/citations?view_op=view_citation&hl=es&user=mYf-JyQAAAAJ&citation_for_view=mYf-JyQAAAAJ:u5HHmVD_uO8C",
       "estado": null,
@@ -30,9 +35,14 @@
     },
     {
       "titulo": "Evolución de los niveles educativos en la provincia de Cáceres (España, 1991–2021): desigualdades territoriales y de género a partir del Censo de Población",
-      "autores": ["García-Álvarez, J.", "Santos-Pérez, C."],
+      "doi": null,
+      "autores": [
+        { "nombre": "García-Álvarez, J.", "orcid": "0009-0002-2876-2683" },
+        { "nombre": "Santos-Pérez, C.", "orcid": null }
+      ],
       "anio": "en prensa",
       "revista": "Revista de Estudios Extremeños",
+      "revistaUrl": "https://www.dip-badajoz.es/cultura/ceex/index.php?seccion=reex_inicio",
       "editorial": null,
       "url": null,
       "estado": "En producción",
@@ -42,9 +52,15 @@
     },
     {
       "titulo": "Game Mechanic as Learning Evidence: A Systematic Review of Embedded Assessment in Educational Games",
-      "autores": ["García-Álvarez, J.", "Acevedo-Borrega, J.", "González-Fernández, A."],
+      "doi": null,
+      "autores": [
+        { "nombre": "García-Álvarez, J.", "orcid": "0009-0002-2876-2683" },
+        { "nombre": "Acevedo-Borrega, J.", "orcid": "0000-0002-7234-8263" },
+        { "nombre": "González-Fernández, A.", "orcid": "0000-0001-6277-9054" }
+      ],
       "anio": "enviado",
       "revista": "Educational Technology Research and Development",
+      "revistaUrl": "https://link.springer.com/journal/11423",
       "editorial": "Springer",
       "url": null,
       "estado": "En revisión por pares",

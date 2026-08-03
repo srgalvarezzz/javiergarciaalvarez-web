@@ -37,13 +37,19 @@ export const persona = {
   sameAs: [ORCID, SCHOLAR],
 };
 
+interface Autor {
+  nombre: string;
+  orcid: string | null;
+}
+
 interface Publicacion {
   titulo: string;
-  autores: string[] | null;
+  autores: Autor[] | null;
   anio: string | null;
   revista: string | null;
   editorial: string | null;
   url: string | null;
+  doi?: string | null;
 }
 
 /**
@@ -60,11 +66,22 @@ export function articulo(pub: Publicacion) {
     '@type': 'ScholarlyArticle',
     headline: pub.titulo,
     name: pub.titulo,
-    author: (pub.autores ?? []).map((nombre) => ({ '@type': 'Person', name: nombre })),
+    // El ORCID va como sameAs: es lo que permite a un agregador saber que este
+    // "García-Álvarez, J." es la misma persona que el de otro artículo.
+    author: (pub.autores ?? []).map((a) => ({
+      '@type': 'Person',
+      name: a.nombre,
+      ...(a.orcid ? { sameAs: `https://orcid.org/${a.orcid}`, identifier: `https://orcid.org/${a.orcid}` } : {}),
+    })),
+    // El DOI manda como identificador y como URL canónica. La ficha de Scholar
+    // ya no se enseña en la página, pero se declara como sameAs: ahí sí sirve,
+    // para que un agregador sepa que ambos registros son el mismo trabajo.
+    ...(pub.doi ? { identifier: `https://doi.org/${pub.doi}` } : {}),
     ...(esAnio ? { datePublished: pub.anio } : {}),
     ...(pub.revista ? { isPartOf: { '@type': 'Periodical', name: pub.revista } } : {}),
     ...(pub.editorial ? { publisher: { '@type': 'Organization', name: pub.editorial } } : {}),
-    ...(pub.url ? { url: pub.url } : {}),
+    ...(pub.doi ? { url: `https://doi.org/${pub.doi}` } : pub.url ? { url: pub.url } : {}),
+    ...(pub.doi && pub.url ? { sameAs: pub.url } : {}),
   };
 }
 
