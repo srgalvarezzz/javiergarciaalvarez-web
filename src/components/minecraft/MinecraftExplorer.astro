@@ -38,18 +38,18 @@
     <div class="wrap"><div class="stats" id="stats"></div></div>
   </div>
 
-  <div class="filters" id="filters">
-    <div class="filters-inner">
-      <div class="fbar">
-        <div class="count">Selección actual: <b id="nsel">106</b> de 106 artículos</div>
-        <div class="fbar-acciones">
-          <button class="reset" id="fijar" type="button" aria-pressed="false">Fijar barra arriba</button>
+  <div class="mc-cuerpo">
+    <aside class="filters" id="filters" aria-label="Filtros del corpus">
+      <div class="filters-inner">
+        <div class="fbar">
+          <div class="count">Selección actual: <b id="nsel">106</b> de 106 artículos</div>
           <button class="reset" id="reset" type="button">Quitar todos los filtros</button>
         </div>
+        <div id="fgroups" class="fgroups"></div>
       </div>
-      <div id="fgroups" style="display:flex;gap:22px;flex-wrap:wrap;width:100%"></div>
-    </div>
-  </div>
+    </aside>
+
+    <div class="mc-columna">
 
   <section>
     <div class="wrap">
@@ -127,6 +127,9 @@
     </div>
   </section>
 
+    </div>
+  </div>
+
   <footer>
     <div class="wrap">
       <p class="eyebrow">Procedencia de los datos</p>
@@ -200,11 +203,30 @@
    cortas. Quien quiera tenerla siempre a mano la fija con el botón.
    Al fijarla se ancla bajo la cabecera usando la altura que publica
    BaseLayout, nunca en top:0, o quedaría tapada por ella. */
-.mc .filters{background:var(--card);border:1px solid var(--rule)}
-.mc .filters.fijada{position:sticky;top:var(--altura-cabecera,0px);z-index:20}
-.mc .fbar-acciones{display:flex;gap:8px;flex-wrap:wrap}
-.mc .reset[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
-.mc .filters-inner{padding:14px 24px;display:flex;gap:22px;flex-wrap:wrap;align-items:flex-start;max-width:1080px;margin:0 auto}
+.mc .mc-cuerpo{
+  display:grid;
+  grid-template-columns:250px minmax(0,1fr);
+  gap:34px;
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 24px;
+  align-items:start;
+}
+.mc .filters{
+  position:sticky;
+  top:calc(var(--altura-cabecera,0px) + 18px);
+  max-height:calc(100vh - var(--altura-cabecera,0px) - 36px);
+  overflow-y:auto;
+  background:var(--card);
+  border:1px solid var(--rule);
+  border-radius:3px;
+  z-index:20;
+}
+/* Las secciones dejan de poner su propio ancho: ahora lo fija la retícula. */
+.mc .mc-columna .wrap{max-width:none;padding:0;margin:0}
+.mc .mc-columna section{padding:40px 0}
+.mc .filters-inner{padding:16px 16px 18px;display:flex;flex-direction:column;gap:18px;align-items:stretch}
+.mc .fgroups{display:flex;flex-direction:column;gap:16px}
 .mc .fgroup{display:flex;flex-direction:column;gap:7px}
 .mc .fgroup>span{font-family:var(--mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted)}
 .mc .chips{display:flex;gap:5px;flex-wrap:wrap}
@@ -212,7 +234,7 @@
 .mc .chip:hover{border-color:var(--accent)}
 .mc .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
 .mc .chip:focus-visible,.mc .tbtn:focus-visible,.mc .reset:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
-.mc .fbar{display:flex;justify-content:space-between;align-items:center;width:100%;gap:14px;flex-wrap:wrap}
+.mc .fbar{display:flex;flex-direction:column;align-items:flex-start;width:100%;gap:9px;padding-bottom:14px;border-bottom:1px solid var(--rule2)}
 .mc .count{font-family:var(--mono);font-size:12px;font-weight:600}
 .mc .count b{color:var(--accent);font-size:15px}
 .mc .reset{font-family:var(--mono);font-size:11px;background:none;border:1px solid var(--rule);padding:4px 9px;cursor:pointer;border-radius:2px}
@@ -258,8 +280,17 @@
 .mc .cite{font-family:var(--mono);font-size:12px;background:#1E212A;padding:14px;margin-top:12px;line-height:1.7;overflow-x:auto}
 .mc .tip{position:fixed;pointer-events:none;background:var(--ink);color:#fff;font-family:var(--mono);font-size:11px;padding:8px 10px;max-width:280px;line-height:1.5;z-index:60;opacity:0;transition:opacity .12s;border-radius:2px}
 @media (prefers-reduced-motion:reduce){.mc *{transition:none!important;animation:none!important;scroll-behavior:auto}}
+/* Por debajo de 900px la columna lateral estrangula los gráficos, así que se
+   apila encima del contenido y deja de ser fija: un lateral pegajoso en una
+   pantalla estrecha se come la mitad de la ventana. */
+@media(max-width:900px){
+  .mc .mc-cuerpo{grid-template-columns:1fr;gap:0}
+  .mc .filters{position:static;max-height:none;overflow-y:visible;margin-bottom:8px}
+  .mc .filters-inner{flex-direction:row;flex-wrap:wrap;gap:22px}
+  .mc .fgroups{flex-direction:row;flex-wrap:wrap;gap:22px;width:100%}
+  .mc .fbar{flex-direction:row;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;border-bottom:0;padding-bottom:0}
+}
 @media(max-width:640px){
-  .mc .filters{position:static}
   .mc .stat{border-right:0;border-bottom:1px solid var(--rule2)}
   .mc{font-size:16px}
 }
@@ -314,15 +345,6 @@ FDEF.forEach(f => {
   });
   d.appendChild(c); fg.appendChild(d);
 });
-// Fijar o soltar la barra. Sin persistencia: el brief descarta
-// localStorage, así que la preferencia dura lo que la visita.
-const btnFijar = document.getElementById('fijar');
-btnFijar.onclick = () => {
-  const fijada = document.getElementById('filters').classList.toggle('fijada');
-  btnFijar.setAttribute('aria-pressed', String(fijada));
-  btnFijar.textContent = fijada ? 'Soltar barra' : 'Fijar barra arriba';
-};
-
 document.getElementById('reset').onclick = () => {
   FDEF.forEach(f => active[f.k].clear());
   document.querySelectorAll('.chip').forEach(b => b.setAttribute('aria-pressed','false'));
