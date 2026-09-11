@@ -23,6 +23,8 @@ const RUTAS_FIJAS = [
   // Página autónoma servida desde public/, no una ruta de Astro.
   '/calculadora-pdi-uex/',
   '/astillas',
+  // /bingo-musical/ (también en public/) queda fuera a propósito: solo se
+  // accede por QR y lleva noindex.
 ];
 
 const FALLBACK = 'https://javiergarciaalvarez.com';

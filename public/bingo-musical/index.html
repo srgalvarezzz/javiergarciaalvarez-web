@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<!-- Página autónoma, sin ruta en Astro ni entrada en el sitemap: se accede
+     únicamente por QR. Vista de jugador en /bingo-musical/ y vista de quien
+     dirige en /bingo-musical/?director (protegida por el código de partida). -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FAFAF7">
+<title>Bingo musical</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Inter+Tight:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  /* Paleta y tipografías de javiergarciaalvarez.com */
+  :root {
+    --bg: #FAFAF7;
+    --surface: #FFFFFF;
+    --surface2: #F4F4EF;
+    --border: #E8E8EC;
+    --border2: #D0D0D8;
+    --text: #0F0F1A;
+    --text2: #4A4A5C;
+    --text3: #6E6E7D;
+    --accent: #5046E4;
+    --accent-hover: #3F35C7;
+    --accent-soft: #EEEDFE;
+    --accent-deep: #3C3489;
+    --warm: #D86842;
+    --warm-soft: #F5E3DA;
+    --warm-deep: #8C3F22;
+    --success: #447A28;
+    --success-soft: #EAF3DE;
+    --danger: #C2362F;
+    --danger-soft: #FCEBEB;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+    --serif: 'Instrument Serif', Georgia, serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.5;
+    min-height: 100vh;
+    min-height: 100dvh;
+    -webkit-tap-highlight-color: transparent;
+  }
+  [hidden] { display: none !important; }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  input { font: inherit; color: inherit; }
+
+  /* ── Estructura común ── */
+  .header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+  }
+  .header h1 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 1.5rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .header .meta {
+    font-family: var(--mono);
+    font-size: 0.8125rem;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+  .header .meta strong { color: var(--text); font-weight: 600; letter-spacing: 0.08em; }
+
+  .wrap { max-width: 520px; margin: 0 auto; padding: 20px 16px 48px; }
+  .wrap--wide { max-width: 1080px; }
+
+  .kicker {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    margin-bottom: 6px;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: 2rem;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  p { color: var(--text2); }
+  .muted { color: var(--text3); font-size: 0.875rem; }
+  .mono { font-family: var(--mono); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .stack > * + * { margin-top: 14px; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 48px;
+    padding: 0 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    background: var(--accent);
+    color: #fff;
+    transition: background .15s;
+    width: 100%;
+  }
+  .btn:hover { background: var(--accent-hover); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn--ghost {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border2);
+  }
+  .btn--ghost:hover { background: var(--surface2); }
+  .btn--warm { background: var(--warm); }
+  .btn--warm:hover { background: var(--warm-deep); }
+  .btn--sm { min-height: 38px; padding: 0 14px; font-size: 0.875rem; width: auto; }
+
+  .field { display: flex; gap: 8px; }
+  .field input {
+    flex: 1;
+    min-width: 0;
+    min-height: 48px;
+    padding: 0 14px;
+    border: 1px solid var(--border2);
+    border-radius: 10px;
+    background: var(--surface);
+    font-family: var(--mono);
+    font-size: 1.125rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .field input:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .field .btn { width: auto; }
+
+  .msg {
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+  }
+  .msg--danger { background: var(--danger-soft); color: var(--danger); }
+
+  /* ── Vista jugador: cartón ── */
+  .status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .status .count {
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    color: var(--text2);
+  }
+  .status .count strong { color: var(--accent); font-size: 1.25rem; font-weight: 600; }
+
+  .grid {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(var(--cols, 3), 1fr);
+  }
+  .tile {
+    position: relative;
+    aspect-ratio: 1 / 1.08;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 8px 6px;
+    border-radius: 12px;
+    border: 1.5px solid var(--border2);
+    background: var(--surface);
+    transition: background .15s, border-color .15s, transform .08s;
+    user-select: none;
+    -webkit-user-select: none;
+    hyphens: auto;
+    overflow-wrap: break-word;
+  }
+  .tile:active { transform: scale(.97); }
+  .tile .title {
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  .tile .artist {
+    margin-top: 5px;
+    font-size: 0.7rem;
+    line-height: 1.25;
+    color: var(--text3);
+  }
+  .tile--on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .tile--on .artist { color: rgba(255,255,255,.75); }
+  .tile--on::after {
+    content: '✓';
+    position: absolute;
+    top: 6px; right: 9px;
+    font-family: var(--mono);
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .bingo-banner {
+    background: var(--warm-soft);
+    color: var(--warm-deep);
+    border: 1px solid #ecc9b8;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .bingo-banner .btn { width: auto; }
+
+  /* ── Overlay de bingo ── */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    background: var(--accent);
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 32px 24px;
+    gap: 14px;
+  }
+  .overlay .big {
+    font-family: var(--serif);
+    font-size: clamp(4rem, 22vw, 7.5rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .overlay .code {
+    font-family: var(--mono);
+    font-size: 2.25rem;
+    letter-spacing: 0.2em;
+    font-weight: 600;
+    background: rgba(255,255,255,.14);
+    padding: 8px 18px;
+    border-radius: 12px;
+  }
+  .overlay .time {
+    font-family: var(--mono);
+    font-size: 1.5rem;
+    letter-spacing: 0.04em;
+  }
+  .overlay p { color: rgba(255,255,255,.85); max-width: 32ch; }
+  .overlay .btn { background: #fff; color: var(--accent); max-width: 320px; margin-top: 12px; }
+
+  /* ── Vista director ── */
+  .cols {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 900px) {
+    .cols { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start; }
+    .cols > .sticky { position: sticky; top: 76px; }
+  }
+
+  .now {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 12px;
+    padding: 18px;
+  }
+  .now .kicker { color: rgba(255,255,255,.7); }
+  .now .title { font-family: var(--serif); font-size: 1.75rem; line-height: 1.1; }
+  .now .artist { color: rgba(255,255,255,.8); margin-top: 4px; }
+  .now .timer {
+    font-family: var(--mono);
+    font-size: 2.5rem;
+    line-height: 1;
+    font-weight: 600;
+    margin-top: 14px;
+    font-variant-numeric: tabular-nums;
+  }
+  .now .timer.over { color: #ffd6c8; }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  .stat {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 10px 12px;
+  }
+  .stat .v { font-family: var(--mono); font-size: 1.25rem; font-weight: 600; }
+  .stat .l { font-size: 0.75rem; color: var(--text3); }
+
+  .order { list-style: none; }
+  .order li {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9375rem;
+  }
+  .order li:last-child { border-bottom: 0; }
+  .order .n { font-family: var(--mono); color: var(--text3); font-size: 0.8125rem; }
+  .order .a { color: var(--text3); font-size: 0.8125rem; }
+  .order li.done { color: var(--text3); }
+  .order li.done .t { text-decoration: line-through; }
+  .order li.done .n { color: var(--success); }
+  .order li.next { background: var(--accent-soft); }
+  .order li.next .n { color: var(--accent); font-weight: 600; }
+
+  .check { list-style: none; }
+  .check li {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9375rem;
+  }
+  .check li:last-child { border-bottom: 0; }
+  .ok { color: var(--success); font-family: var(--mono); font-size: 0.8125rem; white-space: nowrap; }
+  .ko { color: var(--danger); font-family: var(--mono); font-size: 0.8125rem; white-space: nowrap; }
+
+  .verdict {
+    border-radius: 10px;
+    padding: 14px;
+    font-weight: 600;
+    font-size: 1.125rem;
+  }
+  .verdict--ok { background: var(--success-soft); color: var(--success); }
+  .verdict--ko { background: var(--danger-soft); color: var(--danger); }
+  .verdict small { display: block; font-weight: 400; font-size: 0.875rem; margin-top: 4px; }
+
+  .log { list-style: none; font-size: 0.875rem; }
+  .log li { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; border-bottom: 1px solid var(--border); }
+  .log li:last-child { border-bottom: 0; }
+
+  .qr { display: flex; gap: 14px; align-items: center; flex-wrap: wrap; }
+  .qr img { width: 140px; height: 140px; border: 1px solid var(--border); border-radius: 8px; background: #fff; }
+  .qr .url { font-family: var(--mono); font-size: 0.8125rem; overflow-wrap: anywhere; }
+
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .row .btn { flex: 1; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ VISTA JUGADOR ═══════════════════ -->
+<div id="vista-jugador" hidden>
+  <header class="header">
+    <h1>Bingo musical</h1>
+    <div class="meta" id="j-meta"></div>
+  </header>
+
+  <!-- Portada: generar o recuperar cartón -->
+  <main class="wrap stack" id="j-portada" hidden>
+    <div>
+      <div class="kicker">Cómo se juega</div>
+      <h2>Reconoce la canción, marca la casilla.</h2>
+    </div>
+    <p>Sonará un trozo de cada canción. Si está en tu cartón, tócala para marcarla. Gana quien complete el cartón antes: cuando marques la última casilla, enséñale la pantalla a quien dirige.</p>
+    <button class="btn" id="j-nuevo">Generar mi cartón</button>
+    <div class="card stack">
+      <h3>¿Ya tenías cartón?</h3>
+      <p class="muted">Escribe su código de 4 caracteres para recuperarlo idéntico.</p>
+      <form class="field" id="j-form-recuperar">
+        <input id="j-codigo" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="CÓDIGO" aria-label="Código del cartón">
+        <button class="btn btn--ghost" type="submit">Recuperar</button>
+      </form>
+      <div class="msg msg--danger" id="j-error" hidden></div>
+    </div>
+  </main>
+
+  <!-- Cartón -->
+  <main class="wrap" id="j-carton" hidden>
+    <div class="bingo-banner" id="j-banner" hidden>
+      <div>
+        <strong>Bingo cantado</strong>
+        <div class="mono muted" id="j-banner-hora"></div>
+      </div>
+      <button class="btn btn--warm btn--sm" id="j-ver-bingo">Ver pantalla</button>
+    </div>
+    <div class="status">
+      <div class="count">Marcadas <strong id="j-marcadas">0</strong> / <span id="j-total"></span></div>
+      <button class="btn btn--ghost btn--sm" id="j-reiniciar">Nuevo cartón</button>
+    </div>
+    <div class="grid" id="j-grid"></div>
+    <p class="muted" style="margin-top:16px">Marca solo canciones que hayan sonado: al cantar bingo, quien dirige comprueba tu cartón con el código <span class="mono" id="j-codigo-pie"></span>. Si te equivocas, vuelve a tocar la casilla para desmarcarla.</p>
+  </main>
+
+  <!-- Pantalla de bingo -->
+  <div class="overlay" id="j-overlay" hidden>
+    <div class="big">¡Bingo!</div>
+    <p>Enséñale esta pantalla a quien dirige.</p>
+    <div class="code" id="j-overlay-codigo"></div>
+    <div class="time" id="j-overlay-hora"></div>
+    <p>La hora es la del toque que completó el cartón: decide el orden si hay dos bingos en la misma canción.</p>
+    <button class="btn" id="j-cerrar-overlay">Volver al cartón</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ VISTA DIRECTOR ═══════════════════ -->
+<div id="vista-director" hidden>
+  <header class="header">
+    <h1>Bingo musical · dirección</h1>
+    <div class="meta" id="d-meta"></div>
+  </header>
+
+  <!-- Entrada: código de partida -->
+  <main class="wrap stack" id="d-portada" hidden>
+    <div>
+      <div class="kicker">Antes de empezar</div>
+      <h2>Código de partida</h2>
+    </div>
+    <p>Escribe una palabra o frase cualquiera. De ella sale el orden de reproducción, así que si recargas la página con el mismo código recuperas la misma lista. No la compartas con quien juega.</p>
+    <form class="field" id="d-form">
+      <input id="d-codigo" autocomplete="off" spellcheck="false" placeholder="p. ej. FIESTA-2026" aria-label="Código de partida" style="text-transform:none;letter-spacing:0.02em">
+      <button class="btn" type="submit">Empezar</button>
+    </form>
+  </main>
+
+  <main class="wrap wrap--wide" id="d-panel" hidden>
+    <div class="cols">
+      <!-- Columna izquierda: orden de reproducción -->
+      <section class="stack">
+        <div class="now" id="d-now">
+          <div class="kicker">Siguiente</div>
+          <div class="title" id="d-now-title"></div>
+          <div class="artist" id="d-now-artist"></div>
+          <div class="timer" id="d-timer" hidden></div>
+        </div>
+        <div class="row">
+          <button class="btn" id="d-siguiente">Ya ha sonado → siguiente</button>
+          <button class="btn btn--ghost" id="d-deshacer" style="flex:0 0 auto;width:auto">Deshacer</button>
+        </div>
+        <div class="stats">
+          <div class="stat"><div class="v" id="d-stat-sonadas">0</div><div class="l">sonadas</div></div>
+          <div class="stat"><div class="v" id="d-stat-restantes">0</div><div class="l">restantes</div></div>
+          <div class="stat"><div class="v" id="d-stat-tiempo">0:00</div><div class="l">de partida</div></div>
+        </div>
+        <div class="card" style="padding:0">
+          <ol class="order" id="d-orden"></ol>
+        </div>
+      </section>
+
+      <!-- Columna derecha: verificación, QR, reinicio -->
+      <section class="stack sticky">
+        <div class="card stack">
+          <div>
+            <div class="kicker">Alguien ha cantado bingo</div>
+            <h3>Comprobar cartón</h3>
+          </div>
+          <form class="field" id="d-form-verificar">
+            <input id="d-verificar" maxlength="4" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="CÓDIGO" aria-label="Código del cartón">
+            <button class="btn" type="submit">Comprobar</button>
+          </form>
+          <div class="msg msg--danger" id="d-verror" hidden></div>
+          <div id="d-resultado" hidden>
+            <div class="verdict" id="d-verdict"></div>
+            <ul class="check" id="d-check" style="margin-top:10px"></ul>
+            <button class="btn btn--warm btn--sm" id="d-registrar" style="margin-top:12px">Registrar como ganador</button>
+          </div>
+          <p class="muted">Si dos cartones se completan en la misma canción, gana el que muestre la hora más temprana en su pantalla de bingo.</p>
+        </div>
+
+        <div class="card stack" id="d-ganadores-card" hidden>
+          <h3>Bingos registrados</h3>
+          <ul class="log" id="d-ganadores"></ul>
+        </div>
+
+        <div class="card stack">
+          <h3>Enlace para jugar</h3>
+          <div class="qr">
+            <img id="d-qr" alt="Código QR con el enlace de la vista de jugador">
+            <div>
+              <div class="url" id="d-url"></div>
+              <button class="btn btn--ghost btn--sm" id="d-copiar" style="margin-top:8px">Copiar enlace</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card stack">
+          <h3>Otra ronda</h3>
+          <p class="muted">Borra las sonadas y pide un código de partida nuevo. Cada jugador debe pulsar «Nuevo cartón» en su móvil.</p>
+          <button class="btn btn--ghost" id="d-nueva">Nueva partida</button>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+/* ============================================================
+   Parámetros configurables (sección 6 de la especificación)
+   ============================================================ */
+const CARD_SLOTS   = 9;   // 9 = cartón 3×3 (~22 min) | 6 = cartón 2×3 (~19 min)
+const CLIP_SECONDS = 35;  // palanca principal de duración; aquí solo alimenta el cronómetro
+
+/* Pool cerrado de 50 canciones (sección 5). Un cartón solo contiene
+   canciones de esta lista y el orden de reproducción solo saca de aquí. */
+const POOL = [
+  // Clásicos españoles y latinos
+  ['Clavado en Un Bar', 'Maná'],
+  ['En El Muelle de San Blas', 'Maná'],
+  ['Corazón Espinado', 'Santana, Maná'],
+  ['Mariposa Traicionera', 'Maná'],
+  ['Ciega, Sordomuda', 'Shakira'],
+  ['Eloise', 'Tino Casal'],
+  ['Solo pienso en ti', 'Miguel Bosé'],
+  ['Si Me Cambian Los Recuerdos', 'Marta Sánchez, Alaska'],
+  ['Si Tú No Vuelves', 'Mónica Naranjo'],
+  ['Entre tú y mil mares', 'Laura Pausini'],
+  ['¡Hola, Mi Amor!', 'Junco'],
+  ['Kamikaze', 'Amaral'],
+  ['Llévame Muy Lejos', 'Amaral'],
+  ['La Botella', 'Soraya'],
+  ['Escalera de colores', 'Efecto Pasillo, Rosana'],
+  // Pop español actual
+  ['Y Busqué', 'Rozalén'],
+  ['Tres Días en Cartagena', 'Rozalén, Carlos Vives'],
+  ['La Cara Amable del Mundo', 'Rozalén'],
+  ['EL TONTO', 'Lola Índigo, Quevedo'],
+  ['LA REINA', 'Lola Índigo'],
+  ['EL CONDENAO', 'Lola Índigo, Maka'],
+  ['DRAGÓN', 'Lola Índigo'],
+  ['CARITA TRISTE', 'Ana Mena, Emilia'],
+  ['Madrid City', 'Ana Mena'],
+  ['La Gata Bajo la Lluvia', 'Ana Mena'],
+  ['LAS BABYS', 'Aitana'],
+  ['Los Ángeles', 'Aitana'],
+  ['miamor', 'Aitana, Rels B'],
+  ['Si No Estás', 'Íñigo Quintero'],
+  ['SUPERHÉROES', 'Beret, Mr.Rain'],
+  ['Hay Amores Que Duran Toda la Vida', 'Manuel Carrasco'],
+  ['Estoy Hecho De Pedacitos De Ti', 'Antonio Orozco, Pablo Alborán'],
+  ['Clavaito', 'Chanel, Abraham Mateo'],
+  ['NADA', 'Edurne'],
+  ['TUYA', 'ROSALÍA'],
+  ['Viento', 'Gabry Ponte, Vicco'],
+  ['Arena y Sal', 'Omar Montes, SAIKO, Tunvao'],
+  ['LA SEVILLANA', 'Omar Montes'],
+  // Latino y reggaetón
+  ['Bailando Bachata', 'Chayanne'],
+  ['ASÍ ES LA VIDA', 'Enrique Iglesias, María Becerra'],
+  ['HOT', 'Daddy Yankee, Pitbull'],
+  ['BABY HELLO', 'Rauw Alejandro, Bizarrap'],
+  ['Vagabundo', 'Sebastián Yatra, Manuel Turizo, Beéle'],
+  ['LA CAPI', 'Myke Towers'],
+  // Internacional
+  ['Freed From Desire', 'Gala, Molella, Phil Jay'],
+  ['Think About the Way', 'Ice MC'],
+  ['Yeah!', 'USHER, Lil Jon, Ludacris'],
+  ['Tattoo', 'Loreen'],
+  ['How Deep Is Your Love', 'Calvin Harris, Disciples'],
+  ['Dance The Night', 'Dua Lipa'],
+];
+const POOL_SIZE = POOL.length; // 50
+
+/* Alfabeto de los códigos de cartón: sin 0/O ni 1/I para que se dicten sin
+   ambigüedad. 32^4 ≈ 1 M de cartones posibles. */
+const ALFABETO = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+/* ============================================================
+   Aleatoriedad reproducible. El cartón se deriva de su código y el
+   orden de reproducción del código de partida: basta guardar el
+   código para regenerarlos idénticos tras recargar.
+   ============================================================ */
+function semilla(str) {           // xmur3
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(h ^ str.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  h = Math.imul(h ^ (h >>> 16), 2246822507);
+  h = Math.imul(h ^ (h >>> 13), 3266489909);
+  return (h ^= h >>> 16) >>> 0;
+}
+function rng(str) {               // mulberry32
+  let a = semilla(str);
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+function barajar(arr, r) {        // Fisher-Yates
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(r() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+const INDICES = Array.from({ length: POOL_SIZE }, (_, i) => i);
+
+// Muestra sin reposición de CARD_SLOTS canciones: nunca se repite dentro del cartón.
+function cartonDesdeCodigo(codigo) {
+  return barajar(INDICES, rng('carton:' + codigo)).slice(0, CARD_SLOTS);
+}
+// Permutación completa del pool, fija para toda la partida.
+function ordenDesdePartida(partida) {
+  return barajar(INDICES, rng('partida:' + partida.trim().toLowerCase()));
+}
+function codigoAleatorio() {
+  const buf = new Uint8Array(4);
+  crypto.getRandomValues(buf);
+  return Array.from(buf, (b) => ALFABETO[b % ALFABETO.length]).join('');
+}
+function normalizarCodigo(s) {
+  const c = (s || '').trim().toUpperCase().replace(/0/g, 'O').replace(/1/g, 'I');
+  return c.length === 4 && [...c].every((ch) => ALFABETO.includes(ch)) ? c : null;
+}
+
+/* ============================================================
+   Utilidades
+   ============================================================ */
+const $ = (id) => document.getElementById(id);
+const store = {
+  get(k) { try { return JSON.parse(localStorage.getItem(k)); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} },
+  del(k) { try { localStorage.removeItem(k); } catch {} },
+};
+function horaMs(ts) {
+  const d = new Date(ts);
+  const p = (n, l = 2) => String(n).padStart(l, '0');
+  return `${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}.${p(d.getMilliseconds(), 3)}`;
+}
+function hora(ts) { return horaMs(ts).slice(0, 8); }
+function mmss(ms) {
+  const s = Math.max(0, Math.floor(ms / 1000));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`;
+}
+function escapar(s) {
+  return s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+/* ============================================================
+   VISTA JUGADOR
+   ============================================================ */
+const KEY_JUGADOR = 'bingo-musical.jugador';
+
+function iniciarJugador() {
+  $('vista-jugador').hidden = false;
+  $('j-total').textContent = CARD_SLOTS;
+
+  // Estado: { codigo, marcadas: [idx...], bingoAt: ms|null, bingoVisto: bool }
+  let st = store.get(KEY_JUGADOR);
+
+  function guardar() { store.set(KEY_JUGADOR, st); }
+
+  function mostrarPortada() {
+    $('j-portada').hidden = false;
+    $('j-carton').hidden = true;
+    $('j-overlay').hidden = true;
+    $('j-meta').textContent = `${POOL_SIZE} canciones · cartón de ${CARD_SLOTS}`;
+    $('j-error').hidden = true;
+    $('j-codigo').value = '';
+  }
+
+  function abrirCarton(codigo) {
+    st = { codigo, marcadas: [], bingoAt: null, bingoVisto: false };
+    guardar();
+    pintarCarton();
+  }
+
+  function pintarCarton() {
+    $('j-portada').hidden = true;
+    $('j-carton').hidden = false;
+    $('j-meta').innerHTML = `cartón <strong>${st.codigo}</strong>`;
+    $('j-codigo-pie').textContent = st.codigo;
+
+    const cols = CARD_SLOTS % 3 === 0 ? 3 : Math.ceil(Math.sqrt(CARD_SLOTS));
+    const grid = $('j-grid');
+    grid.style.setProperty('--cols', cols);
+    grid.innerHTML = '';
+    for (const idx of cartonDesdeCodigo(st.codigo)) {
+      const [titulo, artista] = POOL[idx];
+      const marcada = st.marcadas.includes(idx);
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'tile' + (marcada ? ' tile--on' : '');
+      b.setAttribute('aria-pressed', marcada);
+      b.innerHTML = `<span class="title">${escapar(titulo)}</span><span class="artist">${escapar(artista)}</span>`;
+      b.addEventListener('click', () => alternar(idx));
+      grid.appendChild(b);
+    }
+    pintarEstado();
+  }
+
+  // Marcado manual, sin auto-marcar: la gracia es reconocer la canción.
+  function alternar(idx) {
+    const i = st.marcadas.indexOf(idx);
+    if (i >= 0) st.marcadas.splice(i, 1); else st.marcadas.push(idx);
+
+    if (st.marcadas.length === CARD_SLOTS) {
+      // El timestamp válido es el del toque que completa el cartón.
+      st.bingoAt = Date.now();
+      st.bingoVisto = false;
+    } else {
+      st.bingoAt = null;
+    }
+    guardar();
+    pintarCarton();
+    if (st.bingoAt && !st.bingoVisto) mostrarOverlay();
+  }
+
+  function pintarEstado() {
+    $('j-marcadas').textContent = st.marcadas.length;
+    $('j-banner').hidden = !st.bingoAt;
+    if (st.bingoAt) $('j-banner-hora').textContent = horaMs(st.bingoAt);
+  }
+
+  function mostrarOverlay() {
+    $('j-overlay-codigo').textContent = st.codigo;
+    $('j-overlay-hora').textContent = horaMs(st.bingoAt);
+    $('j-overlay').hidden = false;
+    st.bingoVisto = true;
+    guardar();
+  }
+
+  $('j-nuevo').addEventListener('click', () => abrirCarton(codigoAleatorio()));
+
+  $('j-form-recuperar').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = normalizarCodigo($('j-codigo').value);
+    if (!c) {
+      $('j-error').textContent = 'El código tiene 4 letras o cifras (sin 0, O, 1 ni I).';
+      $('j-error').hidden = false;
+      return;
+    }
+    abrirCarton(c);
+  });
+
+  $('j-reiniciar').addEventListener('click', () => {
+    if (confirm('¿Generar un cartón nuevo? Se perderán las marcas de este.')) abrirCarton(codigoAleatorio());
+  });
+
+  $('j-ver-bingo').addEventListener('click', mostrarOverlay);
+  $('j-cerrar-overlay').addEventListener('click', () => { $('j-overlay').hidden = true; });
+
+  if (st && st.codigo && normalizarCodigo(st.codigo)) {
+    pintarCarton();
+    if (st.bingoAt && !st.bingoVisto) mostrarOverlay();
+  } else {
+    mostrarPortada();
+  }
+}
+
+/* ============================================================
+   VISTA DIRECTOR
+   ============================================================ */
+const KEY_DIRECTOR = 'bingo-musical.director';
+
+function iniciarDirector() {
+  $('vista-director').hidden = false;
+
+  // Estado: { partida, sonadas: n (las n primeras del orden), inicio: ms|null,
+  //           ultimaAt: ms|null, ganadores: [{codigo, valido, sonadas, at}] }
+  let st = store.get(KEY_DIRECTOR);
+  let orden = [];
+  let cronometro = null;
+
+  function guardar() { store.set(KEY_DIRECTOR, st); }
+
+  function mostrarPortada() {
+    $('d-portada').hidden = false;
+    $('d-panel').hidden = true;
+    $('d-meta').textContent = '';
+    $('d-codigo').value = '';
+    $('d-codigo').focus();
+  }
+
+  function empezar(partida) {
+    st = { partida, sonadas: 0, inicio: null, ultimaAt: null, ganadores: [] };
+    guardar();
+    pintarPanel();
+  }
+
+  function pintarPanel() {
+    orden = ordenDesdePartida(st.partida);
+    $('d-portada').hidden = true;
+    $('d-panel').hidden = false;
+    $('d-meta').innerHTML = `partida <strong>${escapar(st.partida)}</strong>`;
+
+    const url = location.origin + location.pathname;
+    $('d-url').textContent = url;
+    $('d-qr').src = 'https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=8&data=' + encodeURIComponent(url);
+
+    pintarOrden();
+    pintarGanadores();
+    if (!cronometro) cronometro = setInterval(pintarTiempos, 250);
+  }
+
+  function pintarOrden() {
+    const n = st.sonadas;
+    const fin = n >= POOL_SIZE;
+
+    if (fin) {
+      $('d-now-title').textContent = 'Se ha agotado el pool';
+      $('d-now-artist').textContent = `Han sonado las ${POOL_SIZE} canciones.`;
+    } else {
+      const [t, a] = POOL[orden[n]];
+      $('d-now-title').textContent = `${n + 1}. ${t}`;
+      $('d-now-artist').textContent = a;
+    }
+    $('d-siguiente').disabled = fin;
+    $('d-deshacer').disabled = n === 0;
+    $('d-stat-sonadas').textContent = n;
+    $('d-stat-restantes').textContent = POOL_SIZE - n;
+
+    const ol = $('d-orden');
+    ol.innerHTML = '';
+    orden.forEach((idx, i) => {
+      const [t, a] = POOL[idx];
+      const li = document.createElement('li');
+      li.className = i < n ? 'done' : i === n ? 'next' : '';
+      li.innerHTML = `<span class="n">${i + 1}</span><span><span class="t">${escapar(t)}</span> <span class="a">— ${escapar(a)}</span></span>`;
+      ol.appendChild(li);
+    });
+    pintarTiempos();
+  }
+
+  function pintarTiempos() {
+    const ahora = Date.now();
+    $('d-stat-tiempo').textContent = st.inicio ? mmss(ahora - st.inicio) : '0:00';
+
+    // Cuenta atrás del fragmento: ayuda a mantener el ritmo, no corta nada.
+    const timer = $('d-timer');
+    if (st.ultimaAt && st.sonadas > 0) {
+      const restante = CLIP_SECONDS * 1000 - (ahora - st.ultimaAt);
+      timer.hidden = false;
+      timer.classList.toggle('over', restante < 0);
+      timer.textContent = restante >= 0 ? mmss(restante) : '+' + mmss(-restante);
+    } else {
+      timer.hidden = true;
+    }
+  }
+
+  function siguiente() {
+    if (st.sonadas >= POOL_SIZE) return;
+    st.sonadas += 1;
+    st.ultimaAt = Date.now();
+    if (!st.inicio) st.inicio = st.ultimaAt;
+    guardar();
+    pintarOrden();
+  }
+  function deshacer() {
+    if (st.sonadas === 0) return;
+    st.sonadas -= 1;
+    guardar();
+    pintarOrden();
+  }
+
+  // Un bingo solo vale si las CARD_SLOTS canciones del cartón han sonado.
+  function verificar(codigo) {
+    const sonadas = new Set(orden.slice(0, st.sonadas));
+    const carton = cartonDesdeCodigo(codigo);
+    const faltan = carton.filter((idx) => !sonadas.has(idx));
+    const valido = faltan.length === 0;
+
+    const v = $('d-verdict');
+    v.className = 'verdict ' + (valido ? 'verdict--ok' : 'verdict--ko');
+    v.innerHTML = valido
+      ? `Bingo válido · cartón ${codigo}<small>Las ${CARD_SLOTS} canciones han sonado.</small>`
+      : `Bingo no válido · cartón ${codigo}<small>${faltan.length === 1 ? 'Hay 1 canción que no ha sonado' : `Hay ${faltan.length} canciones que no han sonado`}. Que siga jugando.</small>`;
+
+    const ul = $('d-check');
+    ul.innerHTML = '';
+    for (const idx of carton) {
+      const [t, a] = POOL[idx];
+      const ok = sonadas.has(idx);
+      const li = document.createElement('li');
+      li.innerHTML = `<span>${escapar(t)} <span class="muted">— ${escapar(a)}</span></span><span class="${ok ? 'ok' : 'ko'}">${ok ? 'sonó · nº ' + (orden.indexOf(idx) + 1) : 'no ha sonado'}</span>`;
+      ul.appendChild(li);
+    }
+    $('d-registrar').dataset.codigo = codigo;
+    $('d-registrar').dataset.valido = valido ? '1' : '';
+    $('d-registrar').textContent = valido ? 'Registrar como ganador' : 'Registrar el intento';
+    $('d-resultado').hidden = false;
+  }
+
+  function pintarGanadores() {
+    const lista = st.ganadores || [];
+    $('d-ganadores-card').hidden = lista.length === 0;
+    const ul = $('d-ganadores');
+    ul.innerHTML = '';
+    for (const g of lista) {
+      const li = document.createElement('li');
+      li.innerHTML = `<span class="mono">${g.codigo}</span><span class="${g.valido ? 'ok' : 'ko'}">${g.valido ? 'válido' : 'no válido'} · canción ${g.sonadas} · ${hora(g.at)}</span>`;
+      ul.appendChild(li);
+    }
+  }
+
+  $('d-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const p = $('d-codigo').value.trim();
+    if (p) empezar(p);
+  });
+  $('d-siguiente').addEventListener('click', siguiente);
+  $('d-deshacer').addEventListener('click', deshacer);
+
+  $('d-form-verificar').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const c = normalizarCodigo($('d-verificar').value);
+    $('d-verror').hidden = !!c;
+    $('d-resultado').hidden = !c;
+    if (!c) { $('d-verror').textContent = 'El código tiene 4 caracteres (sin 0, O, 1 ni I).'; return; }
+    verificar(c);
+  });
+
+  $('d-registrar').addEventListener('click', (e) => {
+    const { codigo, valido } = e.currentTarget.dataset;
+    st.ganadores = st.ganadores || [];
+    st.ganadores.push({ codigo, valido: !!valido, sonadas: st.sonadas, at: Date.now() });
+    guardar();
+    pintarGanadores();
+    $('d-resultado').hidden = true;
+    $('d-verificar').value = '';
+  });
+
+  $('d-copiar').addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText($('d-url').textContent);
+      $('d-copiar').textContent = 'Copiado';
+      setTimeout(() => { $('d-copiar').textContent = 'Copiar enlace'; }, 1500);
+    } catch { /* sin permiso de portapapeles: la URL está a la vista */ }
+  });
+
+  $('d-nueva').addEventListener('click', () => {
+    if (!confirm('¿Nueva partida? Se borran las canciones sonadas y los bingos registrados.')) return;
+    store.del(KEY_DIRECTOR);
+    st = null;
+    mostrarPortada();
+  });
+
+  // Atajos en el portátil: espacio o → avanza, ← deshace.
+  document.addEventListener('keydown', (e) => {
+    if ($('d-panel').hidden || e.target.tagName === 'INPUT') return;
+    if (e.key === ' ' || e.key === 'ArrowRight') { e.preventDefault(); siguiente(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); deshacer(); }
+  });
+
+  if (st && st.partida) pintarPanel(); else mostrarPortada();
+}
+
+/* ============================================================
+   Arranque
+   ============================================================ */
+(function () {
+  // Universo cerrado: sin canciones repetidas y con cartón realizable.
+  const claves = new Set(POOL.map(([t, a]) => (t + '|' + a).toLowerCase()));
+  if (claves.size !== POOL_SIZE || CARD_SLOTS > POOL_SIZE) {
+    document.body.textContent = 'Error de configuración: el pool tiene canciones repetidas o el cartón es mayor que el pool.';
+    return;
+  }
+  const params = new URLSearchParams(location.search);
+  if (params.has('director')) iniciarDirector(); else iniciarJugador();
+})();
+</script>
+</body>
+</html>
