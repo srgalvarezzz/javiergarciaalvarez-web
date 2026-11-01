@@ -46,10 +46,10 @@
       "revistaUrl": "https://www.dip-badajoz.es/cultura/ceex/index.php?seccion=reex_inicio",
       "editorial": null,
       "url": null,
-      "estado": "En producción",
-      "estadoClase": "status-active",
+      "estado": "Preprint",
+      "estadoClase": "status-paused",
       "resumen": null,
-      "actualizado": "2026-05-26"
+      "actualizado": "2026-11-01"
     },
     {
       "titulo": "Game Mechanic as Learning Evidence: A Systematic Review of Embedded Assessment in Educational Games",
@@ -71,6 +71,15 @@
     }
   ],
   "comunicaciones": [
+    {
+      "titulo": "Conceptualización y evaluación del pensamiento crítico con IAG en educación superior: una revisión de revisiones",
+      "tipo": "Comunicación",
+      "congreso": "EDUTEC 2026",
+      "organiza": null,
+      "lugar": "Por confirmar",
+      "fecha": "2026-11-03",
+      "fechaTexto": "3–7 de noviembre de 2026"
+    },
     {
       "titulo": "Robótica educativa y pensamiento computacional en educación infantil: una experiencia de innovación pedagógica",
       "tipo": "Comunicación",
