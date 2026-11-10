@@ -38,8 +38,8 @@
       "paginaPropia": "/investigacion/caceres/",
       "doi": null,
       "autores": [
-        { "nombre": "García-Álvarez, J.", "orcid": "0009-0002-2876-2683" },
-        { "nombre": "Santos-Pérez, C.", "orcid": "0009-0009-8566-7536" }
+        { "nombre": "Santos-Pérez, C.", "orcid": "0009-0009-8566-7536" },
+        { "nombre": "García-Álvarez, J.", "orcid": "0009-0002-2876-2683" }
       ],
       "anio": "en prensa",
       "revista": "Revista de Estudios Extremeños",
@@ -52,7 +52,7 @@
       "actualizado": "2026-11-01"
     },
     {
-      "titulo": "Game Mechanic as Learning Evidence: A Systematic Review of Embedded Assessment in Educational Games",
+      "titulo": "Digital game elements and learning in studies using player interaction data: A systematic review",
       "doi": null,
       "autores": [
         { "nombre": "García-Álvarez, J.", "orcid": "0009-0002-2876-2683" },
@@ -60,25 +60,26 @@
         { "nombre": "González-Fernández, A.", "orcid": "0000-0001-6277-9054" }
       ],
       "anio": "enviado",
-      "revista": "Educational Technology Research and Development",
-      "revistaUrl": "https://link.springer.com/journal/11423",
-      "editorial": "Springer",
+      "revista": "npj Science of Learning",
+      "revistaUrl": "https://www.nature.com/npjscilearn/",
+      "editorial": "Nature Portfolio",
       "url": null,
       "estado": "En revisión por pares",
       "estadoClase": "status-completed",
-      "resumen": "Esta revisión sistemática analiza cómo las mecánicas de juego pueden actuar como indicadores válidos del aprendizaje en juegos educativos, revisando el estado del arte sobre evaluación integrada o embedded assessment. El objetivo es determinar bajo qué condiciones metodológicas se ha demostrado su validez.",
-      "actualizado": "2026-07-31"
+      "resumenBreve": "Revisión sistemática de 36 estudios que relacionan un elemento de un juego digital, observado con datos de interacción del jugador, con el aprendizaje medido fuera del juego. La investigación se concentra en elementos periféricos, como pistas o retroalimentación, y la certeza de la evidencia es baja.",
+      "resumen": "Saber qué elementos de un juego digital se relacionan con el aprendizaje es clave para diseñar juegos educativos, pero la investigación carece de una definición compartida de esos elementos. Esta revisión sistemática sintetizó 36 estudios que relacionaban un elemento identificable del juego, observado mediante datos de interacción del jugador, con el aprendizaje medido fuera del juego. Los 91 elementos se clasificaron según su lugar en el sistema de juego y su relación con el contenido. Solo tres estudios definían la mecánica de juego, y la investigación se concentra en elementos periféricos, como pistas o retroalimentación, frente a la mecánica primaria, la única que integra sistemáticamente el contenido. Por significación estadística, la mayoría de los resultados fueron nulos o mixtos; por dirección del efecto, el 90 % de los estudios con dirección definida favorecía el aprendizaje, sin diferencias entre tipos de elemento. La certeza de la evidencia es baja.",
+      "actualizado": "2026-11-10"
     }
   ],
   "comunicaciones": [
     {
       "titulo": "Conceptualización y evaluación del pensamiento crítico con IAG en educación superior: una revisión de revisiones",
       "tipo": "Comunicación",
-      "congreso": "EDUTEC 2026",
-      "organiza": null,
-      "lugar": "Por confirmar",
-      "fecha": "2026-11-03",
-      "fechaTexto": "3–7 de noviembre de 2026"
+      "congreso": "EDUTEC 2026 — Reconectar con la pedagogía: una visión crítica, práctica y ética de la tecnología educativa",
+      "organiza": "Universitat Jaume I",
+      "lugar": "Castelló, España",
+      "fecha": "2026-11-04",
+      "fechaTexto": "4–7 de noviembre de 2026"
     },
     {
       "titulo": "Robótica educativa y pensamiento computacional en educación infantil: una experiencia de innovación pedagógica",
@@ -154,13 +155,29 @@
   },
   "revisiones": [
     {
+      "revista": "Smart Learning Environments",
+      "revistaUrl": "https://link.springer.com/journal/40561",
+      "editorial": "Springer",
+      "anio": "2026",
+      "numero": 1
+    },
+    {
+      "revista": "International Journal on Studies in Education",
+      "revistaUrl": "https://ijonse.net/index.php/ijonse",
+      "editorial": "ISTES",
+      "anio": "2026",
+      "numero": 1
+    },
+    {
       "revista": "Education and Information Technologies",
+      "revistaUrl": "https://link.springer.com/journal/10639",
       "editorial": "Springer",
       "anio": "2025",
       "numero": 1
     },
     {
       "revista": "ACADEMO. Revista de Investigación en Ciencias Sociales y Humanidades",
+      "revistaUrl": "https://revistacientifica.uamericana.edu.py/index.php/academo",
       "editorial": null,
       "anio": "2025",
       "numero": 2

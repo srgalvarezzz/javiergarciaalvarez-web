@@ -114,7 +114,19 @@ const datosEstructurados = publicaciones.map(articulo);
               )}
             </p>
           )}
-          {pub.resumen && (
+          {/* Con resumenBreve, el resumen completo queda plegado detrás de un
+              <details>: funciona sin JavaScript y el texto sigue en el HTML
+              para buscadores y lectores de pantalla. Al abrirlo, la versión
+              breve se oculta para no leer dos veces lo mismo. */}
+          {pub.resumen && pub.resumenBreve ? (
+            <div class="publication-abstract">
+              <p class="publication-body publication-abstract-breve">{pub.resumenBreve}</p>
+              <details>
+                <summary>Ver resumen completo</summary>
+                <p class="publication-body">{pub.resumen}</p>
+              </details>
+            </div>
+          ) : pub.resumen && (
             <p class="publication-body">{pub.resumen}</p>
           )}
           {/* La divulgación propia va como botón y no en el título: el título
@@ -166,7 +178,9 @@ const datosEstructurados = publicaciones.map(articulo);
       <ul class="peer-review-list">
         {revisiones.map(rev => (
           <li>
-            <span class="peer-review-journal">{rev.revista}</span>
+            <span class="peer-review-journal">
+              {rev.revistaUrl ? (<a href={rev.revistaUrl} target="_blank" rel="noopener">{rev.revista}</a>) : rev.revista}
+            </span>
             {rev.editorial && <span class="peer-review-publisher"> · {rev.editorial}</span>}
             <span class="peer-review-count">
               {rev.anio} · {rev.numero} {rev.numero === 1 ? 'revisión' : 'revisiones'}
@@ -494,6 +508,35 @@ const datosEstructurados = publicaciones.map(articulo);
     margin-bottom: 0.6rem;
   }
 
+  /* Resumen plegable. El triángulo nativo se sustituye por una flecha de
+     texto, como el resto de enlaces del sitio. */
+  .publication-abstract details { margin-bottom: 0.6rem; }
+  .publication-abstract summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    list-style: none;
+    cursor: pointer;
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-ink);
+    transition: color var(--transition-fast);
+  }
+  .publication-abstract summary::-webkit-details-marker { display: none; }
+  .publication-abstract summary::after {
+    content: '→';
+    display: inline-block;
+    transition: transform var(--transition-base);
+  }
+  .publication-abstract summary:hover { color: var(--color-warm-deep); }
+  .publication-abstract details[open] summary::after { transform: rotate(90deg); }
+  .publication-abstract details[open] summary { margin-bottom: 0.6rem; }
+  .publication-abstract:has(details[open]) .publication-abstract-breve { display: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .publication-abstract summary::after { transition: none; }
+  }
+
   /* Revisión por pares (4.4): compacto a propósito, una línea por revista. */
   .peer-review { margin-top: calc(var(--space-section) * 0.6); }
   .peer-review-lead {
@@ -525,6 +568,14 @@ const datosEstructurados = publicaciones.map(articulo);
     font-weight: var(--weight-medium);
     color: var(--color-ink);
   }
+  .peer-review-journal a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 2px;
+    transition: text-decoration-color var(--transition-fast);
+  }
+  .peer-review-journal a:hover { text-decoration-color: var(--color-warm); }
   .peer-review-publisher {
     font-family: var(--font-body);
     font-size: var(--text-sm);
